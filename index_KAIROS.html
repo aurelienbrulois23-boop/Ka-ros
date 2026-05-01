@@ -67,6 +67,24 @@ body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--text);displ
 .ondes-nav-bar{height:2px;background:rgba(255,255,255,.06);border-radius:1px;margin-top:4px;}
 .ondes-nav-bar-fill{height:100%;border-radius:1px;background:var(--purple);transition:width .4s ease;}
 
+/* ===== SIDEBAR — PROGRESSION ===== */
+.prog-section{padding:10px 14px 14px;}
+.prog-head{font-family:'Orbitron',sans-serif;font-size:.52rem;letter-spacing:3px;color:var(--text-d);text-transform:uppercase;margin-bottom:8px;}
+.prog-btns{display:flex;flex-direction:column;gap:6px;}
+.prog-btn{width:100%;display:flex;align-items:center;gap:9px;padding:8px 12px;border-radius:7px;border:1px solid var(--border);background:var(--primary-dim);cursor:pointer;transition:.2s;text-align:left;}
+.prog-btn:hover{background:rgba(220,38,38,.18);border-color:var(--primary);}
+.prog-btn.secondary{background:rgba(255,255,255,.03);border-color:rgba(255,255,255,.08);}
+.prog-btn.secondary:hover{background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.15);}
+.prog-btn-ico{font-size:1rem;flex-shrink:0;}
+.prog-btn-info{flex:1;min-width:0;}
+.prog-btn-label{font-size:.74rem;color:var(--text);font-weight:600;}
+.prog-btn-sub{font-size:.6rem;color:var(--text-d);margin-top:1px;}
+.prog-stamp{font-size:.58rem;color:var(--text-d);margin-top:7px;padding:0 2px;line-height:1.5;}
+.prog-stamp span{color:var(--text-m);}
+.prog-toast{font-size:.68rem;padding:6px 10px;border-radius:6px;margin-top:6px;display:none;line-height:1.4;}
+.prog-toast.ok{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);color:#6ee7b7;}
+.prog-toast.warn{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.3);color:#fde68a;}
+
 /* ===== MAIN ===== */
 .main{flex:1;overflow:hidden;display:flex;flex-direction:column;}
 
@@ -259,6 +277,31 @@ body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--text);displ
         <div class="ondes-nav-bar"><div class="ondes-nav-bar-fill" id="ondesBarFill" style="width:0%"></div></div>
       </div>
     </button>
+
+    <!-- PROGRESSION SECTION -->
+    <div class="sidebar-divider" style="margin-top:8px;"></div>
+    <div class="prog-section">
+      <div class="prog-head">Progression</div>
+      <div class="prog-btns">
+        <button class="prog-btn" onclick="saveProgress()">
+          <div class="prog-btn-ico">💾</div>
+          <div class="prog-btn-info">
+            <div class="prog-btn-label">Sauvegarder</div>
+            <div class="prog-btn-sub">Exporter un fichier .json</div>
+          </div>
+        </button>
+        <button class="prog-btn secondary" onclick="document.getElementById('progFileInput').click()">
+          <div class="prog-btn-ico">📂</div>
+          <div class="prog-btn-info">
+            <div class="prog-btn-label">Charger</div>
+            <div class="prog-btn-sub">Importer une sauvegarde</div>
+          </div>
+        </button>
+        <input type="file" id="progFileInput" accept=".json" style="display:none" onchange="loadProgress(event)">
+      </div>
+      <div class="prog-stamp" id="progStamp"></div>
+      <div class="prog-toast" id="progToast"></div>
+    </div>
   </aside>
 
   <!-- MAIN CONTENT -->
@@ -820,6 +863,114 @@ window.addEventListener('storage', function(e){
 });
 
 /* ============================================================
+   PROGRESSION — SAUVEGARDE / CHARGEMENT
+   ============================================================ */
+
+const SAVE_TS_KEY = 'kairos_save_timestamp';
+
+function getKairosKeys(){
+  return Object.keys(localStorage).filter(k => k.startsWith('kairos_') || k.startsWith('CERT_KAIROS_'));
+}
+
+function updateProgStamp(){
+  const stamp = document.getElementById('progStamp');
+  if(!stamp) return;
+  const ts = localStorage.getItem(SAVE_TS_KEY);
+  if(ts){
+    const d = new Date(parseInt(ts));
+    const fmt = d.toLocaleDateString('fr-FR',{day:'2-digit',month:'2-digit',year:'numeric'})
+               +' à '+d.toLocaleTimeString('fr-FR',{hour:'2-digit',minute:'2-digit'});
+    stamp.innerHTML = `Dernière sauvegarde :<br><span>${fmt}</span>`;
+  } else {
+    stamp.innerHTML = `Aucune sauvegarde exportée.`;
+  }
+}
+
+function showToast(msg, type='ok', duration=3500){
+  const t = document.getElementById('progToast');
+  if(!t) return;
+  t.textContent = msg;
+  t.className = 'prog-toast ' + type;
+  t.style.display = 'block';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => { t.style.display = 'none'; }, duration);
+}
+
+function saveProgress(){
+  const keys = getKairosKeys();
+  if(keys.length === 0){
+    showToast('Aucune progression à sauvegarder.', 'warn');
+    return;
+  }
+  const data = { version: 1, savedAt: Date.now(), entries: {} };
+  keys.forEach(k => { data.entries[k] = localStorage.getItem(k); });
+
+  // Horodatage de la sauvegarde
+  localStorage.setItem(SAVE_TS_KEY, String(data.savedAt));
+
+  // Téléchargement du fichier JSON
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  const d    = new Date(data.savedAt);
+  const dateStr = d.getFullYear()
+    + ('0'+(d.getMonth()+1)).slice(-2)
+    + ('0'+d.getDate()).slice(-2);
+  a.href     = url;
+  a.download = `kairos_progression_${dateStr}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+
+  updateProgStamp();
+  const xp = keys.filter(k=>k.startsWith('kairos_xp_')).length;
+  const certs = keys.filter(k=>k.startsWith('CERT_KAIROS_')).length;
+  showToast(`✓ Sauvegardé — ${certs} cert. · ${xp} module(s) en cours`, 'ok');
+}
+
+function loadProgress(event){
+  const file = event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    try {
+      const data = JSON.parse(e.target.result);
+      if(!data.entries || typeof data.entries !== 'object'){
+        showToast('Fichier invalide ou corrompu.', 'warn');
+        return;
+      }
+      // Confirmation implicite : on écrase uniquement les clés KAIROS
+      let count = 0;
+      Object.entries(data.entries).forEach(([k, v]) => {
+        if(k.startsWith('kairos_') || k.startsWith('CERT_KAIROS_')){
+          localStorage.setItem(k, v);
+          count++;
+        }
+      });
+      // Mettre à jour l'horodatage de la sauvegarde d'origine
+      if(data.savedAt){
+        localStorage.setItem(SAVE_TS_KEY, String(data.savedAt));
+      }
+      // Rafraîchir toute l'interface
+      loadRegisteredPodcasts();
+      updateXPDisplay();
+      buildSidebar();
+      buildMain();
+      updateONDESSidebar();
+      updateProgStamp();
+      const certs = Object.keys(data.entries).filter(k=>k.startsWith('CERT_KAIROS_')).length;
+      showToast(`✓ ${count} entrées restaurées — ${certs} certificat(s)`, 'ok');
+    } catch(err){
+      showToast('Erreur de lecture du fichier.', 'warn');
+    }
+    // Reset input pour permettre de recharger le même fichier
+    event.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+/* ============================================================
    INIT
    ============================================================ */
 function init(){
@@ -830,6 +981,8 @@ function init(){
   // Podcast system
   loadRegisteredPodcasts();
   updateONDESSidebar();
+  // Progression stamp
+  updateProgStamp();
   // Auto-scan in background (silent)
   setTimeout(()=>scanPodcasts(false), 800);
 }
