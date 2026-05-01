@@ -1,0 +1,23 @@
+{
+  "num": "03",
+  "saison": 1,
+  "episode": 3,
+  "title": "L'élève qui ne dit rien",
+  "subtitle": "Comment reconnaître les signaux silencieux de détresse psychologique chez les adolescents",
+  "pillar": "COMPRENDRE",
+  "pillarColor": "#dc2626",
+  "pillarIcon": "🧠",
+  "duration": "41 min",
+  "icon": "🔇",
+  "description": "Les élèves qui vont le plus mal parlent souvent le moins. Une psychiatre adolescente et une psychologue scolaire décryptent les signaux comportementaux discrets, les biais cognitifs qui empêchent les adultes de les voir, et ce qu'il faut faire quand on a un doute.",
+  "date": "2026-05-15",
+  "tags": ["détresse silencieuse", "adolescents", "signaux faibles", "idées suicidaires", "repérage"],
+  "file_mp3": "podcast_kairos_03.mp3",
+  "chapters": [
+    { "num": "01", "title": "Le paradoxe du silence", "start": "0:00", "end": "8:12" },
+    { "num": "02", "title": "Les signaux à connaître — et ceux qu'on manque", "start": "8:12", "end": "16:24" },
+    { "num": "03", "title": "Les biais cognitifs qui nous empêchent de voir", "start": "16:24", "end": "24:36" },
+    { "num": "04", "title": "Comment parler à un élève qui ne dit rien", "start": "24:36", "end": "33:36" },
+    { "num": "05", "title": "Après l'entretien — que fait-on, concrètement ?", "start": "33:36", "end": "41:00" }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "num": "02",
+  "saison": 1,
+  "episode": 2,
+  "title": "Ce que la CUMP fait vraiment",
+  "subtitle": "Démystifier l'intervention des équipes médico-psychologiques d'urgence en milieu scolaire",
+  "pillar": "COMPRENDRE",
+  "pillarColor": "#dc2626",
+  "pillarIcon": "🧠",
+  "duration": "38 min",
+  "icon": "🏥",
+  "description": "Beaucoup d'établissements ont entendu parler de la CUMP sans jamais en avoir vu une à l'œuvre. Quand la déclencher ? Qui la compose ? Que fait-elle, concrètement, dans les premières 48 heures ? Une psychiatre et un psychologue de CUMP expliquent leur métier depuis l'intérieur.",
+  "date": "2026-05-08",
+  "tags": ["CUMP", "urgence médico-psychologique", "cellule de crise", "SAMU", "postvention"],
+  "file_mp3": "podcast_kairos_02.mp3",
+  "chapters": [
+    { "num": "01", "title": "Ce que n'est pas la CUMP", "start": "0:00", "end": "7:36" },
+    { "num": "02", "title": "Qui déclenche la CUMP, comment, et quand", "start": "7:36", "end": "15:12" },
+    { "num": "03", "title": "Les 48 premières heures — ce qui se passe vraiment", "start": "15:12", "end": "24:00" },
+    { "num": "04", "title": "Les erreurs que l'établissement fait — et comment les éviter", "start": "24:00", "end": "33:00" },
+    { "num": "05", "title": "Ce que ça veut dire pour votre établissement maintenant", "start": "33:00", "end": "38:00" }
+  ]
+}

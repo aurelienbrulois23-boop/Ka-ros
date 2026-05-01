@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KAIROS ONDES · S1E03 · L'élève qui ne dit rien</title>
+
+<!-- ══════════════════════════════════════════════════════════
+     PODCAST METADATA — détecté automatiquement par le hub
+     ══════════════════════════════════════════════════════════ -->
+<script id="PODCAST_META" type="application/json">
+{
+  "num": "03",
+  "saison": 1,
+  "episode": 3,
+  "title": "L'élève qui ne dit rien",
+  "subtitle": "Comment reconnaître les signaux silencieux de détresse psychologique chez les adolescents",
+  "pillar": "COMPRENDRE",
+  "pillarColor": "#dc2626",
+  "pillarIcon": "🧠",
+  "duration": "41 min",
+  "icon": "🔇",
+  "description": "Les élèves qui vont le plus mal parlent souvent le moins. Une psychiatre adolescente et une psychologue scolaire décryptent les signaux comportementaux discrets, les biais cognitifs qui empêchent les adultes de les voir, et ce qu'il faut faire quand on a un doute.",
+  "date": "2026-05-15",
+  "tags": ["détresse silencieuse", "adolescents", "signaux faibles", "idées suicidaires", "repérage"]
+}
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary:#dc2626; --primary-dim:rgba(220,38,38,.1);
+  --purple:#8b5cf6; --purple-dim:rgba(139,92,246,.12); --purple-glow:rgba(139,92,246,.4);
+  --bg:#07000a; --bg2:#0d0012; --panel:#130820; --panel2:#1a0f2a;
+  --text:#ede0ff; --text-m:#a080c0; --text-d:#4a2d6a;
+  --green:#10b981; --gold:#f59e0b; --border:rgba(139,92,246,.2);
+  --rose:#f43f5e; --rose-dim:rgba(244,63,94,.1);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 25% 0%,rgba(139,92,246,.08) 0%,transparent 55%),
+             radial-gradient(ellipse at 75% 100%,rgba(244,63,94,.04) 0%,transparent 55%);}
+
+/* ── HEADER ── */
+.pod-header{padding:28px 24px 20px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:18px;}
+.pod-art{width:80px;height:80px;background:linear-gradient(135deg,#881337,#6d28d9);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:2.4rem;flex-shrink:0;box-shadow:0 0 30px rgba(244,63,94,.25);}
+.pod-meta{flex:1;}
+.pod-series{font-family:'Orbitron',sans-serif;font-size:.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
+.pod-title{font-family:'Orbitron',sans-serif;font-size:1.3rem;color:#fff;margin-bottom:5px;line-height:1.3;}
+.pod-subtitle{font-size:.9rem;color:var(--text-m);margin-bottom:10px;line-height:1.5;}
+.pod-tags{display:flex;flex-wrap:wrap;gap:5px;}
+.pod-tag{font-size:.65rem;padding:2px 9px;border-radius:10px;border:1px solid var(--border);color:var(--text-d);font-family:'Orbitron',sans-serif;letter-spacing:.5px;}
+.pod-duration-chip{background:var(--purple-dim);border:1px solid rgba(139,92,246,.3);padding:4px 12px;border-radius:20px;font-size:.72rem;color:var(--purple);font-family:'Orbitron',sans-serif;white-space:nowrap;align-self:flex-start;}
+
+/* ── PLAYER BAR ── */
+.player-bar{background:var(--panel);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:10;}
+.play-btn{width:40px;height:40px;border-radius:50%;background:var(--purple);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;color:#fff;flex-shrink:0;transition:.2s;box-shadow:0 0 14px var(--purple-glow);}
+.play-btn:hover{filter:brightness(1.15);}
+.player-info{flex:1;}
+.player-track{font-size:.78rem;color:var(--text);margin-bottom:5px;}
+.player-prog-bar{height:3px;background:rgba(255,255,255,.08);border-radius:2px;cursor:pointer;}
+.player-prog-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--rose));border-radius:2px;transition:width .3s ease;}
+.player-times{display:flex;justify-content:space-between;margin-top:4px;}
+.player-t{font-size:.62rem;color:var(--text-d);font-family:'Orbitron',sans-serif;}
+.player-chap-label{font-size:.68rem;color:var(--purple);font-family:'Orbitron',sans-serif;letter-spacing:1px;white-space:nowrap;}
+
+/* ── CONTENT ── */
+#app{max-width:780px;margin:0 auto;padding:24px 20px 80px;}
+
+.chapter{background:var(--panel);border:1px solid var(--border);border-radius:12px;margin-bottom:14px;overflow:hidden;transition:.2s;}
+.chapter.active{border-color:rgba(139,92,246,.5);box-shadow:0 0 20px rgba(139,92,246,.1);}
+.chapter-header{display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;transition:.15s;}
+.chapter-header:hover{background:var(--purple-dim);}
+.chap-num{font-family:'Orbitron',sans-serif;font-size:.65rem;color:var(--purple);letter-spacing:2px;white-space:nowrap;}
+.chap-title{flex:1;font-size:.9rem;font-weight:600;color:var(--text);}
+.chap-dur{font-size:.65rem;color:var(--text-d);font-family:'Orbitron',sans-serif;white-space:nowrap;}
+.chap-arrow{font-size:.8rem;color:var(--text-d);transition:.2s;}
+.chapter.open .chap-arrow{transform:rotate(90deg);}
+.chapter-body{display:none;padding:0 18px 18px;}
+.chapter.open .chapter-body{display:block;}
+
+.narr{font-size:.92rem;line-height:1.85;color:var(--text);margin-bottom:14px;}
+.narr em{color:#c4b5fd;font-style:italic;}
+.narr strong{color:#fde68a;}
+.voice-block{background:var(--panel2);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0;font-size:.92rem;line-height:1.75;color:var(--text);}
+.voice-block em{color:#c4b5fd;font-style:normal;}
+.voice-block.rose{border-left-color:var(--rose);}
+.voice-label{font-size:.6rem;font-family:'Orbitron',sans-serif;letter-spacing:2px;text-transform:uppercase;color:var(--purple);margin-bottom:6px;}
+.voice-label.rose{color:var(--rose);}
+.pullquote{background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.2);border-radius:10px;padding:16px 20px;margin:14px 0;font-size:1rem;font-style:italic;color:#c4b5fd;line-height:1.7;}
+.pullquote cite{display:block;margin-top:8px;font-size:.75rem;color:var(--text-d);font-style:normal;font-family:'Orbitron',sans-serif;letter-spacing:1px;}
+.key-point{background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.2);border-radius:8px;padding:12px 16px;margin:12px 0;font-size:.88rem;color:#6ee7b7;line-height:1.6;}
+.key-point::before{content:'▸ ';font-weight:700;}
+.warn-point{background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.25);border-radius:8px;padding:12px 16px;margin:12px 0;font-size:.88rem;color:#fde68a;line-height:1.6;}
+.warn-point::before{content:'⚠ ';font-weight:700;}
+.ref-block{background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:12px 0;font-size:.82rem;color:var(--text-d);line-height:1.6;}
+.ref-block strong{color:var(--text-m);}
+.section-title{font-family:'Orbitron',sans-serif;font-size:.75rem;letter-spacing:2px;text-transform:uppercase;color:var(--purple);margin:24px 0 12px;display:flex;align-items:center;gap:10px;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* ── SIGNAL GRID ── */
+.signal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0;}
+.signal-card{background:var(--panel2);border-radius:10px;padding:14px 16px;border:1px solid var(--border);}
+.signal-card.alert{border-color:rgba(244,63,94,.3);}
+.signal-icon{font-size:1.3rem;margin-bottom:6px;}
+.signal-title{font-family:'Orbitron',sans-serif;font-size:.65rem;color:var(--text-m);letter-spacing:1px;margin-bottom:6px;}
+.signal-list{list-style:none;}
+.signal-list li{font-size:.82rem;color:var(--text);line-height:1.6;padding:2px 0;}
+.signal-list li::before{content:'· ';color:var(--purple);}
+.signal-card.alert .signal-list li::before{color:var(--rose);}
+.signal-card.alert .signal-title{color:var(--rose);}
+
+/* ── BIAS CARDS ── */
+.bias-list{display:flex;flex-direction:column;gap:10px;margin:14px 0;}
+.bias-item{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:14px 18px;display:flex;gap:14px;align-items:flex-start;}
+.bias-num{font-family:'Orbitron',sans-serif;font-size:.75rem;color:var(--purple);flex-shrink:0;padding-top:2px;}
+.bias-content{}
+.bias-name{font-size:.88rem;font-weight:700;color:var(--text);margin-bottom:4px;}
+.bias-desc{font-size:.82rem;color:var(--text-m);line-height:1.55;}
+
+/* ── QUESTION SCRIPT ── */
+.qscript{background:var(--panel2);border:1px solid rgba(16,185,129,.25);border-radius:10px;padding:16px 20px;margin:14px 0;}
+.qscript-label{font-size:.6rem;font-family:'Orbitron',sans-serif;letter-spacing:2px;color:var(--green);margin-bottom:10px;text-transform:uppercase;}
+.q-line{font-size:.88rem;color:var(--text);line-height:1.7;margin-bottom:6px;}
+.q-line span{color:#6ee7b7;font-weight:600;}
+
+/* ── FIN ── */
+.fin-zone{text-align:center;padding:32px 20px;background:var(--panel);border:1px solid rgba(139,92,246,.3);border-radius:14px;margin-top:20px;display:none;}
+.fin-icon{font-size:2.5rem;margin-bottom:12px;}
+.fin-title{font-family:'Orbitron',sans-serif;font-size:.9rem;color:#fff;margin-bottom:8px;}
+.fin-desc{font-size:.85rem;color:var(--text-m);margin-bottom:20px;line-height:1.6;}
+.btn-hub{background:var(--purple);color:#fff;border:none;padding:11px 28px;font-family:'Orbitron',sans-serif;font-size:.72rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:7px;transition:.2s;font-weight:700;}
+.btn-hub:hover{filter:brightness(1.12);transform:translateY(-1px);}
+.next-ep{background:rgba(139,92,246,.08);border:1px solid var(--border);border-radius:10px;padding:14px 18px;margin-top:16px;text-align:left;}
+.next-ep-label{font-size:.58rem;font-family:'Orbitron',sans-serif;letter-spacing:2px;color:var(--purple);margin-bottom:5px;text-transform:uppercase;}
+.next-ep-title{font-size:.9rem;font-weight:600;color:var(--text);}
+.next-ep-desc{font-size:.8rem;color:var(--text-m);margin-top:4px;line-height:1.5;}
+.sources-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
+.source-item{background:var(--panel2);border:1px solid var(--border);border-radius:7px;padding:10px 12px;}
+.source-type{font-size:.58rem;font-family:'Orbitron',sans-serif;letter-spacing:1.5px;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
+.source-ref{font-size:.78rem;color:var(--text-m);line-height:1.4;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="pod-header">
+  <div class="pod-art">🔇</div>
+  <div class="pod-meta">
+    <div class="pod-series">KAIROS ONDES · Saison 1 · Épisode 03</div>
+    <div class="pod-title">L'élève qui ne dit rien</div>
+    <div class="pod-subtitle">Comment reconnaître les signaux silencieux de détresse psychologique chez les adolescents — et pourquoi les signaux les plus discrets sont souvent les plus sérieux.</div>
+    <div class="pod-tags">
+      <span class="pod-tag">Signaux faibles</span>
+      <span class="pod-tag">Adolescents</span>
+      <span class="pod-tag">Détresse silencieuse</span>
+      <span class="pod-tag">Idées suicidaires</span>
+      <span class="pod-tag">Repérage</span>
+    </div>
+  </div>
+  <div class="pod-duration-chip">⏱ 41 min</div>
+</div>
+
+<!-- PLAYER BAR -->
+<div class="player-bar">
+  <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
+  <div class="player-info">
+    <div class="player-track" id="playerTrack">Chapitre 1 — Le paradoxe du silence</div>
+    <div class="player-prog-bar" id="progBar" onclick="seekTo(event)">
+      <div class="player-prog-fill" id="progFill" style="width:0%"></div>
+    </div>
+    <div class="player-times">
+      <span class="player-t" id="timeElapsed">00:00</span>
+      <span class="player-t" id="timeTotal">41:00</span>
+    </div>
+  </div>
+  <div class="player-chap-label" id="chapLabel">● CHAPITRE 1</div>
+</div>
+
+<div id="app">
+
+<!-- ══════════════════════════════════════
+     CHAPTER 1
+     ══════════════════════════════════════ -->
+<div class="chapter active open" id="chap1" data-start="0" data-end="492" data-label="CHAPITRE 1">
+  <div class="chapter-header" onclick="toggleChap(1)">
+    <div class="chap-num">01</div>
+    <div class="chap-title">Le paradoxe du silence</div>
+    <div class="chap-dur">0:00 → 8:12</div>
+    <div class="chap-arrow">›</div>
+  </div>
+  <div class="chapter-body">
+    <div class="narr">
+      Dans cet épisode, deux professionnelles : <strong>Nora</strong>, psychiatre spécialisée en pédopsychiatrie et en adolescence, qui consulte régulièrement des jeunes orientés par des établissements scolaires ; et <strong>Julie</strong>, psychologue de l'Éducation Nationale (PsyEN) depuis huit ans dans un lycée professionnel en zone sensible.
+    </div>
+
+    <div class="voice-label">Nora, psychiatre adolescente</div>
+    <div class="voice-block">
+      « Il y a un paradoxe au cœur de la détresse adolescente que les adultes doivent comprendre : <em>plus un jeune va mal, moins il est probable qu'il demande de l'aide spontanément.</em>
+      <br><br>
+      C'est contre-intuitif. On pense que si quelqu'un souffre vraiment, il va en parler. Mais l'adolescent en crise suicidaire a généralement arrêté de croire que parler sert à quelque chose. Il a souvent déjà essayé — de manière voilée, indirecte, maladroite — et l'adulte n'a pas saisi. »
+    </div>
+
+    <div class="pullquote">
+      « Dans mes consultations, je demande systématiquement aux jeunes : "Est-ce qu'il y a eu un moment où tu as essayé de dire que ça n'allait pas ?" Environ 60% me disent oui. Et quand je demande ce qui s'est passé, la réponse la plus fréquente est : "L'adulte a cru que j'exagérais." »
+      <cite>— Nora, psychiatre</cite>
+    </div>
+
+    <div class="voice-label rose">Julie, psychologue EN</div>
+    <div class="voice-block rose">
+      « Ce que j'entends le plus souvent des enseignants après un incident grave, c'est : "Mais il était souriant la semaine dernière." Comme si le sourire était la preuve que ça allait. En réalité, le sourire peut être exactement l'inverse : une compétence développée pour ne <em>pas</em> inquiéter les adultes. »
+    </div>
+
+    <div class="key-point">
+      Le sourire social chez l'adolescent en détresse n'est pas un signe que ça va mieux. C'est souvent un signe de plus qu'il a appris à masquer sa détresse — ce que les cliniciens appellent la "façade adaptative".
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CHAPTER 2
+     ══════════════════════════════════════ -->
+<div class="chapter" id="chap2" data-start="492" data-end="984" data-label="CHAPITRE 2">
+  <div class="chapter-header" onclick="toggleChap(2)">
+    <div class="chap-num">02</div>
+    <div class="chap-title">Les signaux à connaître — et ceux qu'on manque</div>
+    <div class="chap-dur">8:12 → 16:24</div>
+    <div class="chap-arrow">›</div>
+  </div>
+  <div class="chapter-body">
+    <div class="section-title">Signaux visibles vs signaux silencieux</div>
+
+    <div class="signal-grid">
+      <div class="signal-card">
+        <div class="signal-icon">👁️</div>
+        <div class="signal-title">Signaux visibles (souvent détectés)</div>
+        <ul class="signal-list">
+          <li>Pleurs en classe ou en récréation</li>
+          <li>Conflits répétés, insolence inhabituelle</li>
+          <li>Traces visibles d'automutilation</li>
+          <li>Propos explicites sur le mal-être</li>
+          <li>Absences brutales et répétées</li>
+        </ul>
+      </div>
+      <div class="signal-card alert">
+        <div class="signal-icon">🔇</div>
+        <div class="signal-title">Signaux silencieux (souvent manqués)</div>
+        <ul class="signal-list">
+          <li>Retrait progressif du groupe de pairs</li>
+          <li>Baisse inexpliquée des résultats sur 4-6 semaines</li>
+          <li>Don soudain d'objets personnels</li>
+          <li>Mise en ordre des affaires (rangement, lettres)</li>
+          <li>Calme soudain après une période agitée</li>
+          <li>Fatigue chronique, hypersomnie signalée</li>
+          <li>Désintérêt pour les activités habituellement investies</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="voice-label">Nora, psychiatre adolescente</div>
+    <div class="voice-block">
+      « Les signaux les plus inquiétants cliniquement sont souvent les moins bruyants. Le calme soudain après une longue période de crise — ce que j'appelle "la fausse accalmie" — est l'un des signes qui m'alarme le plus. Quand un jeune qui était agité, en pleurs, désorganisé devient subitement serein et organisé, <em>c'est parfois parce qu'il a pris une décision.</em> »
+    </div>
+
+    <div class="warn-point">
+      Signe d'alerte spécifique : un élève qui donne des objets personnels importants (son téléphone, un bijou, un objet sentimental) à ses amis, ou qui "met de l'ordre" dans ses affaires — rangement du casier, rédaction de lettres — doit être vu immédiatement.
+    </div>
+
+    <div class="voice-label rose">Julie, psychologue EN</div>
+    <div class="voice-block rose">
+      « La baisse des résultats, c'est le signal que j'ai appris à surveiller différemment depuis ma formation. Avant, je cherchais des causes scolaires : difficultés dans une matière, problème avec un enseignant. Maintenant, quand je vois une chute de 4 à 6 semaines sans explication évidente, je me demande systématiquement : <em>qu'est-ce qui se passe dans la vie de cet élève ?</em>
+      <br><br>
+      Les résultats sont souvent le premier signe observable d'une dérégulation psychologique profonde. L'élève n'a plus les ressources cognitives pour apprendre, parce que tout passe dans la gestion de la détresse. »
+    </div>
+
+    <div class="key-point">
+      Règle empirique : une chute de résultats sur 4 à 6 semaines, sans explication scolaire claire, justifie un entretien individuel — pas pour parler des notes, mais pour prendre des nouvelles de l'élève en tant que personne.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CHAPTER 3
+     ══════════════════════════════════════ -->
+<div class="chapter" id="chap3" data-start="984" data-end="1476" data-label="CHAPITRE 3">
+  <div class="chapter-header" onclick="toggleChap(3)">
+    <div class="chap-num">03</div>
+    <div class="chap-title">Les biais cognitifs qui nous empêchent de voir</div>
+    <div class="chap-dur">16:24 → 24:36</div>
+    <div class="chap-arrow">›</div>
+  </div>
+  <div class="chapter-body">
+    <div class="narr">
+      Ce ne sont pas les adultes qui manquent d'attention. Ce sont souvent des mécanismes cognitifs bien documentés qui interfèrent avec la détection. Nora en identifie cinq particulièrement fréquents en milieu scolaire.
+    </div>
+
+    <div class="bias-list">
+      <div class="bias-item">
+        <div class="bias-num">01</div>
+        <div class="bias-content">
+          <div class="bias-name">Le biais de normalisation adolescente</div>
+          <div class="bias-desc">« C'est juste l'adolescence. » La détresse est rationalisée comme développementalement normale. En réalité, la dépression chez l'adolescent n'est pas normale — elle est fréquente, ce qui n'est pas la même chose. 15 à 20% des adolescents traversent un épisode dépressif caractérisé.</div>
+        </div>
+      </div>
+      <div class="bias-item">
+        <div class="bias-num">02</div>
+        <div class="bias-content">
+          <div class="bias-name">Le biais de l'élève-modèle</div>
+          <div class="bias-desc">« Il est toujours souriant, impliqué, bon élève — ça ne peut pas être lui. » Les élèves performants et socialement adaptés camouflent mieux leur détresse. Le profil "bon élève en crise" est l'un des plus fréquemment manqués.</div>
+        </div>
+      </div>
+      <div class="bias-item">
+        <div class="bias-num">03</div>
+        <div class="bias-content">
+          <div class="bias-name">Le biais de responsabilité délimitée</div>
+          <div class="bias-desc">« Ce n'est pas mon rôle, je suis professeur de mathématiques. » L'adulte remarque quelque chose mais se dit que d'autres sont mieux placés. Résultat : personne n'agit. En milieu scolaire, le premier adulte qui voit est souvent le seul en position de déclencher.</div>
+        </div>
+      </div>
+      <div class="bias-item">
+        <div class="bias-num">04</div>
+        <div class="bias-content">
+          <div class="bias-name">Le biais de la peur d'aggraver</div>
+          <div class="bias-desc">« Si j'aborde le sujet du suicide, je vais y mettre l'idée. » C'est l'une des croyances les mieux démenties par la recherche. Aborder directement la question du suicide avec un jeune en détresse ne l'incite pas à passer à l'acte — au contraire, cela peut diminuer son sentiment d'isolement.</div>
+        </div>
+      </div>
+      <div class="bias-item">
+        <div class="bias-num">05</div>
+        <div class="bias-content">
+          <div class="bias-name">Le biais de la promesse de discrétion</div>
+          <div class="bias-desc">« Tu peux tout me dire, ça restera entre nous. » Promesse qu'on ne peut pas tenir si les informations révèlent un danger. Et quand on rompt la promesse, l'élève perd confiance dans les adultes pour longtemps. Ne jamais promettre une confidentialité absolue — promettre la discrétion dans le cadre de la sécurité.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="pullquote">
+      « Le mythe le plus dangereux est celui de la contagion par l'évocation. La peur de nommer le suicide fait que des adultes voient des signes clairs et ne posent pas la question directe. Et la question directe, c'est souvent ce qui manque pour que l'élève comprenne qu'il peut parler. »
+      <cite>— Nora, psychiatre</cite>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CHAPTER 4
+     ══════════════════════════════════════ -->
+<div class="chapter" id="chap4" data-start="1476" data-end="2016" data-label="CHAPITRE 4">
+  <div class="chapter-header" onclick="toggleChap(4)">
+    <div class="chap-num">04</div>
+    <div class="chap-title">Comment parler à un élève qui ne dit rien</div>
+    <div class="chap-dur">24:36 → 33:36</div>
+    <div class="chap-arrow">›</div>
+  </div>
+  <div class="chapter-body">
+    <div class="narr">
+      Julie décrit ce qu'elle appelle "l'entretien d'inquiétude" — une approche qu'elle utilise quand elle a repéré des signaux mais que l'élève n'est pas venu la voir spontanément.
+    </div>
+
+    <div class="voice-label rose">Julie, psychologue EN</div>
+    <div class="voice-block rose">
+      « Je ne dis jamais à l'élève "on m'a dit que tu n'allais pas bien" ou "ton prof est inquiet pour toi". Ça met l'élève en position d'être surveillé. Je dis quelque chose comme : <em>"J'avais envie de prendre de tes nouvelles — tu t'en sors comment, là ?"</em>
+      <br><br>
+      C'est neutre. C'est une ouverture. Et si l'élève dit "ça va", je ne m'arrête pas là. Je dis : "Et en dehors du lycée, ça se passe comment ?" Parce que la détresse est rarement scolaire uniquement. »
+    </div>
+
+    <div class="section-title">Script d'entretien — niveau 1 : prise de contact</div>
+
+    <div class="qscript">
+      <div class="qscript-label">Ouverture non alarmante</div>
+      <div class="q-line"><span>Adulte :</span> « J'avais envie de te voir — pas parce qu'il y a un problème, juste pour prendre de tes nouvelles. Tu t'en sors comment ces derniers temps ? »</div>
+      <div class="q-line"><span>Si "ça va" :</span> « C'est bien. Et en dehors du lycée, dans ta vie perso ? »</div>
+      <div class="q-line"><span>Si hésitation :</span> « J'ai l'impression que quelque chose te pèse. Je me trompe ? »</div>
+    </div>
+
+    <div class="qscript">
+      <div class="qscript-label">Si l'élève s'ouvre — approfondissement sécurisé</div>
+      <div class="q-line"><span>Adulte :</span> « Je t'entends. C'est important ce que tu me dis. Est-ce qu'il y a des moments où tu as des pensées sombres — des pensées de te faire du mal, ou que ça serait mieux si tu n'étais plus là ? »</div>
+      <div class="q-line" style="font-size:.8rem;color:var(--text-d);padding-left:16px;">→ La question directe ne "met pas l'idée". Elle ouvre la possibilité de parler de quelque chose que l'élève pense souvent seul.</div>
+    </div>
+
+    <div class="voice-label">Nora, psychiatre adolescente</div>
+    <div class="voice-block">
+      « La question directe "est-ce que tu as des idées de te faire du mal ?" est recommandée par l'OMS, l'HAS et toutes les sociétés savantes de prévention du suicide. <em>Elle ne crée pas l'idée.</em> Elle dit à l'élève : je suis un adulte avec qui tu peux parler de ça. Et pour beaucoup d'adolescents, c'est la première fois qu'un adulte leur donne explicitement cette permission. »
+    </div>
+
+    <div class="key-point">
+      Après la question directe : écouter sans interrompre, sans minimiser, sans chercher à résoudre immédiatement. La première étape est d'être là. La deuxième est d'évaluer si une orientation urgente est nécessaire. La troisième seulement est de réfléchir à un plan.
+    </div>
+
+    <div class="warn-point">
+      Ce qu'il ne faut jamais dire : "Tu n'as pas de raisons d'être triste", "D'autres ont de vrais problèmes", "Tu verras, ça va passer", "Si tu faisais plus de sport...". Ces réponses, même bien intentionnées, ferment la conversation et renforcent l'isolement.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CHAPTER 5
+     ══════════════════════════════════════ -->
+<div class="chapter" id="chap5" data-start="2016" data-end="2460" data-label="CHAPITRE 5">
+  <div class="chapter-header" onclick="toggleChap(5)">
+    <div class="chap-num">05</div>
+    <div class="chap-title">Après l'entretien — que fait-on, concrètement ?</div>
+    <div class="chap-dur">33:36 → 41:00</div>
+    <div class="chap-arrow">›</div>
+  </div>
+  <div class="chapter-body">
+    <div class="narr">
+      La conversation a eu lieu. L'élève a dit quelque chose d'inquiétant — ou n'a rien dit mais quelque chose ne colle pas. La question que posent tous les adultes : et maintenant ?
+    </div>
+
+    <div class="voice-label rose">Julie, psychologue EN</div>
+    <div class="voice-block rose">
+      « La règle que je donne toujours aux enseignants qui viennent me voir : <em>vous n'avez pas à tout gérer seul.</em> Votre rôle est d'accueillir, d'écouter, et de transmettre. Pas de traiter. Pas de décider seul si c'est grave ou pas. Pas de promettre que vous allez garder ça pour vous.
+      <br><br>
+      La transmission au PsyEN ou à l'infirmière scolaire n'est pas une trahison. C'est le bon geste. Si vous n'avez pas de PsyEN accessible rapidement, vous allez voir le CPE ou le chef d'établissement. L'isolement de l'adulte dans la gestion d'un élève en détresse est aussi dangereux que l'isolement de l'élève. »
+    </div>
+
+    <div class="key-point">
+      Chaîne de prise en charge recommandée : enseignant/AED qui repère → CPE ou infirmière scolaire → PsyEN → famille → si urgence : 15 ou 3114 (numéro national de prévention du suicide).
+    </div>
+
+    <div class="voice-label">Nora, psychiatre adolescente</div>
+    <div class="voice-block">
+      « Le 3114, je veux en parler spécifiquement parce qu'il est encore peu connu des professionnels de l'éducation. C'est le numéro national de prévention du suicide, disponible 24h/24, 7j/7, avec des professionnels formés. Il est destiné <em>aux personnes en détresse</em> mais aussi <em>à l'entourage et aux professionnels</em> qui ne savent pas comment gérer une situation. Vous pouvez appeler le 3114 pour avoir un conseil sur la conduite à tenir — même si ce n'est pas une urgence immédiate. »
+    </div>
+
+    <div class="ref-block">
+      <strong>Numéro national de prévention du suicide :</strong> 3114 (24h/24, gratuit, pour les personnes en détresse et pour les professionnels qui les accompagnent).
+    </div>
+
+    <div class="section-title">Sources et références</div>
+    <div class="sources-grid">
+      <div class="source-item">
+        <div class="source-type">Épidémiologie</div>
+        <div class="source-ref">HBSC (Health Behaviour in School-aged Children), OMS, 2022. Enquête nationale sur la santé mentale des lycéens, MGEN, 2023.</div>
+      </div>
+      <div class="source-item">
+        <div class="source-type">Question directe</div>
+        <div class="source-ref">Dazzi et al. (2014) — "Does asking about suicide and related behaviours induce suicidal ideation ?", Psychological Medicine.</div>
+      </div>
+      <div class="source-item">
+        <div class="source-type">Biais cognitifs</div>
+        <div class="source-ref">Kahneman, D. (2011) — Thinking, Fast and Slow. HAS, Recommandations de bonne pratique — Évaluation et prise en charge des adolescents, 2021.</div>
+      </div>
+      <div class="source-item">
+        <div class="source-type">Ressource EN</div>
+        <div class="source-ref">Vade-mecum Prévention du suicide, MENJS, 2019. Référentiel PsyEN (missions et pratiques), MENJS, 2020.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FIN ZONE -->
+<div class="fin-zone" id="finZone">
+  <div class="fin-icon">🔇</div>
+  <div class="fin-title">Épisode terminé</div>
+  <div class="fin-desc">
+    Vous avez parcouru les 5 chapitres de cet épisode.<br>
+    <strong>À retenir :</strong> le silence n'est pas l'absence de détresse — et la question directe ne crée pas l'idée. <strong>3114</strong> : le numéro des professionnels aussi.
+  </div>
+  <button class="btn-hub" onclick="markComplete()">✓ Marquer comme écouté</button>
+
+  <div class="next-ep">
+    <div class="next-ep-label">Prochain épisode</div>
+    <div class="next-ep-title">S1E04 · « Gérer la presse — quand les médias s'emparent d'une crise »</div>
+    <div class="next-ep-desc">Un proviseur, un attaché de presse académique et un journaliste racontent trois versions du même incident. Ce qu'il faut dire, ne pas dire, et à qui — dans les premières 24 heures.</div>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<script>
+/* ══════════════════════════════════════════════════════
+   AUTO-REGISTRATION
+   ══════════════════════════════════════════════════════ */
+(function register(){
+  const rawMeta = document.getElementById('PODCAST_META');
+  const meta = JSON.parse(rawMeta.textContent.trim());
+  localStorage.setItem('kairos_ondes_reg_' + meta.num, JSON.stringify(meta));
+  if(window.parent && window.parent !== window){
+    window.parent.postMessage({type:'pvs_bridge_event', event:'PODCAST_REGISTERED', data:meta}, '*');
+  }
+})();
+
+/* ══════════════════════════════════════════════════════
+   PLAYER SIMULATION
+   ══════════════════════════════════════════════════════ */
+const TOTAL = 2460;
+let elapsed = 0, playing = false, timer = null;
+const chapters = [
+  {start:0,    end:492,  label:'CHAPITRE 1', track:'Chapitre 1 — Le paradoxe du silence'},
+  {start:492,  end:984,  label:'CHAPITRE 2', track:'Chapitre 2 — Les signaux à connaître'},
+  {start:984,  end:1476, label:'CHAPITRE 3', track:'Chapitre 3 — Les biais cognitifs'},
+  {start:1476, end:2016, label:'CHAPITRE 4', track:'Chapitre 4 — Comment parler à l\'élève'},
+  {start:2016, end:2460, label:'CHAPITRE 5', track:'Chapitre 5 — Après l\'entretien'}
+];
+
+function fmt(s){const m=Math.floor(s/60),sec=Math.floor(s%60);return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');}
+function updateUI(){
+  document.getElementById('progFill').style.width=(elapsed/TOTAL*100)+'%';
+  document.getElementById('timeElapsed').textContent=fmt(elapsed);
+  const chap=chapters.findIndex(c=>elapsed>=c.start&&elapsed<c.end);
+  if(chap>=0){document.getElementById('playerTrack').textContent=chapters[chap].track;document.getElementById('chapLabel').textContent='● '+chapters[chap].label;}
+}
+function togglePlay(){
+  playing=!playing;document.getElementById('playBtn').textContent=playing?'⏸':'▶';
+  if(playing){timer=setInterval(()=>{elapsed=Math.min(elapsed+5,TOTAL);updateUI();chapters.forEach((c,i)=>{if(elapsed>=c.start&&elapsed<c.end){const el=document.getElementById('chap'+(i+1));if(el&&!el.classList.contains('open')){chapRead[i]=true;el.classList.add('open','active');el.querySelector('.chapter-body').style.display='block';checkAllRead();}}});if(elapsed>=TOTAL){clearInterval(timer);playing=false;document.getElementById('playBtn').textContent='▶';showFin();}},200);}else{clearInterval(timer);}
+}
+function seekTo(e){const bar=document.getElementById('progBar');elapsed=Math.floor((e.offsetX/bar.clientWidth)*TOTAL);updateUI();}
+
+const chapRead=[false,false,false,false,false];
+function toggleChap(n){
+  const el=document.getElementById('chap'+n);const wasOpen=el.classList.contains('open');
+  document.querySelectorAll('.chapter').forEach(c=>{c.classList.remove('open','active');c.querySelector('.chapter-body').style.display='none';});
+  if(!wasOpen){el.classList.add('open','active');el.querySelector('.chapter-body').style.display='block';chapRead[n-1]=true;checkAllRead();}
+}
+function checkAllRead(){if(chapRead.filter(Boolean).length>=4)showFin();}
+function showFin(){document.getElementById('finZone').style.display='block';document.getElementById('finZone').scrollIntoView({behavior:'smooth'});}
+
+function markComplete(){
+  localStorage.setItem('kairos_podcast_done_03','true');
+  if(window.parent&&window.parent!==window){window.parent.postMessage({type:'pvs_bridge_event',event:'PODCAST_COMPLETE',data:{num:'03',title:"L'élève qui ne dit rien"}},'*');}
+  const btn=document.querySelector('.fin-zone .btn-hub');btn.textContent='✓ Écouté';btn.style.background='#10b981';btn.disabled=true;
+}
+if(localStorage.getItem('kairos_podcast_done_03')){const btn=document.querySelector('.fin-zone .btn-hub');if(btn){btn.textContent='✓ Déjà écouté';btn.style.background='#10b981';btn.disabled=true;}}
+updateUI();
+</script>
+</body>
+</html>

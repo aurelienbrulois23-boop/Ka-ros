@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KAIROS · CRISE 05 · Temporalité de la Crise et Postvention</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary:#dc2626; --primary-dim:rgba(220,38,38,.12); --primary-glow:rgba(220,38,38,.35);
+  --bg:#070000; --bg2:#0f0202; --panel:#1a0707; --panel2:#220a0a;
+  --text:#f5e0e0; --text-m:#b07070; --text-d:#5a1e1e;
+  --green:#10b981; --gold:#f59e0b; --blue:#3b82f6; --teal:#14b8a6; --purple:#8b5cf6; --border:rgba(220,38,38,.22);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 20% 0%,rgba(220,38,38,.08) 0%,transparent 50%),
+             radial-gradient(ellipse at 80% 100%,rgba(220,38,38,.04) 0%,transparent 50%);}
+.mod-header{padding:28px 24px 20px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:16px;}
+.mod-icon{font-size:2.8rem;filter:drop-shadow(0 0 12px var(--primary-glow));flex-shrink:0;}
+.mod-meta{flex:1;}
+.mod-pilier{font-family:'Orbitron',sans-serif;font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--primary);margin-bottom:4px;}
+.mod-title{font-family:'Orbitron',sans-serif;font-size:1.4rem;color:#fff;margin-bottom:4px;}
+.mod-sub{font-size:.88rem;color:var(--text-m);line-height:1.5;}
+.mod-ref{font-size:.72rem;color:var(--text-d);font-style:italic;margin-top:4px;}
+.xp-chip{background:var(--primary-dim);border:1px solid var(--border);padding:4px 12px;border-radius:20px;font-size:.75rem;color:var(--primary);font-family:'Orbitron',sans-serif;white-space:nowrap;}
+.prog-bar{height:3px;background:rgba(255,255,255,.06);}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--primary),#f87171);transition:width .5s ease;}
+.level-nav{display:flex;gap:0;border-bottom:1px solid var(--border);}
+.lnav-btn{flex:1;padding:10px 8px;text-align:center;font-size:.7rem;font-family:'Orbitron',sans-serif;letter-spacing:1px;text-transform:uppercase;color:var(--text-d);cursor:pointer;border-bottom:2px solid transparent;transition:.2s;background:none;border-top:none;border-left:none;border-right:none;}
+.lnav-btn.active{color:var(--primary);border-bottom-color:var(--primary);}
+.lnav-btn.done{color:var(--green);}
+.lnav-btn:disabled{opacity:.35;cursor:not-allowed;}
+#app{max-width:800px;margin:0 auto;padding-bottom:80px;}
+.screen{display:none;padding:24px 20px;}
+.screen.active{display:block;animation:fadeUp .4s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.section-title{font-family:'Orbitron',sans-serif;font-size:.8rem;letter-spacing:2px;text-transform:uppercase;color:var(--primary);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.narr-block{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:14px;font-size:.95rem;line-height:1.8;color:var(--text);}
+.narr-block strong{color:#fca5a5;}
+.narr-block em{color:var(--primary);font-style:italic;}
+/* Unique à CRISE_05 : frise temporelle verticale */
+.chrono{position:relative;padding-left:32px;margin-bottom:20px;}
+.chrono::before{content:'';position:absolute;left:10px;top:0;bottom:0;width:2px;background:linear-gradient(to bottom,var(--primary),rgba(220,38,38,.1));}
+.chrono-item{position:relative;margin-bottom:20px;}
+.chrono-dot{position:absolute;left:-27px;top:4px;width:14px;height:14px;border-radius:50%;border:2px solid;}
+.chrono-item.phase1 .chrono-dot{background:#dc2626;border-color:#dc2626;box-shadow:0 0 8px rgba(220,38,38,.6);}
+.chrono-item.phase2 .chrono-dot{background:#f97316;border-color:#f97316;box-shadow:0 0 8px rgba(249,115,22,.4);}
+.chrono-item.phase3 .chrono-dot{background:#f59e0b;border-color:#f59e0b;box-shadow:0 0 8px rgba(245,158,11,.4);}
+.chrono-item.phase4 .chrono-dot{background:#10b981;border-color:#10b981;box-shadow:0 0 8px rgba(16,185,129,.4);}
+.chrono-period{font-family:'Orbitron',sans-serif;font-size:.65rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:5px;}
+.chrono-item.phase1 .chrono-period{color:#fca5a5;}
+.chrono-item.phase2 .chrono-period{color:#fdba74;}
+.chrono-item.phase3 .chrono-period{color:#fcd34d;}
+.chrono-item.phase4 .chrono-period{color:#6ee7b7;}
+.chrono-title{font-size:.92rem;font-weight:600;color:var(--text);margin-bottom:4px;}
+.chrono-desc{font-size:.83rem;color:var(--text-m);line-height:1.55;}
+.chrono-desc strong{color:var(--text);}
+.chrono-actions{margin-top:6px;display:flex;flex-wrap:wrap;gap:5px;}
+.ca-tag{font-size:.7rem;background:var(--panel2);border:1px solid var(--border);border-radius:20px;padding:2px 9px;color:var(--text-d);}
+/* Dates sensibles */
+.date-sens-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+.ds-item{background:var(--panel2);border-left:3px solid var(--primary);border-radius:0 8px 8px 0;padding:10px 14px;}
+.ds-date{font-family:'Orbitron',sans-serif;font-size:.62rem;color:var(--primary);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px;}
+.ds-desc{font-size:.8rem;color:var(--text-m);line-height:1.4;}
+/* Postvention checklist */
+.checklist{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:14px;}
+.cl-title{font-family:'Orbitron',sans-serif;font-size:.65rem;letter-spacing:2px;color:var(--primary);text-transform:uppercase;margin-bottom:12px;}
+.cl-item{display:flex;align-items:flex-start;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.05);}
+.cl-item:last-child{border-bottom:none;}
+.cl-check{width:18px;height:18px;border:1px solid var(--border);border-radius:4px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;color:var(--green);margin-top:2px;}
+.cl-text{font-size:.83rem;color:var(--text-m);line-height:1.4;}
+.cl-text strong{color:var(--text);}
+/* Standard */
+.quote-block{background:var(--panel2);border-left:3px solid var(--primary);border-radius:0 8px 8px 0;padding:14px 20px;margin-bottom:16px;font-size:.92rem;font-style:italic;color:var(--text-m);line-height:1.7;}
+.quote-block cite{display:block;margin-top:8px;font-size:.78rem;color:var(--text-d);font-style:normal;}
+.reflect-q{font-size:1rem;color:#fca5a5;font-style:italic;margin-bottom:14px;padding:14px 18px;background:var(--primary-dim);border:1px solid var(--border);border-radius:8px;}
+.opts-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.opt-btn{background:var(--panel);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:14px 18px;text-align:left;cursor:pointer;font-size:.92rem;color:var(--text);font-family:'Exo 2',sans-serif;transition:.2s;}
+.opt-btn:hover,.opt-btn.selected{border-color:var(--primary);background:var(--primary-dim);}
+.feedback-box{background:rgba(220,38,38,.1);border:1px solid var(--border);border-radius:8px;padding:12px 16px;font-size:.88rem;color:#fca5a5;line-height:1.6;margin-bottom:16px;display:none;}
+.feedback-box.show{display:block;}
+.sim-phase{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:14px;}
+.phase-label{font-size:.65rem;font-family:'Orbitron',sans-serif;color:var(--text-d);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;}
+.phase-q{font-size:.9rem;color:#fca5a5;margin-bottom:12px;}
+.phase-intro{font-size:.88rem;color:var(--text-m);line-height:1.6;margin-bottom:14px;padding:12px 16px;background:var(--panel2);border-radius:8px;border:1px solid var(--border);}
+.phase-choice{background:var(--panel2);border:1px solid rgba(255,255,255,.08);border-radius:7px;padding:11px 14px;cursor:pointer;margin-bottom:8px;font-size:.88rem;color:var(--text);transition:.2s;}
+.phase-choice:hover{border-color:var(--primary);}
+.phase-choice.good{border-color:var(--green);background:rgba(16,185,129,.08);}
+.phase-choice.medium{border-color:var(--gold);background:rgba(245,158,11,.08);}
+.phase-choice.bad{border-color:#dc2626;background:rgba(220,38,38,.08);}
+.phase-fb{padding:10px 14px;border-radius:7px;font-size:.85rem;line-height:1.6;margin-bottom:10px;display:none;}
+.phase-fb.show{display:block;background:var(--panel2);border:1px solid var(--border);color:var(--text-m);}
+.xfer-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:20px;}
+.xfer-title{font-size:.75rem;font-family:'Orbitron',sans-serif;color:var(--primary);margin-bottom:10px;letter-spacing:.5px;}
+.xfer-scenario{font-size:.95rem;line-height:1.7;margin-bottom:12px;}
+.xfer-q{font-size:.85rem;color:#fca5a5;font-style:italic;margin-bottom:12px;}
+.xfer-choice{background:var(--panel2);border:1px solid rgba(255,255,255,.08);border-radius:7px;padding:11px 14px;cursor:pointer;margin-bottom:8px;font-size:.88rem;color:var(--text);transition:.2s;}
+.xfer-choice:hover{border-color:var(--primary);}
+.xfer-choice.best{border-color:var(--green);background:rgba(16,185,129,.08);}
+.xfer-choice.good{border-color:var(--gold);background:rgba(245,158,11,.06);}
+.xfer-choice.bad{border-color:#dc2626;background:rgba(220,38,38,.06);}
+.xfer-fb{padding:10px 14px;border-radius:7px;font-size:.85rem;line-height:1.6;margin-bottom:10px;display:none;}
+.xfer-fb.show{display:block;background:var(--panel2);border:1px solid var(--border);color:var(--text-m);}
+.btn-primary{background:var(--primary);color:#fff;border:none;padding:12px 28px;font-family:'Orbitron',sans-serif;font-size:.75rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:7px;transition:.2s;margin-top:8px;font-weight:700;}
+.btn-primary:hover{filter:brightness(1.1);transform:translateY(-1px);}
+.btn-primary:disabled{opacity:.3;cursor:not-allowed;transform:none;}
+.fin-zone{text-align:center;padding:40px 20px;}
+.cert-badge{width:90px;height:90px;background:linear-gradient(135deg,var(--primary),#f87171);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.4rem;margin:0 auto 20px;box-shadow:0 0 40px var(--primary-glow);}
+.cert-title{font-family:'Orbitron',sans-serif;font-size:1.1rem;color:#fff;margin-bottom:8px;}
+.cert-sub{font-size:.88rem;color:var(--text-m);margin-bottom:24px;line-height:1.6;}
+.xp-earned{font-family:'Orbitron',sans-serif;font-size:2.2rem;color:var(--primary);margin-bottom:6px;}
+.xp-label{font-size:.75rem;color:var(--text-d);text-transform:uppercase;letter-spacing:2px;margin-bottom:28px;}
+.pilier-complete{background:linear-gradient(135deg,rgba(220,38,38,.15),rgba(245,158,11,.08));border:1px solid rgba(220,38,38,.4);border-radius:12px;padding:20px;margin-top:20px;text-align:center;}
+.pilier-complete-icon{font-size:2.5rem;margin-bottom:10px;}
+.pilier-complete-title{font-family:'Orbitron',sans-serif;font-size:.85rem;color:#fca5a5;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+.pilier-complete-desc{font-size:.85rem;color:var(--text-m);line-height:1.6;}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <header class="mod-header">
+    <div class="mod-icon">⏳</div>
+    <div class="mod-meta">
+      <div class="mod-pilier">Pilier Comprendre · Module 05 · Capstone</div>
+      <div class="mod-title">Temporalité de la Crise & Postvention</div>
+      <div class="mod-sub">Comprendre les quatre phases post-événement, identifier les dates sensibles, et construire un plan de postvention progressif adapté au temps long de la communauté scolaire.</div>
+      <div class="mod-ref">Herman 1992 · AFSP Postvention 2018 · Académie de Lyon · Suicide Prevention Resource Center 2022</div>
+    </div>
+    <div class="xp-chip">+200 XP</div>
+  </header>
+
+  <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+
+  <nav class="level-nav">
+    <button class="lnav-btn active" id="nav1" onclick="goLevel(1)">I · Déconstruction</button>
+    <button class="lnav-btn" id="nav2" onclick="goLevel(2)" disabled>II · Expérimentation</button>
+    <button class="lnav-btn" id="nav3" onclick="goLevel(3)" disabled>III · Transfert</button>
+  </nav>
+
+  <!-- =================== NIVEAU 1 =================== -->
+  <section class="screen active" id="screen1">
+    <div class="section-title">Le Temps Long de la Crise</div>
+
+    <div class="narr-block">
+      La crise ne finit pas avec la fin de l'urgence. C'est l'une des erreurs institutionnelles les plus courantes : <em>croire que la crise est terminée quand le calme revient</em>.<br><br>
+      En réalité, une crise scolaire grave traverse <strong>quatre phases distinctes</strong>, chacune avec ses risques propres, ses acteurs prioritaires et ses leviers d'intervention. La <em>postvention</em> — ensemble des actions menées après l'événement traumatique — est aussi importante que la gestion de crise immédiate. C'est elle qui détermine si la communauté scolaire guérit ou se fracture.
+    </div>
+
+    <div class="section-title">Les Quatre Phases Post-Événement</div>
+
+    <div class="chrono">
+
+      <div class="chrono-item phase1">
+        <div class="chrono-dot"></div>
+        <div class="chrono-period">Phase I · J0 – J3</div>
+        <div class="chrono-title">Choc et Urgence</div>
+        <div class="chrono-desc">Sidération institutionnelle, mobilisation maximale des ressources. <strong>Priorité : sécurisation physique et psychique immédiate.</strong> Activation de la cellule de crise, PFA-S, contact CUMP si nécessaire. Tout le monde est en état altéré — décisions à chaud, chaîne de commandement claire.</div>
+        <div class="chrono-actions">
+          <span class="ca-tag">Cellule de crise</span>
+          <span class="ca-tag">PFA-S</span>
+          <span class="ca-tag">Sécurisation site</span>
+          <span class="ca-tag">Communication maîtrisée</span>
+        </div>
+      </div>
+
+      <div class="chrono-item phase2">
+        <div class="chrono-dot"></div>
+        <div class="chrono-period">Phase II · J3 – J30</div>
+        <div class="chrono-title">Réaction Aiguë</div>
+        <div class="chrono-desc">Remontée progressive à la normale en surface, mais <strong>vulnérabilités latentes maximales</strong>. Risque élevé de contagion suicidaire (cluster). Repérage actif des élèves C3. Soutien aux personnels (C4). Retour au cadre scolaire structurant. <strong>Ne pas "tourner la page" prématurément.</strong></div>
+        <div class="chrono-actions">
+          <span class="ca-tag">Repérage C2/C3</span>
+          <span class="ca-tag">Soutien personnel</span>
+          <span class="ca-tag">Retour au cadre</span>
+          <span class="ca-tag">Veille réseaux</span>
+        </div>
+      </div>
+
+      <div class="chrono-item phase3">
+        <div class="chrono-dot"></div>
+        <div class="chrono-period">Phase III · J30 – 12 mois</div>
+        <div class="chrono-title">Reconstruction</div>
+        <div class="chrono-desc">Apparence de normalisation, mais <strong>dates sensibles à fort risque de réactivation</strong> (1 mois, examens, vacances, anniversaire du décès). Deuil différé possible pour les élèves initialement en dissociation. Supervision progressive de la cellule de crise. <strong>Maintien d'une vigilance longue durée.</strong></div>
+        <div class="chrono-actions">
+          <span class="ca-tag">Dates sensibles</span>
+          <span class="ca-tag">Deuil différé</span>
+          <span class="ca-tag">Rituel de clôture</span>
+          <span class="ca-tag">Bilan institutionnel</span>
+        </div>
+      </div>
+
+      <div class="chrono-item phase4">
+        <div class="chrono-dot"></div>
+        <div class="chrono-period">Phase IV · 12 mois +</div>
+        <div class="chrono-title">Intégration et Résilience</div>
+        <div class="chrono-desc">La communauté a intégré l'événement dans son histoire. <strong>L'anniversaire de la première année est une date critique à préparer.</strong> Formation des personnels à partir de l'expérience vécue. Mise à jour des protocoles. Renforcement préventif des facteurs de protection.</div>
+        <div class="chrono-actions">
+          <span class="ca-tag">Anniversaire 1 an</span>
+          <span class="ca-tag">Formation retour d'expérience</span>
+          <span class="ca-tag">Renforcement préventif</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="section-title">Les Dates Sensibles</div>
+
+    <div class="narr-block">
+      La <em>date sensible</em> est un moment prévisible de réactivation traumatique. Anticiper ces dates permet de renforcer la vigilance et le soutien <strong>avant</strong> qu'une décompensation ne survienne — et non en réaction à elle.
+    </div>
+
+    <div class="date-sens-grid">
+      <div class="ds-item">
+        <div class="ds-date">J+30</div>
+        <div class="ds-desc">Premier mois. Souvent le premier moment de décompensation pour les élèves en dissociation initiale.</div>
+      </div>
+      <div class="ds-item">
+        <div class="ds-date">Fêtes / Vacances</div>
+        <div class="ds-desc">Rupture de rythme. L'absence de cadre scolaire supprime le facteur structurant. Isolement amplifié.</div>
+      </div>
+      <div class="ds-item">
+        <div class="ds-date">Examens</div>
+        <div class="ds-desc">Rappel de l'absence (place vide, groupe amputé). Stress amplifié pour les cercles C2.</div>
+      </div>
+      <div class="ds-item">
+        <div class="ds-date">Anniversaire du décès</div>
+        <div class="ds-desc">Réactivation quasi-universelle à 1 an. À préparer 2 semaines avant, pas en urgence.</div>
+      </div>
+      <div class="ds-item">
+        <div class="ds-date">Rentrée suivante</div>
+        <div class="ds-desc">Nouvelle classe sans l'élève, changement de profs, perte des référents de la crise.</div>
+      </div>
+      <div class="ds-item">
+        <div class="ds-date">Anniversaire de l'élève</div>
+        <div class="ds-desc">Surtout pour les cercles C2. La date de naissance est souvent plus douloureuse que celle du décès.</div>
+      </div>
+    </div>
+
+    <div class="section-title">Plan de Postvention — Checklist</div>
+
+    <div class="checklist">
+      <div class="cl-title">Actions Postvention — Phase I (J0–J3)</div>
+      <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text"><strong>Informer les personnels</strong> avant les élèves — briefing direction + personnels d'encadrement</div></div>
+      <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text"><strong>Annoncer aux élèves</strong> classe par classe avec adulte présent (pas par ENT)</div></div>
+      <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text"><strong>Ouvrir un espace d'écoute</strong> (bureau CPE, infirmerie) dès l'annonce</div></div>
+      <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text"><strong>Cartographier les cercles</strong> C1–C5 dans les premières heures</div></div>
+      <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text"><strong>Contact CUMP</strong> si exposition directe (C1) ou grande échelle</div></div>
+      <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text"><strong>Communication institutionnelle sobre</strong> aux familles dans les 24h</div></div>
+    </div>
+
+    <div class="checklist">
+      <div class="cl-title">Actions Postvention — Phase II–III (J3–12 mois)</div>
+      <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text"><strong>Repérage proactif des élèves C3</strong> à J+7, J+30, date des examens</div></div>
+      <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text"><strong>Soutien des personnels</strong> exposés : point hebdomadaire, médecine du travail si besoin</div></div>
+      <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text"><strong>Calendrier des dates sensibles</strong> partagé avec toute l'équipe pédagogique</div></div>
+      <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text"><strong>Rituel de clôture</strong> de l'espace de recueillement avec la communauté</div></div>
+      <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text"><strong>Bilan institutionnel</strong> à 3 mois : ce qui a fonctionné, ce qui doit être renforcé</div></div>
+      <div class="cl-item"><div class="cl-check">✓</div><div class="cl-text"><strong>Préparation de l'anniversaire 1 an</strong> dès le 10ème mois</div></div>
+    </div>
+
+    <div class="quote-block">
+      « La postvention est une forme de prévention. Accompagner les survivants d'un suicide ne se fait pas par compassion seule — c'est une intervention de santé publique qui réduit mesurément le risque de contagion suicidaire. »
+      <cite>— Edwin Shneidman, fondateur de la suicidologie moderne, 1971</cite>
+    </div>
+
+    <div class="reflect-q">
+      En quoi la postvention est-elle aussi de la prévention ? Quel est le mécanisme qui lie ces deux actions ?
+    </div>
+
+    <div class="opts-list" id="opts1">
+      <button class="opt-btn" onclick="chooseOpt1(this,'A')">A — La postvention est de la prévention parce qu'elle permet de retrouver la normalité plus vite, ce qui réduit le risque de nouveaux drames.</button>
+      <button class="opt-btn" onclick="chooseOpt1(this,'B')">B — La postvention est de la prévention parce qu'en accompagnant activement les survivants et en réduisant leur isolement, elle réduit le risque de contagion suicidaire (cluster) et d'état de stress aigu non traité évoluant en TSPT — deux facteurs de risque de passage à l'acte documentés.</button>
+      <button class="opt-btn" onclick="chooseOpt1(this,'C')">C — La postvention est de la prévention uniquement si elle inclut une formation systématique de tous les personnels après chaque crise.</button>
+    </div>
+
+    <div class="feedback-box" id="fb1"></div>
+    <button class="btn-primary" id="btnL1" onclick="unlockLevel2()" disabled>Accéder au Niveau II →</button>
+  </section>
+
+  <!-- =================== NIVEAU 2 =================== -->
+  <section class="screen" id="screen2">
+    <div class="section-title">Application — Situer la Phase, Choisir l'Action</div>
+
+    <!-- Phase 1 -->
+    <div class="sim-phase" id="phase1">
+      <div class="phase-label">Situation 01 / 03</div>
+      <div class="phase-q">Nous sommes J+8. L'établissement a repris un rythme normal. La direction envisage de "lever" la cellule de crise et de ne plus en parler officiellement pour ne pas "entretenir la tristesse". Quelle est votre analyse ?</div>
+      <div class="phase-intro">Phase II — réaction aiguë. La normalisation de surface masque des vulnérabilités latentes maximales.</div>
+      <div class="phase-choice" onclick="choosePhase(1,this,'bad')">✗ La direction a raison : le retour à la normale est un facteur de protection. L'institutionnaliser trop longtemps entretient la douleur.</div>
+      <div class="phase-choice" onclick="choosePhase(1,this,'medium')">~ Proposer de réduire la cellule de crise mais de maintenir un "référent postvention" accessible.</div>
+      <div class="phase-choice" onclick="choosePhase(1,this,'good')">✓ Alerter sur le risque de la phase II : J+8 est exactement la période de vulnérabilité latente maximale et de risque de cluster. La cellule peut évoluer (moins de réunions plénières), mais le repérage actif des C3, la veille des réseaux et le soutien aux personnels doivent rester opérationnels jusqu'à J+30 minimum. "Ne plus en parler" n'est pas protecteur — c'est silencieux et dangereux.</div>
+      <div class="phase-fb" id="pfb1"></div>
+    </div>
+
+    <!-- Phase 2 -->
+    <div class="sim-phase" id="phase2" style="opacity:.45;pointer-events:none;">
+      <div class="phase-label">Situation 02 / 03</div>
+      <div class="phase-q">Nous sommes J+28. Un AED vous signale qu'un élève C2 (meilleur ami de la victime), apparemment stable depuis le drame, pleure depuis le matin sans raison apparente et n'arrive pas à expliquer pourquoi. Que faites-vous ?</div>
+      <div class="phase-intro">J+30 approche — date sensible documentée. Possible deuil différé, dissociation qui se lève.</div>
+      <div class="phase-choice" onclick="choosePhase(2,this,'bad')">✗ Encourager l'élève : « C'est normal de pleurer encore, le deuil prend du temps. Il faut juste que tu tentes d'avancer. »</div>
+      <div class="phase-choice" onclick="choosePhase(2,this,'medium')">~ Le voir rapidement pour s'assurer qu'il va bien, et lui proposer de parler à la psychologue s'il le souhaite.</div>
+      <div class="phase-choice" onclick="choosePhase(2,this,'good')">✓ Reconnaître un signe probable de deuil différé à l'approche de J+30 (date sensible). Voir l'élève en entretien individuel (CPE ou infirmière), évaluer la présence de pensées suicidaires, contacter le médecin scolaire. L'approche de la date sensible est un élément clinique, pas une coïncidence. Signaler à la direction pour mise à jour du suivi de postvention.</div>
+      <div class="phase-fb" id="pfb2"></div>
+    </div>
+
+    <!-- Phase 3 -->
+    <div class="sim-phase" id="phase3" style="opacity:.45;pointer-events:none;">
+      <div class="phase-label">Situation 03 / 03</div>
+      <div class="phase-q">Nous sommes à 11 mois du drame. Personne n'en parle plus dans l'établissement. Vous, vous savez que l'anniversaire approche dans 5 semaines. Que faites-vous ?</div>
+      <div class="phase-intro">Phase IV, pré-anniversaire. La date du 1 an est une réactivation quasi-universelle documentée.</div>
+      <div class="phase-choice" onclick="choosePhase(3,this,'bad')">✗ Attendre — si personne n'en parle, c'est signe que la communauté a fait son deuil. Agir serait raviver quelque chose d'éteint.</div>
+      <div class="phase-choice" onclick="choosePhase(3,this,'medium')">~ En parler discrètement à quelques collègues proches, mais ne rien formaliser pour ne pas alarmer inutilement.</div>
+      <div class="phase-choice" onclick="choosePhase(3,this,'good')">✓ Préparer activement l'anniversaire en équipe (direction, CPE, infirmière, profs principaux) : briefing des personnels sur les signes à surveiller, identification des élèves C2 encore fragilisés, décision sur la nature de l'hommage si souhaitée (sobre, optionnel, pas de glorification). La préparation 5 semaines avant est exactement le bon délai. L'anniversaire mal géré peut déclencher une réactivation de cluster.</div>
+      <div class="phase-fb" id="pfb3"></div>
+    </div>
+
+    <button class="btn-primary" id="btnL2" onclick="unlockLevel3()" disabled>Accéder au Niveau III →</button>
+  </section>
+
+  <!-- =================== NIVEAU 3 =================== -->
+  <section class="screen" id="screen3">
+    <div class="section-title">Transfert — Décisions en Conditions Réelles</div>
+
+    <div class="xfer-card">
+      <div class="xfer-title">Scénario Professionnel 01 / 03</div>
+      <div class="xfer-scenario">
+        3 mois après le drame, la direction vous demande un « bilan de la gestion de crise » pour le rectorat. Elle veut souligner les points positifs et minimiser les difficultés pour « préserver l'image de l'établissement ».
+      </div>
+      <div class="xfer-q">Comment répondez-vous à cette demande ?</div>
+      <div class="xfer-choice" onclick="chooseXfer(1,this,'bad')">○ Rédiger le bilan tel que demandé : la réputation de l'établissement est une ressource à protéger pour l'avenir.</div>
+      <div class="xfer-choice" onclick="chooseXfer(1,this,'good')">◎ Rédiger un bilan équilibré, en soulignant à la fois les réussites et les axes d'amélioration.</div>
+      <div class="xfer-choice" onclick="chooseXfer(1,this,'best')">⬤ Proposer un bilan honnête qui inclut les difficultés — pas pour « accabler » l'établissement, mais parce que l'identification précise des lacunes est le seul levier d'amélioration réelle des protocoles. Un bilan institutionnel cosmétique prive l'établissement d'une opportunité d'apprentissage et expose à la répétition des mêmes erreurs. Rappeler que le rectorat attend un retour d'expérience opérationnel, pas une communication.</div>
+      <div class="xfer-fb" id="xfb1"></div>
+    </div>
+
+    <div class="xfer-card">
+      <div class="xfer-title">Scénario Professionnel 02 / 03</div>
+      <div class="xfer-scenario">
+        Un(e) nouveau(elle) CPE prend le poste dans l'établissement à la rentrée suivante, 10 mois après le drame. L'ancienne équipe ne lui a pas transmis le dossier de postvention. L'anniversaire du décès approche dans 6 semaines.
+      </div>
+      <div class="xfer-q">En tant qu'AED présent depuis le drame, que faites-vous ?</div>
+      <div class="xfer-choice" onclick="chooseXfer(2,this,'best')">⬤ Vous considérez qu'il est de votre devoir de briefer activement le nouveau CPE sur l'historique de la crise, les élèves encore fragilisés (C2 identifiés), les dates sensibles à venir et les protocoles mis en place. Vous préparez ou reconstituez un document de suivi si nécessaire. La mémoire institutionnelle est une responsabilité collective — surtout quand une date critique approche.</div>
+      <div class="xfer-choice" onclick="chooseXfer(2,this,'good')">◎ Signaler au nouveau CPE qu'il y a eu un drame l'année précédente et lui dire que l'anniversaire approche, en restant disponible si besoin.</div>
+      <div class="xfer-choice" onclick="chooseXfer(2,this,'bad')">○ Ce n'est pas votre rôle — c'est à la direction d'informer le nouveau CPE. Vous attendez qu'on vous sollicite.</div>
+      <div class="xfer-fb" id="xfb2"></div>
+    </div>
+
+    <div class="xfer-card">
+      <div class="xfer-title">Scénario Professionnel 03 / 03</div>
+      <div class="xfer-scenario">
+        18 mois après le drame, lors d'une réunion de rentrée, la direction propose d'organiser une « journée de sensibilisation à la santé mentale » pour toute la communauté scolaire — élèves, personnels, parents. Elle vous demande votre avis sur ce projet.
+      </div>
+      <div class="xfer-q">Quel est votre analyse et votre recommandation ?</div>
+      <div class="xfer-choice" onclick="chooseXfer(3,this,'best')">⬤ Soutenir l'initiative en recommandant une préparation rigoureuse : (1) ne pas centrer la journée sur l'événement passé mais sur la santé mentale comme culture préventive, (2) s'assurer que des professionnels de santé mentale co-animent, (3) proposer un protocole pour les élèves qui pourraient être déstabilisés par le sujet, (4) inclure un volet spécifique pour les personnels (fatigue compassionnelle, ressources). Une telle journée bien cadrée est un puissant facteur Papageno.</div>
+      <div class="xfer-choice" onclick="chooseXfer(3,this,'good')">◎ Soutenir l'initiative et proposer d'y associer des intervenants extérieurs spécialisés.</div>
+      <div class="xfer-choice" onclick="chooseXfer(3,this,'bad')">○ Déconseiller la journée : à 18 mois du drame, rouvrir le sujet de la santé mentale risque de réactiver la douleur de la communauté.</div>
+      <div class="xfer-fb" id="xfb3"></div>
+    </div>
+
+    <button class="btn-primary" id="btnCert" onclick="completeMod()" disabled>Valider le Module →</button>
+  </section>
+
+  <!-- FIN -->
+  <section class="screen" id="screenFin">
+    <div class="fin-zone">
+      <div class="cert-badge">⏳</div>
+      <div class="cert-title">Module CRISE_05 Validé</div>
+      <div class="cert-sub">Tu maîtrises la temporalité de la crise post-événement : les 4 phases, les dates sensibles, et la construction d'un plan de postvention progressif. Tu sais que la crise ne finit pas quand le calme revient — elle se gère dans le temps long.</div>
+      <div class="xp-earned">+200 XP</div>
+      <div class="xp-label">Points acquis</div>
+      <div class="pilier-complete">
+        <div class="pilier-complete-icon">🧠</div>
+        <div class="pilier-complete-title">Pilier COMPRENDRE — Complété</div>
+        <div class="pilier-complete-desc">Tu as validé les 5 modules fondationnels de KAIROS. Tu disposes désormais d'une base neurobiologique, clinique et institutionnelle solide pour aborder les piliers opérationnels : protocoles, communication, postvention avancée.</div>
+      </div>
+      <button class="btn-primary" style="margin-top:20px;" onclick="goHub()">Retour au Hub KAIROS</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const MODULE_ID = 'CRISE_05';
+const XP_VALUE  = 200;
+
+let l1Done=false, l2Done=false, xferDone=[false,false,false], phaseDone=[false,false,false];
+
+function chooseOpt1(btn, val){
+  document.querySelectorAll('#opts1 .opt-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  const fb=document.getElementById('fb1');
+  if(val==='B'){
+    fb.textContent='✓ Exact. Le lien entre postvention et prévention est précisément celui-là : en réduisant l\'isolement, en identifiant et en accompagnant les personnes en souffrance, et en maintenant un environnement de sécurité psychique, la postvention coupe les deux principaux vecteurs de contagion suicidaire — l\'isolement et l\'identification non accompagnée. Ce n\'est pas de la compassion abstraite : c\'est de l\'épidémiologie appliquée.';
+    fb.className='feedback-box show';
+    document.getElementById('btnL1').disabled=false;
+    l1Done=true; updateProg();
+  } else if(val==='A'){
+    fb.textContent='Partiellement vrai. Le retour à la normalité est bien un facteur de protection (restauration du cadre structurant). Mais le mécanisme précis du lien entre postvention et prévention est plus spécifique : la réduction de l\'isolement des personnes vulnérables et l\'interruption de la chaîne de contagion suicidaire.';
+    fb.className='feedback-box show';
+  } else {
+    fb.textContent='La formation est effectivement une composante importante de la postvention — mais ce n\'est pas le mécanisme qui fait de la postvention une prévention. La formation améliore la capacité de réponse future ; c\'est l\'accompagnement des survivants qui prévient la contagion immédiate.';
+    fb.className='feedback-box show';
+  }
+}
+
+function unlockLevel2(){
+  document.getElementById('screen1').classList.remove('active');
+  document.getElementById('screen2').classList.add('active');
+  document.getElementById('nav1').classList.add('done');
+  document.getElementById('nav2').classList.add('active');
+  document.getElementById('nav2').disabled=false;
+  updateProg();
+}
+
+const pFb={
+  1:{
+    good:'✓ Analyse juste et argumentée. La phase II est précisément la plus trompeuse : la surface se normalise, les urgences visibles disparaissent, mais les vulnérabilités latentes sont à leur pic. Réduire la vigilance à J+8 est une erreur documentée dans les retours d\'expérience post-cluster. L\'évolution de la cellule est légitime — son abandon ne l\'est pas.',
+    medium:'Meilleur que l\'inaction, mais le "référent postvention seul" risque d\'être perçu comme une mesure symbolique. Le repérage actif des C3 et la veille des réseaux nécessitent une organisation collective, pas un seul interlocuteur isolé.',
+    bad:'Erreur documentée. "Ne plus en parler" n\'est pas neutre — c\'est un message institutionnel qui dit : "Votre douleur n\'a plus sa place ici." Cela peut amplifier le sentiment d\'isolement des élèves encore fragilisés, et priver de vigilance une période à haut risque de cluster.'
+  },
+  2:{
+    good:'✓ Lecture clinique juste. Le J+30 est une date sensible documentée. Un élève C2 en pleurs "sans raison apparente" à ce moment est probablement en deuil différé — le mécanisme de dissociation initiale se lève. Ce n\'est pas un caprice : c\'est une réactivation neurobiologique prévisible. La réponse est une évaluation individuelle, pas un encouragement général.',
+    medium:'Correct mais trop passif. "Proposer si il le souhaite" place la responsabilité de la demande sur l\'élève en souffrance — qui, souvent, ne demandera pas. En phase de date sensible, c\'est à l\'institution d\'aller vers l\'élève, pas l\'inverse.',
+    bad:'Faux encouragement. "Tenter d\'avancer" est une injonction cognitive adressée à un cerveau en réactivation traumatique. Il ne peut pas "avancer sur commande" — et cette phrase peut renforcer la culpabilité de ne pas y arriver. C\'est exactement ce qu\'une posture PFA-S cherche à éviter.'
+  },
+  3:{
+    good:'✓ Posture de professionnel de la postvention. La préparation active 5 semaines avant l\'anniversaire est la recommandation standard. La mémoire institutionnelle doit être activée collectivement — pas attendue comme une réaction spontanée. Vous ne "ravivez" pas quelque chose d\'éteint : vous anticipez une réactivation prévisible et vous vous donnez les moyens de l\'accompagner.',
+    medium:'Trop informel pour une date aussi documentée. La conversation discrète ne suffit pas — il faut une préparation collective (direction, CPE, infirmière, enseignants des classes concernées) avec un plan d\'action concret.',
+    bad:'Erreur d\'analyse. L\'anniversaire à 1 an n\'est pas une résurgence artificielle d\'une douleur éteinte : c\'est une réactivation neurobiologique presque universelle dans les cercles C2. "Ne pas en parler" ne la prévient pas — cela la rend juste non accompagnée.'
+  }
+};
+
+function choosePhase(n,el,qual){
+  const ph=document.getElementById('phase'+n);
+  ph.querySelectorAll('.phase-choice').forEach(c=>c.classList.remove('good','medium','bad'));
+  el.classList.add(qual);
+  const fb=document.getElementById('pfb'+n);
+  fb.textContent=pFb[n][qual];
+  fb.className='phase-fb show';
+  if(qual==='good'||qual==='medium'){
+    phaseDone[n-1]=true;
+    if(n<3) setTimeout(()=>{ const nxt=document.getElementById('phase'+(n+1)); nxt.style.opacity='1'; nxt.style.pointerEvents='auto'; },600);
+    checkL2Done();
+  }
+}
+function checkL2Done(){
+  if(phaseDone[0]&&phaseDone[1]&&phaseDone[2]){ document.getElementById('btnL2').disabled=false; l2Done=true; updateProg(); }
+}
+function unlockLevel3(){
+  document.getElementById('screen2').classList.remove('active');
+  document.getElementById('screen3').classList.add('active');
+  document.getElementById('nav2').classList.add('done');
+  document.getElementById('nav3').classList.add('active');
+  document.getElementById('nav3').disabled=false;
+  updateProg();
+}
+
+const xFb={
+  1:{
+    best:'✓ Position professionnelle et courageuse. Un bilan institutionnel honnête n\'est pas une attaque contre l\'établissement — c\'est son meilleur investissement dans sa propre résilience. Le rectorat dispose de l\'expérience de dizaines de crises scolaires et est parfaitement capable de lire un bilan nuancé. Un retour d\'expérience cosmétique est une occasion manquée de formation et d\'amélioration systémique.',
+    good:'Correct dans l\'intention, mais "équilibré" peut devenir un euphémisme pour "édulcoré". La question n\'est pas l\'équilibre formel mais la précision des difficultés identifiées — ce sont elles qui permettent d\'améliorer les protocoles.',
+    bad:'Erreur éthique et stratégique. Protéger l\'image au détriment de l\'honnêteté institutionnelle prive l\'établissement d\'un apprentissage nécessaire, et expose à des critiques bien plus sévères si la même situation se reproduit avec les mêmes lacunes.'
+  },
+  2:{
+    best:'✓ Posture exemplaire. La mémoire institutionnelle est une responsabilité partagée — et les AED, en continuité de poste, en sont souvent les dépositaires naturels. Briefer activement le nouveau CPE, reconstituer le dossier si nécessaire, anticiper l\'anniversaire : c\'est exactement le rôle d\'un professionnel engagé dans la postvention. Ce geste peut littéralement sauver des vies.',
+    good:'Utile mais insuffisant. Un simple signalement sans document ni suivi laisse le nouveau CPE démuni face à une situation qu\'il ne connaît pas. La transmission doit être active et documentée.',
+    bad:'Erreur de positionnement. En matière de postvention, "ce n\'est pas mon rôle" n\'est pas une réponse recevable quand une date critique approche et que vous êtes le seul dépositaire de l\'histoire. L\'AED n\'est pas un simple exécutant — il est membre d\'une équipe de postvention.'
+  },
+  3:{
+    best:'✓ Recommandation experte et complète. À 18 mois, une journée santé mentale est une action Papageno de haute valeur — à condition qu\'elle ne soit pas une simple commémoration déguisée. Les 4 conditions que vous posez (culture préventive, co-animation professionnelle, protocole de sécurisation, volet personnel) sont exactement les garde-fous qui transforment une bonne intention en intervention probante.',
+    good:'Correct dans l\'intention — les intervenants extérieurs sont essentiels. Mais sans les autres conditions (cadrage non mémoriel, protocole de sécurisation pour élèves fragilisés, volet personnels), la journée reste incomplète et potentiellement iatrogène.',
+    bad:'Erreur de temporalité. À 18 mois, la crise est en phase IV (intégration). Une journée santé mentale à ce stade ne "rouvre" pas une plaie — elle s\'inscrit dans la construction d\'une culture préventive pérenne. Le refus par précaution est lui-même une erreur de calibrage.'
+  }
+};
+
+function chooseXfer(n,el,qual){
+  const c=el.closest('.xfer-card');
+  c.querySelectorAll('.xfer-choice').forEach(x=>x.classList.remove('best','good','bad'));
+  el.classList.add(qual);
+  const fb=document.getElementById('xfb'+n);
+  fb.textContent=xFb[n][qual];
+  fb.className='xfer-fb show';
+  if(qual==='best'||qual==='good'){ xferDone[n-1]=true; checkCert(); }
+}
+function checkCert(){
+  if(xferDone[0]&&xferDone[1]&&xferDone[2]){ document.getElementById('btnCert').disabled=false; updateProg(); }
+}
+
+function completeMod(){
+  if(!localStorage.getItem('kairos_xp_'+MODULE_ID)){
+    let tot=parseInt(localStorage.getItem('kairos_xp_total')||'0');
+    tot+=XP_VALUE;
+    localStorage.setItem('kairos_xp_total', tot);
+    localStorage.setItem('kairos_xp_'+MODULE_ID, XP_VALUE);
+  }
+  localStorage.setItem('CERT_KAIROS_'+MODULE_ID, 'true');
+  if(window.parent&&window.parent!==window){
+    window.parent.postMessage({type:'pvs_bridge_event',event:'MODULE_COMPLETE',data:{module:MODULE_ID,xp:XP_VALUE}},'*');
+  }
+  document.getElementById('screen3').classList.remove('active');
+  document.getElementById('screenFin').classList.add('active');
+  document.getElementById('progFill').style.width='100%';
+}
+
+function goLevel(n){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen'+n).classList.add('active');
+  document.querySelectorAll('.lnav-btn').forEach((b,i)=>{ b.classList.remove('active'); if(i===n-1)b.classList.add('active'); });
+}
+function goHub(){
+  if(window.parent&&window.parent!==window){
+    window.parent.postMessage({type:'pvs_bridge_event',event:'GO_HUB',data:{}},'*');
+  } else {
+    window.location.href='index_KAIROS.html';
+  }
+}
+function updateProg(){
+  const steps=[l1Done,l2Done,xferDone[0]||xferDone[1]||xferDone[2]];
+  const done=steps.filter(Boolean).length;
+  document.getElementById('progFill').style.width=(done/3*100)+'%';
+}
+
+(function init(){
+  if(localStorage.getItem('CERT_KAIROS_'+MODULE_ID)){
+    document.getElementById('nav2').disabled=false;
+    document.getElementById('nav3').disabled=false;
+    l1Done=l2Done=true; xferDone=[true,true,true]; phaseDone=[true,true,true];
+    updateProg();
+  }
+})();
+</script>
+</body>
+</html>

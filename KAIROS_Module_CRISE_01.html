@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KAIROS · CRISE 01 · Ontologie de la Crise Scolaire</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary:#dc2626; --primary-dim:rgba(220,38,38,.12); --primary-glow:rgba(220,38,38,.35);
+  --bg:#070000; --bg2:#0f0202; --panel:#1a0707; --panel2:#220a0a;
+  --text:#f5e0e0; --text-m:#b07070; --text-d:#5a1e1e;
+  --green:#10b981; --gold:#f59e0b; --red:#dc2626; --border:rgba(220,38,38,.22);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 20% 0%,rgba(220,38,38,.08) 0%,transparent 50%),
+             radial-gradient(ellipse at 80% 100%,rgba(220,38,38,.04) 0%,transparent 50%);}
+.mod-header{padding:28px 24px 20px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:16px;}
+.mod-icon{font-size:2.8rem;filter:drop-shadow(0 0 12px var(--primary-glow));flex-shrink:0;}
+.mod-meta{flex:1;}
+.mod-pilier{font-family:'Orbitron',sans-serif;font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--primary);margin-bottom:4px;}
+.mod-title{font-family:'Orbitron',sans-serif;font-size:1.4rem;color:#fff;margin-bottom:4px;}
+.mod-sub{font-size:.88rem;color:var(--text-m);line-height:1.5;}
+.mod-ref{font-size:.72rem;color:var(--text-d);font-style:italic;margin-top:4px;}
+.xp-chip{background:var(--primary-dim);border:1px solid var(--border);padding:4px 12px;border-radius:20px;font-size:.75rem;color:var(--primary);font-family:'Orbitron',sans-serif;white-space:nowrap;}
+.prog-bar{height:3px;background:rgba(255,255,255,.06);}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--primary),#f87171);transition:width .5s ease;}
+.level-nav{display:flex;gap:0;border-bottom:1px solid var(--border);}
+.lnav-btn{flex:1;padding:10px 8px;text-align:center;font-size:.7rem;font-family:'Orbitron',sans-serif;letter-spacing:1px;text-transform:uppercase;color:var(--text-d);cursor:pointer;border-bottom:2px solid transparent;transition:.2s;background:none;border-top:none;border-left:none;border-right:none;}
+.lnav-btn.active{color:var(--primary);border-bottom-color:var(--primary);}
+.lnav-btn.done{color:var(--green);}
+.lnav-btn:disabled{opacity:.35;cursor:not-allowed;}
+#app{max-width:800px;margin:0 auto;padding-bottom:80px;}
+.screen{display:none;padding:24px 20px;}
+.screen.active{display:block;animation:fadeUp .4s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.section-title{font-family:'Orbitron',sans-serif;font-size:.8rem;letter-spacing:2px;text-transform:uppercase;color:var(--primary);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.narr-block{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:14px;font-size:.95rem;line-height:1.8;color:var(--text);}
+.narr-block strong{color:#fca5a5;}
+.narr-block em{color:var(--primary);font-style:italic;}
+/* Unique to CRISE_01: typology cards */
+.typo-card{background:var(--panel2);border-left:3px solid var(--primary);border-radius:0 8px 8px 0;padding:12px 16px;margin-bottom:10px;}
+.typo-event{font-family:'Orbitron',sans-serif;font-size:.65rem;color:var(--primary);letter-spacing:2px;margin-bottom:4px;text-transform:uppercase;}
+.typo-impact{font-size:.85rem;color:var(--text-m);line-height:1.6;}
+.typo-impact strong{color:var(--text);}
+.typo-card.blue{border-color:#3b82f6;}
+.typo-card.blue .typo-event{color:#3b82f6;}
+.typo-card.orange{border-color:#f97316;}
+.typo-card.orange .typo-event{color:#f97316;}
+.typo-card.teal{border-color:#14b8a6;}
+.typo-card.teal .typo-event{color:#14b8a6;}
+/* Cercle de vulnérabilité */
+.cercle-row{display:flex;align-items:center;gap:12px;background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;margin-bottom:8px;}
+.cercle-num{font-family:'Orbitron',sans-serif;font-size:1.1rem;color:var(--primary);min-width:28px;font-weight:700;}
+.cercle-body{}
+.cercle-label{font-size:.65rem;color:var(--text-d);letter-spacing:2px;text-transform:uppercase;margin-bottom:2px;}
+.cercle-desc{font-size:.87rem;color:var(--text-m);}
+.cercle-desc strong{color:var(--text);}
+.quote-block{background:var(--panel2);border-left:3px solid var(--primary);border-radius:0 8px 8px 0;padding:14px 20px;margin-bottom:16px;font-size:.92rem;font-style:italic;color:var(--text-m);line-height:1.7;}
+.quote-block cite{display:block;margin-top:8px;font-size:.78rem;color:var(--text-d);font-style:normal;}
+.reflect-q{font-size:1rem;color:#fca5a5;font-style:italic;margin-bottom:14px;padding:14px 18px;background:var(--primary-dim);border:1px solid var(--border);border-radius:8px;}
+.opts-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.opt-btn{background:var(--panel);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:14px 18px;text-align:left;cursor:pointer;font-size:.92rem;color:var(--text);font-family:'Exo 2',sans-serif;transition:.2s;}
+.opt-btn:hover,.opt-btn.selected{border-color:var(--primary);background:var(--primary-dim);}
+.feedback-box{background:rgba(220,38,38,.1);border:1px solid var(--border);border-radius:8px;padding:12px 16px;font-size:.88rem;color:#fca5a5;line-height:1.6;margin-bottom:16px;display:none;}
+.feedback-box.show{display:block;}
+.sim-phase{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:14px;}
+.phase-label{font-size:.65rem;font-family:'Orbitron',sans-serif;color:var(--text-d);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;}
+.phase-q{font-size:.9rem;color:#fca5a5;margin-bottom:12px;}
+.phase-intro{font-size:.88rem;color:var(--text-m);line-height:1.6;margin-bottom:14px;padding:12px 16px;background:var(--panel2);border-radius:8px;border:1px solid var(--border);}
+.phase-choice{background:var(--panel2);border:1px solid rgba(255,255,255,.08);border-radius:7px;padding:11px 14px;cursor:pointer;margin-bottom:8px;font-size:.88rem;color:var(--text);transition:.2s;}
+.phase-choice:hover{border-color:var(--primary);}
+.phase-choice.good{border-color:var(--green);background:rgba(16,185,129,.08);}
+.phase-choice.medium{border-color:var(--gold);background:rgba(245,158,11,.08);}
+.phase-choice.bad{border-color:var(--red);background:rgba(220,38,38,.08);}
+.phase-fb{padding:10px 14px;border-radius:7px;font-size:.85rem;line-height:1.6;margin-bottom:10px;display:none;}
+.phase-fb.show{display:block;background:var(--panel2);border:1px solid var(--border);color:var(--text-m);}
+.xfer-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:20px;}
+.xfer-title{font-size:.75rem;font-family:'Orbitron',sans-serif;color:var(--primary);margin-bottom:10px;letter-spacing:.5px;}
+.xfer-scenario{font-size:.95rem;line-height:1.7;margin-bottom:12px;}
+.xfer-q{font-size:.85rem;color:#fca5a5;font-style:italic;margin-bottom:12px;}
+.xfer-choice{background:var(--panel2);border:1px solid rgba(255,255,255,.08);border-radius:7px;padding:11px 14px;cursor:pointer;margin-bottom:8px;font-size:.88rem;color:var(--text);transition:.2s;}
+.xfer-choice:hover{border-color:var(--primary);}
+.xfer-choice.best{border-color:var(--green);background:rgba(16,185,129,.08);}
+.xfer-choice.good{border-color:var(--gold);background:rgba(245,158,11,.06);}
+.xfer-choice.bad{border-color:var(--red);background:rgba(220,38,38,.06);}
+.xfer-fb{padding:10px 14px;border-radius:7px;font-size:.85rem;line-height:1.6;margin-bottom:10px;display:none;}
+.xfer-fb.show{display:block;background:var(--panel2);border:1px solid var(--border);color:var(--text-m);}
+.btn-primary{background:var(--primary);color:#fff;border:none;padding:12px 28px;font-family:'Orbitron',sans-serif;font-size:.75rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:7px;transition:.2s;margin-top:8px;font-weight:700;}
+.btn-primary:hover{filter:brightness(1.1);transform:translateY(-1px);}
+.btn-primary:disabled{opacity:.3;cursor:not-allowed;transform:none;}
+.fin-zone{text-align:center;padding:40px 20px;}
+.cert-badge{width:90px;height:90px;background:linear-gradient(135deg,var(--primary),#f87171);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.4rem;margin:0 auto 20px;box-shadow:0 0 40px var(--primary-glow);}
+.cert-title{font-family:'Orbitron',sans-serif;font-size:1.1rem;color:#fff;margin-bottom:8px;}
+.cert-sub{font-size:.88rem;color:var(--text-m);margin-bottom:24px;line-height:1.6;}
+.xp-earned{font-family:'Orbitron',sans-serif;font-size:2.2rem;color:var(--primary);margin-bottom:6px;}
+.xp-label{font-size:.75rem;color:var(--text-d);text-transform:uppercase;letter-spacing:2px;margin-bottom:28px;}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HEADER -->
+  <header class="mod-header">
+    <div class="mod-icon">🧠</div>
+    <div class="mod-meta">
+      <div class="mod-pilier">Pilier Comprendre · Module 01</div>
+      <div class="mod-title">Ontologie de la Crise Scolaire</div>
+      <div class="mod-sub">Distinguer événement traumatogène et crise institutionnelle. Comprendre les cercles de vulnérabilité et la temporalité des réactions.</div>
+      <div class="mod-ref">MEN · Académie de Limoges · OMS LIVE LIFE · NCTSN 2024</div>
+    </div>
+    <div class="xp-chip">+100 XP</div>
+  </header>
+
+  <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+
+  <!-- NAV -->
+  <nav class="level-nav">
+    <button class="lnav-btn active" id="nav1" onclick="goLevel(1)">I · Déconstruction</button>
+    <button class="lnav-btn" id="nav2" onclick="goLevel(2)" disabled>II · Expérimentation</button>
+    <button class="lnav-btn" id="nav3" onclick="goLevel(3)" disabled>III · Transfert</button>
+  </nav>
+
+  <!-- =================== NIVEAU 1 =================== -->
+  <section class="screen active" id="screen1">
+    <div class="section-title">La Nature de la Crise Scolaire</div>
+
+    <div class="narr-block">
+      Une crise scolaire ne se définit pas uniquement par la gravité de l'événement déclencheur. Elle se définit par la <strong>rupture brutale</strong> qu'elle provoque dans les capacités de régulation de l'institution.<br><br>
+      Lorsqu'un établissement est confronté à un drame, il entre dans un état de <em>sidération</em> où les processus habituels de décision et de communication sont saturés par l'intensité émotionnelle. L'espace scolaire se transforme en lieu de danger potentiel, altérant la perception de sécurité des élèves <strong>et</strong> des adultes.
+    </div>
+
+    <div class="section-title">Typologies — Calibrer la Réponse</div>
+
+    <div class="typo-card">
+      <div class="typo-event">🚨 Suicide sur site scolaire</div>
+      <div class="typo-impact"><strong>Rupture totale.</strong> Exposition directe, risque de contagion suicidaire élevé (effet Werther). Priorité : sécurisation immédiate + CUMP + protocole Papageno. <em>Le plus complexe à gérer.</em></div>
+    </div>
+
+    <div class="typo-card blue">
+      <div class="typo-event">🔵 Décès brutal externe (accident, maladie)</div>
+      <div class="typo-impact"><strong>Choc émotionnel collectif.</strong> Relève principalement du deuil, non du trauma aigu. Priorité : accompagnement, rituels sobres, écoute sans forcer la parole.</div>
+    </div>
+
+    <div class="typo-card orange">
+      <div class="typo-event">⚠️ Violence extrême / intrusion armée</div>
+      <div class="typo-impact"><strong>Menace sécuritaire + perte de confiance.</strong> Confinement, sécurisation physique, restauration du cadre protecteur. Activation immédiate du plan PPMS.</div>
+    </div>
+
+    <div class="typo-card teal">
+      <div class="typo-event">💬 Tentative de suicide signalée</div>
+      <div class="typo-impact"><strong>Crise individuelle à risque de propagation.</strong> Rumeurs, curiosité malsaine, identification. Priorité : discrétion, orientation soin, secret partagé maîtrisé.</div>
+    </div>
+
+    <div class="section-title">Les Cercles de Vulnérabilité</div>
+
+    <div class="narr-block">
+      L'onde de choc ne suit pas seulement une logique géographique — elle est <strong>affective et symbolique</strong>. Cartographier les cercles dès les premières heures permet d'anticiper les décompensations retardées.
+    </div>
+
+    <div class="cercle-row">
+      <div class="cercle-num">C1</div>
+      <div class="cercle-body">
+        <div class="cercle-label">Exposition directe</div>
+        <div class="cercle-desc"><strong>Témoins directs, découvreurs de corps.</strong> Risque de TSPT maximal. Stabilisation immédiate, protection sensorielle (éloigner de la scène).</div>
+      </div>
+    </div>
+    <div class="cercle-row">
+      <div class="cercle-num">C2</div>
+      <div class="cercle-body">
+        <div class="cercle-label">Proximité affective</div>
+        <div class="cercle-desc"><strong>Amis intimes, petit(e) ami(e), fratrie scolarisée.</strong> Deuil traumatique, culpabilité du survivant, risque de contagion suicidaire.</div>
+      </div>
+    </div>
+    <div class="cercle-row">
+      <div class="cercle-num">C3</div>
+      <div class="cercle-body">
+        <div class="cercle-label">Vulnérabilité préexistante</div>
+        <div class="cercle-desc"><strong>Élèves avec antécédents (deuil récent, trouble mental, TS passée).</strong> Le drame actuel agit comme réactivation violente. Repérage proactif urgent.</div>
+      </div>
+    </div>
+    <div class="cercle-row">
+      <div class="cercle-num">C4</div>
+      <div class="cercle-body">
+        <div class="cercle-label">Personnels exposés</div>
+        <div class="cercle-desc"><strong>AED, CPE, enseignants ayant un lien fort.</strong> Fatigue compassionnelle, blessure morale. Souvent oubliés des dispositifs de soutien.</div>
+      </div>
+    </div>
+    <div class="cercle-row">
+      <div class="cercle-num">C5</div>
+      <div class="cercle-body">
+        <div class="cercle-label">Cercle élargi</div>
+        <div class="cercle-desc"><strong>Reste de la communauté, réseaux sociaux.</strong> Anxiété collective, rumeurs, contagion émotionnelle. Information factuelle et retour au cadre = facteurs de protection.</div>
+      </div>
+    </div>
+
+    <div class="quote-block">
+      « La crise n'efface pas l'école — elle la met à l'épreuve. La task-force doit protéger non seulement les élèves, mais aussi la capacité de l'institution à rester un sanctuaire. »
+      <cite>— Guide d'intervention, Académie de Limoges, 2023</cite>
+    </div>
+
+    <div class="reflect-q" id="reflectQ1">
+      Pourquoi la distinction entre un décès survenu sur site scolaire et un décès survenu hors de l'établissement change-t-elle fondamentalement le niveau de réponse institutionnelle ?
+    </div>
+
+    <div class="opts-list" id="opts1">
+      <button class="opt-btn" onclick="chooseOpt1(this,'A')">A — Parce que la responsabilité légale de l'école ne s'applique qu'aux événements survenus dans l'enceinte scolaire.</button>
+      <button class="opt-btn" onclick="chooseOpt1(this,'B')">B — Parce qu'un événement sur site crée une exposition sensorielle directe, transformant l'espace scolaire en lieu de danger perçu et exigeant une stabilisation immédiate, que le décès hors site ne nécessite pas au même degré.</button>
+      <button class="opt-btn" onclick="chooseOpt1(this,'C')">C — Parce qu'un décès hors site n'affecte pas la communauté scolaire de façon significative.</button>
+    </div>
+
+    <div class="feedback-box" id="fb1"></div>
+    <button class="btn-primary" id="btnL1" onclick="unlockLevel2()" disabled>Accéder au Niveau II →</button>
+  </section>
+
+  <!-- =================== NIVEAU 2 =================== -->
+  <section class="screen" id="screen2">
+    <div class="section-title">Application — Identifier et Calibrer</div>
+
+    <!-- Phase 1 -->
+    <div class="sim-phase" id="phase1">
+      <div class="phase-label">Situation 01 / 03</div>
+      <div class="phase-q">Mardi 8h45 : un AED découvre Théo, 16 ans, inanimé dans les sanitaires. Il appelle immédiatement. Vous êtes CPE de permanence. Quelles sont vos deux premières actions en moins de 60 secondes ?</div>
+      <div class="phase-intro">La "boucle décisionnelle" doit s'enclencher immédiatement. Analyser, sécuriser, alerter — dans cet ordre précis.</div>
+      <div class="phase-choice" onclick="choosePhase(1,this,'good')">✓ Appeler le 15/SAMU immédiatement ET demander à l'AED de rester auprès de Théo sans déplacer quoi que ce soit, tout en écartant les autres élèves.</div>
+      <div class="phase-choice" onclick="choosePhase(1,this,'medium')">~ Alerter le proviseur d'abord pour qu'il décide des suites, puis envoyer quelqu'un aux sanitaires.</div>
+      <div class="phase-choice" onclick="choosePhase(1,this,'bad')">✗ Attendre de savoir si Théo reprend conscience avant d'alerter qui que ce soit pour éviter de créer une panique inutile.</div>
+      <div class="phase-fb" id="pfb1"></div>
+    </div>
+
+    <!-- Phase 2 -->
+    <div class="sim-phase" id="phase2" style="opacity:.45;pointer-events:none;">
+      <div class="phase-label">Situation 02 / 03</div>
+      <div class="phase-q">Le lundi de la rentrée des vacances de Toussaint, une enseignante vous apprend qu'Aïcha, 14 ans, est décédée dans un accident de voiture pendant les vacances. Les élèves n'ont pas encore appris la nouvelle. Quel niveau de réponse ?</div>
+      <div class="phase-intro">Mort externe, pendant les vacances. La communauté n'a pas été exposée à la scène. Mais Aïcha est connue et aimée.</div>
+      <div class="phase-choice" onclick="choosePhase(2,this,'good')">✓ Niveau "accompagnement du deuil" : briefer les personnels, annoncer classe par classe avec sobriété, créer un espace d'écoute — mais sans déclencher la cellule de crise complète ni la CUMP, sauf fragilité particulière identifiée.</div>
+      <div class="phase-choice" onclick="choosePhase(2,this,'medium')">~ Déclencher immédiatement la cellule de crise complète avec demande de CUMP — un décès est un décès, quelle que soit la circonstance.</div>
+      <div class="phase-choice" onclick="choosePhase(2,this,'bad')">✗ Laisser la nouvelle se répandre naturellement par les élèves — intervenir institutionnellement amplifierait le traumatisme.</div>
+      <div class="phase-fb" id="pfb2"></div>
+    </div>
+
+    <!-- Phase 3 -->
+    <div class="sim-phase" id="phase3" style="opacity:.45;pointer-events:none;">
+      <div class="phase-label">Situation 03 / 03</div>
+      <div class="phase-q">Des rumeurs circulent sur les réseaux : « Kylian a tenté de se suicider hier soir. » Vous ne confirmez rien officiellement. Quelle est votre posture institutionnelle en attendant confirmation ?</div>
+      <div class="phase-intro">Tentative non confirmée. Cercle C2 (amis) probablement déjà informé. Réseaux sociaux actifs.</div>
+      <div class="phase-choice" onclick="choosePhase(3,this,'good')">✓ Activer discrètement le repérage (AED, profs principaux) pour identifier les élèves les plus proches de Kylian, contacter la famille pour confirmer et comprendre ce qu'ils souhaitent partager, et surveiller les réseaux sans diffuser de message institutionnel qui amplifierait les rumeurs.</div>
+      <div class="phase-choice" onclick="choosePhase(3,this,'medium')">~ Diffuser un message institutionnel rassurant disant que « rien de grave n'est confirmé » — pour calmer les rumeurs.</div>
+      <div class="phase-choice" onclick="choosePhase(3,this,'bad')">✗ Convoquer tous les élèves de la classe de Kylian pour faire le point collectivement et tirer les choses au clair.</div>
+      <div class="phase-fb" id="pfb3"></div>
+    </div>
+
+    <button class="btn-primary" id="btnL2" onclick="unlockLevel3()" disabled>Accéder au Niveau III →</button>
+  </section>
+
+  <!-- =================== NIVEAU 3 =================== -->
+  <section class="screen" id="screen3">
+    <div class="section-title">Transfert — Décisions en Conditions Réelles</div>
+
+    <!-- Xfer 1 -->
+    <div class="xfer-card">
+      <div class="xfer-title">Scénario Professionnel 01 / 03</div>
+      <div class="xfer-scenario">
+        Le proviseur veut annoncer la nouvelle du décès d'un élève par message sur l'ENT à toute la communauté scolaire, immédiatement, pour « être transparent et éviter les rumeurs ». Il vous demande votre avis.
+      </div>
+      <div class="xfer-q">Quelle est votre recommandation argumentée ?</div>
+      <div class="xfer-choice" onclick="chooseXfer(1,this,'best')">⬤ Déconseiller fortement l'annonce collective par écran — préconiser une annonce classe par classe, avec présence adulte contenante, permettant la gestion individuelle des réactions émotionnelles. La transparence ne justifie pas l'absence de contention.</div>
+      <div class="xfer-choice" onclick="chooseXfer(1,this,'good')">◎ Accepter le message ENT mais proposer d'y ajouter les coordonnées des personnes ressources disponibles dans l'établissement ce jour.</div>
+      <div class="xfer-choice" onclick="chooseXfer(1,this,'bad')">○ Valider la décision du proviseur : la transparence rapide est toujours préférable, et les réseaux l'auraient annoncé de toute façon.</div>
+      <div class="xfer-fb" id="xfb1"></div>
+    </div>
+
+    <!-- Xfer 2 -->
+    <div class="xfer-card">
+      <div class="xfer-title">Scénario Professionnel 02 / 03</div>
+      <div class="xfer-scenario">
+        Vous êtes AED en surveillance de cour. Une élève en larmes s'approche et vous dit : <em>« Ma meilleure amie est morte. Je veux rentrer chez moi. »</em> Ses parents ne répondent pas au téléphone.
+      </div>
+      <div class="xfer-q">Que faites-vous dans l'immédiat ?</div>
+      <div class="xfer-choice" onclick="chooseXfer(2,this,'best')">⬤ Emmener l'élève en lieu calme (infirmerie, bureau CPE), rester avec elle, alerter le CPE ou l'infirmière immédiatement, et ne la laisser partir sous aucun prétexte avant qu'un adulte responsable ne prenne le relais — même si elle insiste.</div>
+      <div class="xfer-choice" onclick="chooseXfer(2,this,'good')">◎ Lui dire de rester en classe pour l'instant et de prévenir le CPE en passant par le bureau.</div>
+      <div class="xfer-choice" onclick="chooseXfer(2,this,'bad')">○ La laisser rentrer chez elle — elle est majeure dans ses décisions émotionnelles et insiste pour partir.</div>
+      <div class="xfer-fb" id="xfb2"></div>
+    </div>
+
+    <!-- Xfer 3 -->
+    <div class="xfer-card">
+      <div class="xfer-title">Scénario Professionnel 03 / 03</div>
+      <div class="xfer-scenario">
+        Trois semaines après un drame, la direction décide de « tourner la page » et supprime l'espace de recueillement informel que des élèves avaient spontanément créé dans un couloir. Plusieurs élèves vous expriment leur colère.
+      </div>
+      <div class="xfer-q">Quelle lecture faites-vous de la situation, et quel est votre rôle ?</div>
+      <div class="xfer-choice" onclick="chooseXfer(3,this,'best')">⬤ La suppression brutale est un signal d'alerte : les "dates sensibles" et les besoins de rituel persistants au-delà des premières semaines sont normaux. Vous faites remonter à la direction la nécessité de clôturer l'espace formellement (rituel de clôture) plutôt que de le supprimer unilatéralement, et restez attentif aux élèves qui réagissent le plus fortement.</div>
+      <div class="xfer-choice" onclick="chooseXfer(3,this,'good')">◎ Vous validez la décision de la direction — trois semaines, c'est assez long — mais vous proposez d'organiser un moment de clôture collectif avant la suppression.</div>
+      <div class="xfer-choice" onclick="chooseXfer(3,this,'bad')">○ Vous soutenez les élèves dans leur colère et leur conseillez de rédiger une pétition pour maintenir l'espace indéfiniment.</div>
+      <div class="xfer-fb" id="xfb3"></div>
+    </div>
+
+    <button class="btn-primary" id="btnCert" onclick="completeMod()" disabled>Valider le Module →</button>
+  </section>
+
+  <!-- FIN -->
+  <section class="screen" id="screenFin">
+    <div class="fin-zone">
+      <div class="cert-badge">🧠</div>
+      <div class="cert-title">Module CRISE_01 Validé</div>
+      <div class="cert-sub">Tu maîtrises les fondements de l'ontologie de la crise scolaire : typologies, cercles de vulnérabilité, calibration de la réponse institutionnelle et temporalité des réactions.</div>
+      <div class="xp-earned">+100 XP</div>
+      <div class="xp-label">Points acquis</div>
+      <button class="btn-primary" onclick="goHub()">Retour au Hub KAIROS</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const MODULE_ID = 'CRISE_01';
+const XP_VALUE  = 100;
+
+let l1Done=false, l2Done=false, xferDone=[false,false,false], phaseDone=[false,false,false];
+
+/* ---- LEVEL 1 ---- */
+function chooseOpt1(btn, val){
+  document.querySelectorAll('#opts1 .opt-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  const fb=document.getElementById('fb1');
+  if(val==='B'){
+    fb.textContent='✓ Exact. Un événement sur site provoque une exposition sensorielle directe (images, odeurs, sons) qui peut fixer le trauma dans la mémoire. L\'espace scolaire devient un lieu de danger perçu — le sentiment de sécurité est fracturé là où il devrait être maximal. Cela exige une stabilisation immédiate et une sécurisation physique du lieu. Un décès externe relève d\'une autre temporalité psychique : le deuil, non le trauma aigu.';
+    fb.className='feedback-box show';
+    document.getElementById('btnL1').disabled=false;
+    l1Done=true; updateProg();
+  } else if(val==='A'){
+    fb.textContent='Partiellement. La responsabilité légale est bien différente, mais ce n\'est pas la raison principale de la différence de niveau de réponse. Ce qui change fondamentalement, c\'est l\'exposition sensorielle directe des membres de la communauté à la scène traumatique — ce que le droit ne peut pas capturer à lui seul.';
+    fb.className='feedback-box show';
+  } else {
+    fb.textContent='Non. Même sans être sur site, un décès frappe profondément la communauté — surtout les cercles affectifs (C2). La distinction porte sur l\'intensité du trauma et le type d\'intervention requis, pas sur l\'absence d\'impact.';
+    fb.className='feedback-box show';
+  }
+}
+function unlockLevel2(){
+  document.getElementById('screen1').classList.remove('active');
+  document.getElementById('screen2').classList.add('active');
+  document.getElementById('nav1').classList.add('done');
+  document.getElementById('nav2').classList.add('active');
+  document.getElementById('nav2').disabled=false;
+  updateProg();
+}
+
+/* ---- LEVEL 2 ---- */
+const pFb={
+  1:{
+    good:'✓ Parfait. La priorité absolue : la vie de Théo (15/SAMU) et l\'intégrité de la scène. L\'AED reste, ne déplace rien, et vous éloignez les élèves — protéger du spectacle traumatique est aussi urgent que les soins. Le proviseur est informé immédiatement après.',
+    medium:'Trop lent. Chaque seconde compte en cas de détresse physiologique. Le proviseur est informé, mais APRÈS le 15. La boucle décisionnelle commence par l\'urgence médicale, pas par la chaîne hiérarchique.',
+    bad:'Gravissime erreur. En cas d\'urgence médicale suspectée, la non-assistance à personne en danger (Art. 223-6) est un délit pénal. L\'attentisme est la pire des postures.'
+  },
+  2:{
+    good:'✓ Calibrage exact. Décès externe = accompagnement du deuil, pas trauma aigu. L\'annonce structurée, classe par classe, avec présence adulte, est la bonne modalité. La CUMP n\'est pas indiquée sauf élèves avec vulnérabilité repérée. Adapter, ne pas sur-réagir.',
+    medium:'Sur-réaction. La CUMP est une ressource rare et intensive destinée aux traumatismes aigus sur site. La mobiliser pour un deuil externe déprogramme des ressources pour des établissements en crise aigüe. Le calibrage de la réponse protège aussi le système.',
+    bad:'La rumeur incontrôlée est plus traumatisante que l\'annonce structurée. Le silence institutionnel génère de l\'imaginaire — souvent bien pire que la réalité. L\'annonce maîtrisée est un facteur de protection.'
+  },
+  3:{
+    good:'✓ Posture optimale. L\'action discrète (repérage C2, contact famille) permet d\'agir sans alimenter les rumeurs. Le message institutionnel avant confirmation risque soit de nier une réalité connue (perte de crédibilité), soit de valider une rumeur fausse. La discrétion active est la bonne ligne.',
+    medium:'Contre-productif. "Rien de grave n\'est confirmé" peut être perçu comme un déni, et si la tentative est réelle, le message amplifie la honte de la victime et complexifie son retour éventuel à l\'établissement.',
+    bad:'Très dangereux. Réunir le groupe classe sans confirmation et sans protocole peut déclencher une contagion émotionnelle, des révélations incontrôlées, et retraumatiser des élèves déjà fragilisés. C\'est exactement le type de "fausse bonne idée" à éviter.'
+  }
+};
+function choosePhase(n,el,qual){
+  const ph=document.getElementById('phase'+n);
+  ph.querySelectorAll('.phase-choice').forEach(c=>c.classList.remove('good','medium','bad'));
+  el.classList.add(qual);
+  const fb=document.getElementById('pfb'+n);
+  fb.textContent=pFb[n][qual];
+  fb.className='phase-fb show';
+  if(qual==='good'||qual==='medium'){
+    phaseDone[n-1]=true;
+    if(n<3) setTimeout(()=>{ const nxt=document.getElementById('phase'+(n+1)); nxt.style.opacity='1'; nxt.style.pointerEvents='auto'; },600);
+    checkL2Done();
+  }
+}
+function checkL2Done(){
+  if(phaseDone[0]&&phaseDone[1]&&phaseDone[2]){ document.getElementById('btnL2').disabled=false; l2Done=true; updateProg(); }
+}
+function unlockLevel3(){
+  document.getElementById('screen2').classList.remove('active');
+  document.getElementById('screen3').classList.add('active');
+  document.getElementById('nav2').classList.add('done');
+  document.getElementById('nav3').classList.add('active');
+  document.getElementById('nav3').disabled=false;
+  updateProg();
+}
+
+/* ---- LEVEL 3 ---- */
+const xFb={
+  1:{
+    best:'✓ Excellent. L\'annonce collective par écran supprime toute possibilité de contention émotionnelle individuelle. Un élève seul devant son écran qui apprend la mort d\'un camarade est livré à lui-même. La transparence est une valeur — mais sa modalité doit préserver la sécurité psychique. "Comment on dit" est aussi important que "ce qu\'on dit".',
+    good:'Acceptable mais insuffisant. Le message ENT seul reste problématique. L\'ajout des coordonnées ressource est un plus, mais ne résout pas l\'absence de présence adulte contenante au moment de l\'annonce.',
+    bad:'Erreur. "Les réseaux l\'auraient dit de toute façon" n\'est pas un argument — c\'est une abdication de la responsabilité éducative de l\'institution. Le fait que l\'information circule n\'exonère pas l\'école de sa manière d\'annoncer.'
+  },
+  2:{
+    best:'✓ Parfait. Un élève en détresse aiguë ne doit jamais quitter l\'établissement seul, quelle que soit sa majorité. La contention bienveillante (l\'emmener en lieu calme, rester avec elle, alerter un professionnel) est la posture juste. Vous créez les conditions d\'une prise en charge, pas d\'une décision isolée de sa part.',
+    good:'Insuffisant. Envoyer seule une élève en pleurs d\'une extrémité à l\'autre du bâtiment n\'est pas une contention — c\'est l\'abandonner à nouveau. Le CPE doit être alerté PAR vous, immédiatement.',
+    bad:'Grave erreur. Même majeure, une personne en détresse émotionnelle intense n\'est pas en état de prendre une décision autonome éclairée. La laisser partir seule expose à un risque immédiat. L\'obligation de sécurité des personnels de l\'EN ne s\'arrête pas à la sortie physique du site.'
+  },
+  3:{
+    best:'✓ Lecture clinique et institutionnelle juste. Les rituels de deuil ont une durée naturelle — les supprimer brutalement peut déclencher des réactions de colère qui masquent en réalité de la douleur non traitée. Proposer un rituel de clôture (dernier moment collectif, puis retrait) respecte la temporalité psychique tout en restaurant la normalité. Votre vigilance envers les réactions fortes est essentielle.',
+    good:'Bonne intuition, analyse incomplète. Proposer un rituel de clôture est juste — mais ne pas nommer le risque des suppressions brutales à la direction vous prive d\'une opportunité de formation institutionnelle. Le CPE en task-force a une mission de conseil auprès de la direction.',
+    bad:'Non. Soutenir la pétition de maintien indéfini d\'un mémorial scolaire n\'est pas protecteur — c\'est iatrogène. Les recherches montrent qu\'un espace de recueillement prolongé peut "figer" le deuil et constituer un lieu de cristallisation pour les élèves les plus à risque de contagion suicidaire. Le CPE doit naviguer entre empathie et cadre.'
+  }
+};
+function chooseXfer(n,el,qual){
+  const c=el.closest('.xfer-card');
+  c.querySelectorAll('.xfer-choice').forEach(x=>x.classList.remove('best','good','bad'));
+  el.classList.add(qual);
+  const fb=document.getElementById('xfb'+n);
+  fb.textContent=xFb[n][qual];
+  fb.className='xfer-fb show';
+  if(qual==='best'||qual==='good'){ xferDone[n-1]=true; checkCert(); }
+}
+function checkCert(){
+  if(xferDone[0]&&xferDone[1]&&xferDone[2]){ document.getElementById('btnCert').disabled=false; updateProg(); }
+}
+
+/* ---- COMPLETE ---- */
+function completeMod(){
+  if(!localStorage.getItem('kairos_xp_'+MODULE_ID)){
+    let tot=parseInt(localStorage.getItem('kairos_xp_total')||'0');
+    tot+=XP_VALUE;
+    localStorage.setItem('kairos_xp_total', tot);
+    localStorage.setItem('kairos_xp_'+MODULE_ID, XP_VALUE);
+  }
+  localStorage.setItem('CERT_KAIROS_'+MODULE_ID, 'true');
+  if(window.parent&&window.parent!==window){
+    window.parent.postMessage({type:'pvs_bridge_event',event:'MODULE_COMPLETE',data:{module:MODULE_ID,xp:XP_VALUE}},'*');
+  }
+  document.getElementById('screen3').classList.remove('active');
+  document.getElementById('screenFin').classList.add('active');
+  document.getElementById('progFill').style.width='100%';
+}
+
+/* ---- NAV ---- */
+function goLevel(n){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen'+n).classList.add('active');
+  document.querySelectorAll('.lnav-btn').forEach((b,i)=>{ b.classList.remove('active'); if(i===n-1)b.classList.add('active'); });
+}
+function goHub(){
+  if(window.parent&&window.parent!==window){ window.parent.postMessage({type:'pvs_bridge_event',event:'GO_HUB',data:{}},'*'); }
+  else { window.location.href='index_KAIROS.html'; }
+}
+function updateProg(){
+  let p=0;
+  if(l1Done) p=30;
+  if(l2Done) p=65;
+  if(xferDone[0]&&xferDone[1]&&xferDone[2]) p=90;
+  document.getElementById('progFill').style.width=p+'%';
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('nav2').disabled=true;
+  document.getElementById('nav3').disabled=true;
+});
+</script>
+</body>
+</html>

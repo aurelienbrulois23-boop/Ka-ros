@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KAIROS · CRISE 02 · Neurobiologie du Trauma</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary:#dc2626; --primary-dim:rgba(220,38,38,.12); --primary-glow:rgba(220,38,38,.35);
+  --bg:#070000; --bg2:#0f0202; --panel:#1a0707; --panel2:#220a0a;
+  --text:#f5e0e0; --text-m:#b07070; --text-d:#5a1e1e;
+  --green:#10b981; --gold:#f59e0b; --blue:#3b82f6; --teal:#14b8a6; --border:rgba(220,38,38,.22);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 20% 0%,rgba(220,38,38,.08) 0%,transparent 50%),
+             radial-gradient(ellipse at 80% 100%,rgba(220,38,38,.04) 0%,transparent 50%);}
+.mod-header{padding:28px 24px 20px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:16px;}
+.mod-icon{font-size:2.8rem;filter:drop-shadow(0 0 12px var(--primary-glow));flex-shrink:0;}
+.mod-meta{flex:1;}
+.mod-pilier{font-family:'Orbitron',sans-serif;font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--primary);margin-bottom:4px;}
+.mod-title{font-family:'Orbitron',sans-serif;font-size:1.4rem;color:#fff;margin-bottom:4px;}
+.mod-sub{font-size:.88rem;color:var(--text-m);line-height:1.5;}
+.mod-ref{font-size:.72rem;color:var(--text-d);font-style:italic;margin-top:4px;}
+.xp-chip{background:var(--primary-dim);border:1px solid var(--border);padding:4px 12px;border-radius:20px;font-size:.75rem;color:var(--primary);font-family:'Orbitron',sans-serif;white-space:nowrap;}
+.prog-bar{height:3px;background:rgba(255,255,255,.06);}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--primary),#f87171);transition:width .5s ease;}
+.level-nav{display:flex;gap:0;border-bottom:1px solid var(--border);}
+.lnav-btn{flex:1;padding:10px 8px;text-align:center;font-size:.7rem;font-family:'Orbitron',sans-serif;letter-spacing:1px;text-transform:uppercase;color:var(--text-d);cursor:pointer;border-bottom:2px solid transparent;transition:.2s;background:none;border-top:none;border-left:none;border-right:none;}
+.lnav-btn.active{color:var(--primary);border-bottom-color:var(--primary);}
+.lnav-btn.done{color:var(--green);}
+.lnav-btn:disabled{opacity:.35;cursor:not-allowed;}
+#app{max-width:800px;margin:0 auto;padding-bottom:80px;}
+.screen{display:none;padding:24px 20px;}
+.screen.active{display:block;animation:fadeUp .4s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.section-title{font-family:'Orbitron',sans-serif;font-size:.8rem;letter-spacing:2px;text-transform:uppercase;color:var(--primary);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.narr-block{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:14px;font-size:.95rem;line-height:1.8;color:var(--text);}
+.narr-block strong{color:#fca5a5;}
+.narr-block em{color:var(--primary);font-style:italic;}
+/* Unique à CRISE_02 : neuro-schema */
+.neuro-schema{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.neuro-node{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;position:relative;}
+.neuro-node::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:10px 10px 0 0;}
+.neuro-node.amyg::before{background:#dc2626;}
+.neuro-node.hpa::before{background:#f97316;}
+.neuro-node.mem::before{background:#3b82f6;}
+.neuro-node.fen::before{background:#10b981;}
+.neuro-tag{font-size:.6rem;font-family:'Orbitron',sans-serif;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+.neuro-node.amyg .neuro-tag{color:#dc2626;}
+.neuro-node.hpa .neuro-tag{color:#f97316;}
+.neuro-node.mem .neuro-tag{color:#3b82f6;}
+.neuro-node.fen .neuro-tag{color:#10b981;}
+.neuro-title{font-size:.9rem;font-weight:600;color:var(--text);margin-bottom:4px;}
+.neuro-desc{font-size:.8rem;color:var(--text-m);line-height:1.5;}
+.neuro-desc strong{color:var(--text);}
+/* Fenêtre de tolérance */
+.fdt-schema{background:var(--panel2);border:1px solid var(--border);border-radius:12px;padding:18px;margin-bottom:16px;}
+.fdt-title{font-family:'Orbitron',sans-serif;font-size:.68rem;color:var(--primary);letter-spacing:2px;text-transform:uppercase;text-align:center;margin-bottom:14px;}
+.fdt-zone{border-radius:8px;padding:10px 16px;margin-bottom:6px;font-size:.85rem;line-height:1.5;}
+.fdt-zone.hyper{background:rgba(220,38,38,.15);border:1px solid rgba(220,38,38,.3);}
+.fdt-zone.hyper .fdt-zone-label{color:#fca5a5;font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+.fdt-zone.ok{background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);}
+.fdt-zone.ok .fdt-zone-label{color:#10b981;font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+.fdt-zone.hypo{background:rgba(59,130,246,.1);border:1px solid rgba(59,130,246,.3);}
+.fdt-zone.hypo .fdt-zone-label{color:#93c5fd;font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;}
+.fdt-zone-desc{color:var(--text-m);font-size:.83rem;}
+/* Timeline stress/TSPT */
+.timeline-row{display:flex;gap:0;margin-bottom:16px;border-radius:10px;overflow:hidden;border:1px solid var(--border);}
+.tl-phase{flex:1;padding:12px 10px;text-align:center;}
+.tl-phase:not(:last-child){border-right:1px solid var(--border);}
+.tl-label{font-size:.58rem;font-family:'Orbitron',sans-serif;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px;}
+.tl-time{font-size:.95rem;font-weight:700;margin-bottom:4px;}
+.tl-desc{font-size:.75rem;color:var(--text-m);line-height:1.4;}
+.tl-phase.j0{background:rgba(220,38,38,.1);} .tl-phase.j0 .tl-label{color:#fca5a5;} .tl-phase.j0 .tl-time{color:#dc2626;}
+.tl-phase.j30{background:rgba(245,158,11,.08);} .tl-phase.j30 .tl-label{color:#fcd34d;} .tl-phase.j30 .tl-time{color:#f59e0b;}
+.tl-phase.m3{background:rgba(59,130,246,.08);} .tl-phase.m3 .tl-label{color:#93c5fd;} .tl-phase.m3 .tl-time{color:#3b82f6;}
+.tl-phase.tspt{background:rgba(139,92,246,.08);} .tl-phase.tspt .tl-label{color:#c4b5fd;} .tl-phase.tspt .tl-time{color:#8b5cf6;}
+/* Réponses survie */
+.survie-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:16px;}
+.survie-card{background:var(--panel2);border:1px solid var(--border);border-radius:9px;padding:12px 14px;text-align:center;}
+.survie-icon{font-size:1.6rem;margin-bottom:6px;}
+.survie-name{font-family:'Orbitron',sans-serif;font-size:.62rem;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px;}
+.survie-card.fight .survie-name{color:#dc2626;}
+.survie-card.flight .survie-name{color:#f97316;}
+.survie-card.freeze .survie-name{color:#3b82f6;}
+.survie-behav{font-size:.78rem;color:var(--text-m);line-height:1.5;}
+.survie-behav strong{color:var(--text);}
+/* questions / feedback */
+.quote-block{background:var(--panel2);border-left:3px solid var(--primary);border-radius:0 8px 8px 0;padding:14px 20px;margin-bottom:16px;font-size:.92rem;font-style:italic;color:var(--text-m);line-height:1.7;}
+.quote-block cite{display:block;margin-top:8px;font-size:.78rem;color:var(--text-d);font-style:normal;}
+.reflect-q{font-size:1rem;color:#fca5a5;font-style:italic;margin-bottom:14px;padding:14px 18px;background:var(--primary-dim);border:1px solid var(--border);border-radius:8px;}
+.opts-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.opt-btn{background:var(--panel);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:14px 18px;text-align:left;cursor:pointer;font-size:.92rem;color:var(--text);font-family:'Exo 2',sans-serif;transition:.2s;}
+.opt-btn:hover,.opt-btn.selected{border-color:var(--primary);background:var(--primary-dim);}
+.feedback-box{background:rgba(220,38,38,.1);border:1px solid var(--border);border-radius:8px;padding:12px 16px;font-size:.88rem;color:#fca5a5;line-height:1.6;margin-bottom:16px;display:none;}
+.feedback-box.show{display:block;}
+.sim-phase{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:14px;}
+.phase-label{font-size:.65rem;font-family:'Orbitron',sans-serif;color:var(--text-d);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;}
+.phase-q{font-size:.9rem;color:#fca5a5;margin-bottom:12px;}
+.phase-intro{font-size:.88rem;color:var(--text-m);line-height:1.6;margin-bottom:14px;padding:12px 16px;background:var(--panel2);border-radius:8px;border:1px solid var(--border);}
+.phase-choice{background:var(--panel2);border:1px solid rgba(255,255,255,.08);border-radius:7px;padding:11px 14px;cursor:pointer;margin-bottom:8px;font-size:.88rem;color:var(--text);transition:.2s;}
+.phase-choice:hover{border-color:var(--primary);}
+.phase-choice.good{border-color:var(--green);background:rgba(16,185,129,.08);}
+.phase-choice.medium{border-color:var(--gold);background:rgba(245,158,11,.08);}
+.phase-choice.bad{border-color:#dc2626;background:rgba(220,38,38,.08);}
+.phase-fb{padding:10px 14px;border-radius:7px;font-size:.85rem;line-height:1.6;margin-bottom:10px;display:none;}
+.phase-fb.show{display:block;background:var(--panel2);border:1px solid var(--border);color:var(--text-m);}
+.xfer-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:20px;}
+.xfer-title{font-size:.75rem;font-family:'Orbitron',sans-serif;color:var(--primary);margin-bottom:10px;letter-spacing:.5px;}
+.xfer-scenario{font-size:.95rem;line-height:1.7;margin-bottom:12px;}
+.xfer-q{font-size:.85rem;color:#fca5a5;font-style:italic;margin-bottom:12px;}
+.xfer-choice{background:var(--panel2);border:1px solid rgba(255,255,255,.08);border-radius:7px;padding:11px 14px;cursor:pointer;margin-bottom:8px;font-size:.88rem;color:var(--text);transition:.2s;}
+.xfer-choice:hover{border-color:var(--primary);}
+.xfer-choice.best{border-color:var(--green);background:rgba(16,185,129,.08);}
+.xfer-choice.good{border-color:var(--gold);background:rgba(245,158,11,.06);}
+.xfer-choice.bad{border-color:#dc2626;background:rgba(220,38,38,.06);}
+.xfer-fb{padding:10px 14px;border-radius:7px;font-size:.85rem;line-height:1.6;margin-bottom:10px;display:none;}
+.xfer-fb.show{display:block;background:var(--panel2);border:1px solid var(--border);color:var(--text-m);}
+.btn-primary{background:var(--primary);color:#fff;border:none;padding:12px 28px;font-family:'Orbitron',sans-serif;font-size:.75rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:7px;transition:.2s;margin-top:8px;font-weight:700;}
+.btn-primary:hover{filter:brightness(1.1);transform:translateY(-1px);}
+.btn-primary:disabled{opacity:.3;cursor:not-allowed;transform:none;}
+.fin-zone{text-align:center;padding:40px 20px;}
+.cert-badge{width:90px;height:90px;background:linear-gradient(135deg,var(--primary),#f87171);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.4rem;margin:0 auto 20px;box-shadow:0 0 40px var(--primary-glow);}
+.cert-title{font-family:'Orbitron',sans-serif;font-size:1.1rem;color:#fff;margin-bottom:8px;}
+.cert-sub{font-size:.88rem;color:var(--text-m);margin-bottom:24px;line-height:1.6;}
+.xp-earned{font-family:'Orbitron',sans-serif;font-size:2.2rem;color:var(--primary);margin-bottom:6px;}
+.xp-label{font-size:.75rem;color:var(--text-d);text-transform:uppercase;letter-spacing:2px;margin-bottom:28px;}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HEADER -->
+  <header class="mod-header">
+    <div class="mod-icon">⚡</div>
+    <div class="mod-meta">
+      <div class="mod-pilier">Pilier Comprendre · Module 02</div>
+      <div class="mod-title">Neurobiologie du Trauma</div>
+      <div class="mod-sub">Comprendre ce que fait le cerveau sous trauma pour mieux lire les comportements élèves et personnels. Amygdale, axe HPA, fenêtre de tolérance, mémoire traumatique.</div>
+      <div class="mod-ref">Van der Kolk 2014 · Siegel 2010 · Herman 1992 · OMS LIVE LIFE 2021 · NCTSN 2024</div>
+    </div>
+    <div class="xp-chip">+150 XP</div>
+  </header>
+
+  <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+
+  <!-- NAV -->
+  <nav class="level-nav">
+    <button class="lnav-btn active" id="nav1" onclick="goLevel(1)">I · Déconstruction</button>
+    <button class="lnav-btn" id="nav2" onclick="goLevel(2)" disabled>II · Expérimentation</button>
+    <button class="lnav-btn" id="nav3" onclick="goLevel(3)" disabled>III · Transfert</button>
+  </nav>
+
+  <!-- =================== NIVEAU 1 =================== -->
+  <section class="screen active" id="screen1">
+    <div class="section-title">Le Cerveau Face au Danger</div>
+
+    <div class="narr-block">
+      Face à un événement traumatogène, le cerveau ne « choisit » pas de réagir. Il <strong>réagit avant</strong> que la pensée consciente ait eu le temps de s'installer.<br><br>
+      Cette réalité neurobiologique est fondamentale pour tout professionnel de l'éducation : les comportements que vous observez chez un élève traumatisé — sidération, agitation, agressivité, indifférence apparente — ne sont <em>pas des choix</em>. Ce sont des réponses automatiques d'un système nerveux qui tente de survivre.
+    </div>
+
+    <div class="neuro-schema">
+      <div class="neuro-node amyg">
+        <div class="neuro-tag">🔴 Amygdale</div>
+        <div class="neuro-title">Le détecteur de menace</div>
+        <div class="neuro-desc">S'active en <strong>0,2 secondes</strong> — avant le cortex préfrontal. Déclare le danger, coupe le raisonnement logique. C'est le <strong>« hijacking émotionnel »</strong> : la logique est mise hors-jeu par la survie.</div>
+      </div>
+      <div class="neuro-node hpa">
+        <div class="neuro-tag">🟠 Axe HPA</div>
+        <div class="neuro-title">La cascade hormonale</div>
+        <div class="neuro-desc">Hypothalamus → Hypophyse → Glandes surrénales → <strong>adrénaline + cortisol</strong>. Augmente rythme cardiaque, tension, vigilance. En cas de stress prolongé, cette cascade <strong>épuise le système immunitaire</strong> et la mémoire.</div>
+      </div>
+      <div class="neuro-node mem">
+        <div class="neuro-tag">🔵 Mémoire traumatique</div>
+        <div class="neuro-title">L'encodage sensoriel</div>
+        <div class="neuro-desc">Sous trauma, la mémoire s'encode de façon <strong>fragmentée et sensorielle</strong> — images, odeurs, sons — sans narration linéaire. Ces fragments peuvent être <strong>réactivés involontairement</strong> par des triggers environnementaux.</div>
+      </div>
+      <div class="neuro-node fen">
+        <div class="neuro-tag">🟢 Fenêtre de tolérance</div>
+        <div class="neuro-title">La zone d'apprentissage</div>
+        <div class="neuro-desc">Concept de <strong>Daniel Siegel</strong> : zone optimale d'activation entre hyperactivation et hypoactivation. En dehors de cette fenêtre, <strong>l'apprentissage, la relation et la réflexion sont impossibles</strong>.</div>
+      </div>
+    </div>
+
+    <div class="section-title">La Fenêtre de Tolérance</div>
+
+    <div class="fdt-schema">
+      <div class="fdt-title">Modèle de Daniel Siegel — Zone Optimale d'Activation</div>
+      <div class="fdt-zone hyper">
+        <div class="fdt-zone-label">⬆ Hyperactivation (Zone Rouge)</div>
+        <div class="fdt-zone-desc">Agitation, cris, agressivité, dissociation partielle, fuite panique, larmes incontrôlables. Le système nerveux est en <strong>sur-régime</strong>. L'élève ne peut pas « se calmer » sur commande — il faut d'abord <strong>réguler par la présence corporelle contenante</strong>.</div>
+      </div>
+      <div class="fdt-zone ok">
+        <div class="fdt-zone-label">✓ Fenêtre de tolérance (Zone Verte)</div>
+        <div class="fdt-zone-desc">État optimal. L'élève peut penser, parler, ressentir et interagir. Il peut bénéficier d'un soutien psychologique et d'un accompagnement. <strong>C'est seulement dans cette zone que la parole thérapeutique est efficace.</strong></div>
+      </div>
+      <div class="fdt-zone hypo">
+        <div class="fdt-zone-label">⬇ Hypoactivation (Zone Bleue)</div>
+        <div class="fdt-zone-desc">Sidération, mutisme, regard vide, incapacité à bouger ou répondre, dissociation profonde. L'élève qui « n'a aucune réaction » est souvent en hypoactivation — ce silence peut être <strong>trompeur et dangereux</strong>.</div>
+      </div>
+    </div>
+
+    <div class="section-title">Les Réponses de Survie</div>
+
+    <div class="survie-grid">
+      <div class="survie-card fight">
+        <div class="survie-icon">🔥</div>
+        <div class="survie-name">Combat (Fight)</div>
+        <div class="survie-behav"><strong>Agressivité, opposition, cris, propos violents.</strong> Ne pas confondre avec une « mauvaise volonté » — c'est une réponse de survie automatique. Répondre avec autorité sèche aggrave.</div>
+      </div>
+      <div class="survie-card flight">
+        <div class="survie-icon">💨</div>
+        <div class="survie-name">Fuite (Flight)</div>
+        <div class="survie-behav"><strong>Fugue, départ brusque, esquive de contact, absentéisme soudain.</strong> L'élève « fuit » un espace qui lui paraît dangereux. Forcer le contact peut déclencher une décompensation.</div>
+      </div>
+      <div class="survie-card freeze">
+        <div class="survie-icon">🧊</div>
+        <div class="survie-name">Gel (Freeze)</div>
+        <div class="survie-behav"><strong>Mutisme, regard vide, corps figé, non-réponse.</strong> La réponse la plus trompeuse. « Il reste calme » peut signifier « il est en hypoactivation totale ». Nécessite une approche douce et une présence non-verbale.</div>
+      </div>
+    </div>
+
+    <div class="section-title">Stress Aigu vs TSPT — La Temporalité</div>
+
+    <div class="timeline-row">
+      <div class="tl-phase j0">
+        <div class="tl-label">Phase</div>
+        <div class="tl-time">J0 – J3</div>
+        <div class="tl-desc">Réaction de stress aigu normale. Sidération, larmes, agitation. <em>Physiologique et attendu.</em></div>
+      </div>
+      <div class="tl-phase j30">
+        <div class="tl-label">Phase</div>
+        <div class="tl-time">J3 – 1 mois</div>
+        <div class="tl-desc">État de stress aigu (DSM-5). Si persistant : trouble, pas juste « réaction ». Orienter vers professionnels.</div>
+      </div>
+      <div class="tl-phase m3">
+        <div class="tl-label">Phase</div>
+        <div class="tl-time">1 – 3 mois</div>
+        <div class="tl-desc">Fenêtre critique. Résilience ou fixation traumatique ? Facteurs de protection en jeu.</div>
+      </div>
+      <div class="tl-phase tspt">
+        <div class="tl-label">Seuil TSPT</div>
+        <div class="tl-time">> 1 mois</div>
+        <div class="tl-desc">TSPT si symptômes persistants : flashbacks, évitement, hypervigilance, altération cognitive. Prise en charge spécialisée.</div>
+      </div>
+    </div>
+
+    <div class="narr-block">
+      <strong>Ce que ça change pour vous, sur le terrain :</strong> quand un élève est en réponse de survie, votre priorité n'est pas de lui expliquer quelque chose, ni de chercher à comprendre ce qui s'est passé. Votre priorité est de le <em>ramener dans la fenêtre de tolérance</em> — par votre présence calme, un espace sécurisant, une voix posée, et en évitant tout stimulus supplémentaire.
+    </div>
+
+    <div class="quote-block">
+      « Le corps garde le score. La mémoire traumatique n'est pas une histoire que l'on raconte — c'est une sensation que l'on revit. L'intervention doit d'abord s'adresser au corps, avant les mots. »
+      <cite>— Bessel van der Kolk, <em>The Body Keeps the Score</em>, 2014</cite>
+    </div>
+
+    <div class="reflect-q" id="reflectQ1">
+      Un élève témoin d'une scène de violence se lève brusquement en classe, renverse sa chaise et sort en courant. Son professeur dit : « Il fait une crise, il cherche juste l'attention. » Quelle lecture neurobiologique différente pouvez-vous proposer ?
+    </div>
+
+    <div class="opts-list" id="opts1">
+      <button class="opt-btn" onclick="chooseOpt1(this,'A')">A — Le professeur a probablement raison : si l'élève peut courir, c'est qu'il n'est pas vraiment traumatisé — les vrais traumatisés sont sidérés et silencieux.</button>
+      <button class="opt-btn" onclick="chooseOpt1(this,'B')">B — L'élève est probablement en réponse de fuite (flight), une réponse automatique de survie déclenchée par un trigger sensoriel ou contextuel. Son amygdale a détecté un danger (réel ou perçu) et a déclenché la fuite avant que son cortex préfrontal puisse intervenir. Ce n'est pas une recherche d'attention — c'est une réponse neurobiologique involontaire.</button>
+      <button class="opt-btn" onclick="chooseOpt1(this,'C')">C — On ne peut pas savoir sans un bilan psychiatrique complet : ne pas interpréter les comportements en milieu scolaire.</button>
+    </div>
+
+    <div class="feedback-box" id="fb1"></div>
+    <button class="btn-primary" id="btnL1" onclick="unlockLevel2()" disabled>Accéder au Niveau II →</button>
+  </section>
+
+  <!-- =================== NIVEAU 2 =================== -->
+  <section class="screen" id="screen2">
+    <div class="section-title">Application — Lire les Réactions, Ajuster la Posture</div>
+
+    <!-- Phase 1 -->
+    <div class="sim-phase" id="phase1">
+      <div class="phase-label">Situation 01 / 03</div>
+      <div class="phase-q">Deux heures après l'annonce du décès d'un camarade, une élève reste assise, regarde dans le vide, ne répond pas quand on lui parle, ne pleure pas. Un collègue dit : « Elle encaisse bien, elle est forte. » Quelle est votre évaluation ?</div>
+      <div class="phase-intro">Identifier la zone d'activation : hyperactivation (zone rouge), fenêtre de tolérance (zone verte), ou hypoactivation (zone bleue) ?</div>
+      <div class="phase-choice" onclick="choosePhase(1,this,'bad')">✗ Il a raison — absence de larmes = bonne gestion émotionnelle. Laisser faire, elle contactera quelqu'un si elle en a besoin.</div>
+      <div class="phase-choice" onclick="choosePhase(1,this,'medium')">~ La surveiller à distance pendant 30 minutes, puis décider d'intervenir si elle ne réagit toujours pas.</div>
+      <div class="phase-choice" onclick="choosePhase(1,this,'good')">✓ Identifier immédiatement une probable hypoactivation (zone bleue). Le mutisme et le regard vide sont des signaux de sidération, pas de « force ». Aller doucement vers elle (sans forcer la parole), assurer une présence physique calme, et contacter l'infirmière ou le CPE.</div>
+      <div class="phase-fb" id="pfb1"></div>
+    </div>
+
+    <!-- Phase 2 -->
+    <div class="sim-phase" id="phase2" style="opacity:.45;pointer-events:none;">
+      <div class="phase-label">Situation 02 / 03</div>
+      <div class="phase-q">Pendant la récréation qui suit l'annonce d'un drame, un élève de 3ème frappe un mur, crie des insultes et repousse violemment un AED qui tente de l'approcher. Il était proche de la victime. Que faites-vous ?</div>
+      <div class="phase-intro">Réponse de combat (fight). Le système nerveux est en hyperactivation. Toute confrontation directe risque d'escalader.</div>
+      <div class="phase-choice" onclick="choosePhase(2,this,'bad')">✗ Sanctionner immédiatement : la violence physique envers un adulte ne peut pas être tolérée, drame ou pas. Convoquer les parents.</div>
+      <div class="phase-choice" onclick="choosePhase(2,this,'medium')">~ L'isoler dans un bureau fermé pour qu'il se calme seul, puis revenir 20 minutes après.</div>
+      <div class="phase-choice" onclick="choosePhase(2,this,'good')">✓ Reconnaître une réponse de survie (fight). Éloigner les spectateurs pour éviter la sur-stimulation. Maintenir une distance de sécurité, voix douce et basse, pas de confrontation directe. L'objectif est de le ramener dans la fenêtre de tolérance — appel de l'infirmière ou du CPE. La sanction, si nécessaire, viendra plus tard, dans la calme.</div>
+      <div class="phase-fb" id="pfb2"></div>
+    </div>
+
+    <!-- Phase 3 -->
+    <div class="sim-phase" id="phase3" style="opacity:.45;pointer-events:none;">
+      <div class="phase-label">Situation 03 / 03</div>
+      <div class="phase-q">Une semaine après un incident grave sur l'établissement, un AED vous confie : « Depuis, je dors mal, j'ai des images qui reviennent sans que je les veuille, et je ne supporte plus d'aller dans ce couloir. » Il précise : « Mais je gère, je suis là. » Quelle est votre réponse ?</div>
+      <div class="phase-intro">Le personnel est un cercle C4 de vulnérabilité. Les symptômes décrits correspondent à des signes cliniques à évaluer.</div>
+      <div class="phase-choice" onclick="choosePhase(3,this,'good')">✓ Nommer ce que vous entendez sans diagnostiquer : « Ce que tu décris — les images, le sommeil, l'évitement du couloir — ce sont des réactions normales après un événement anormal, mais elles méritent d'être accompagnées. Être là ne suffit pas si ton système nerveux est en surchauffe. » Orienter vers la médecine du travail ou l'assistante sociale de l'EN, et en parler à la direction.</div>
+      <div class="phase-choice" onclick="choosePhase(3,this,'medium')">~ Le féliciter pour son professionnalisme et lui dire de ne pas hésiter à vous en parler si ça empire.</div>
+      <div class="phase-choice" onclick="choosePhase(3,this,'bad')">✗ Lui rappeler que les personnels de l'EN sont formés pour la résilience et que ce genre de réaction est normal — il faut juste du temps.</div>
+      <div class="phase-fb" id="pfb3"></div>
+    </div>
+
+    <button class="btn-primary" id="btnL2" onclick="unlockLevel3()" disabled>Accéder au Niveau III →</button>
+  </section>
+
+  <!-- =================== NIVEAU 3 =================== -->
+  <section class="screen" id="screen3">
+    <div class="section-title">Transfert — Décisions en Conditions Réelles</div>
+
+    <!-- Xfer 1 -->
+    <div class="xfer-card">
+      <div class="xfer-title">Scénario Professionnel 01 / 03</div>
+      <div class="xfer-scenario">
+        Le lendemain d'un incident grave, un proviseur propose d'organiser un « débriefing collectif de classe » immédiat pour « que les élèves parlent et libèrent ce qu'ils ont sur le cœur. » Il vous demande d'animer la séance.
+      </div>
+      <div class="xfer-q">Quelle est votre recommandation, et pourquoi ?</div>
+      <div class="xfer-choice" onclick="chooseXfer(1,this,'bad')">○ Accepter : libérer la parole collectivement est toujours thérapeutique après un trauma.</div>
+      <div class="xfer-choice" onclick="chooseXfer(1,this,'good')">◎ Accepter, mais en proposant une structure non-directive : donner des supports écrits, permettre la non-participation, et éviter de forcer la verbalisation.</div>
+      <div class="xfer-choice" onclick="chooseXfer(1,this,'best')">⬤ Déconseiller le débriefing collectif immédiat (J+1). Les recherches (Rose et al., 2002) montrent que le débriefing précoce en groupe peut aggraver les symptômes en forçant le rappel traumatique avant stabilisation neurobiologique. Proposer à la place : présence adulte calme, retour à un cadre sécurisant, soutien individuel disponible. Le groupe de parole structuré, si pertinent, s'envisage à J+7 minimum, animé par un professionnel de santé mentale.</div>
+      <div class="xfer-fb" id="xfb1"></div>
+    </div>
+
+    <!-- Xfer 2 -->
+    <div class="xfer-card">
+      <div class="xfer-title">Scénario Professionnel 02 / 03</div>
+      <div class="xfer-scenario">
+        Un enseignant vous signale qu'une élève, depuis le drame il y a 10 jours, « se comporte comme si rien ne s'était passé » — souriante, bavarde, résultats stables. L'enseignant pense que « ça ne l'a pas touchée ». Vous connaissez les mécanismes de dissociation.
+      </div>
+      <div class="xfer-q">Quelle lecture faites-vous, et quelle action proposez-vous ?</div>
+      <div class="xfer-choice" onclick="chooseXfer(2,this,'best')">⬤ Cette présentation peut correspondre à une dissociation défensive ou à un mécanisme d'évitement cognitif — deux réponses neurobiologiques fréquentes après un trauma. « Se comporter normalement » n'exclut pas une souffrance sous-jacente. Proposer un entretien informel et bienveillant avec l'élève (sans forcer), alerter le médecin scolaire, et rester vigilant sur les J+30 (date sensible fréquente).</div>
+      <div class="xfer-choice" onclick="chooseXfer(2,this,'good')">◎ Surveiller discrètement. Si dans 3 semaines tout va bien, considérer qu'elle a bien récupéré.</div>
+      <div class="xfer-choice" onclick="chooseXfer(2,this,'bad')">○ Faire confiance à l'enseignant : il connaît l'élève, et si elle va bien, c'est une bonne nouvelle.</div>
+      <div class="xfer-fb" id="xfb2"></div>
+    </div>
+
+    <!-- Xfer 3 -->
+    <div class="xfer-card">
+      <div class="xfer-title">Scénario Professionnel 03 / 03</div>
+      <div class="xfer-scenario">
+        Vous êtes AED depuis 4 ans dans le même établissement. Un élève proche est décédé il y a 3 semaines. Depuis, vous n'êtes plus concentré(e), vous avez des réactions de colère disproportionnées, et vous avez du mal à « rebrancher » en rentrant chez vous. Vous connaissez votre propre fonctionnement.
+      </div>
+      <div class="xfer-q">Que faites-vous de cette auto-observation ?</div>
+      <div class="xfer-choice" onclick="chooseXfer(3,this,'bad')">○ Tenir bon — c'est le lot de ce métier, et cela va passer avec le temps.</div>
+      <div class="xfer-choice" onclick="chooseXfer(3,this,'good')">◎ En parler à un collègue de confiance pour ne pas porter ça seul(e), mais continuer à travailler normalement.</div>
+      <div class="xfer-choice" onclick="chooseXfer(3,this,'best')">⬤ Reconnaître les signes de fatigue compassionnelle ou de traumatisation vicariante (réponse de survie persistante, intrusion, hyperactivation). En parler explicitement à la direction ou à la médecine du travail, et ne pas attendre que ça empire. Prendre soin de vous est une condition de prise en charge des élèves — pas un luxe. Si les symptômes durent plus d'un mois, consulter un médecin.</div>
+      <div class="xfer-fb" id="xfb3"></div>
+    </div>
+
+    <button class="btn-primary" id="btnCert" onclick="completeMod()" disabled>Valider le Module →</button>
+  </section>
+
+  <!-- FIN -->
+  <section class="screen" id="screenFin">
+    <div class="fin-zone">
+      <div class="cert-badge">⚡</div>
+      <div class="cert-title">Module CRISE_02 Validé</div>
+      <div class="cert-sub">Tu maîtrises les fondements neurobiologiques du trauma : amygdale, axe HPA, fenêtre de tolérance, réponses de survie (fight/flight/freeze), et temporalité stress aigu vs TSPT. Tu peux désormais lire les comportements sous un autre prisme que la volonté ou la discipline.</div>
+      <div class="xp-earned">+150 XP</div>
+      <div class="xp-label">Points acquis</div>
+      <button class="btn-primary" onclick="goHub()">Retour au Hub KAIROS</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const MODULE_ID = 'CRISE_02';
+const XP_VALUE  = 150;
+
+let l1Done=false, l2Done=false, xferDone=[false,false,false], phaseDone=[false,false,false];
+
+/* ---- LEVEL 1 ---- */
+function chooseOpt1(btn, val){
+  document.querySelectorAll('#opts1 .opt-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  const fb=document.getElementById('fb1');
+  if(val==='B'){
+    fb.textContent='✓ Exact. La réponse de fuite est une réponse automatique pilotée par l\'amygdale, déclenchée en 0,2 secondes — bien avant que le cortex préfrontal (siège de la réflexion et du contrôle) puisse intervenir. Il ne s\'agit pas d\'une recherche d\'attention, mais d\'une réponse de survie involontaire. La première priorité est de rejoindre l\'élève dans un espace calme et sécurisé, pas de le sanctionner pour une réaction qu\'il ne maîtrise pas.';
+    fb.className='feedback-box show';
+    document.getElementById('btnL1').disabled=false;
+    l1Done=true; updateProg();
+  } else if(val==='A'){
+    fb.textContent='Non. C\'est une idée reçue fréquente — le trauma peut s\'exprimer aussi bien par la sidération que par l\'agitation. La réponse de fuite (flight) est une réponse de survie active, pas un signe d\'absence de trauma. Au contraire, les réponses actives (fuite, combat) signalent souvent une hyperactivation intense du système nerveux.';
+    fb.className='feedback-box show';
+  } else {
+    fb.textContent='Partiellement juste dans la rigueur (on ne diagnostic pas en milieu scolaire), mais la lecture neurobiologique est accessible et utile sans diagnostic. Repérer une réponse de survie permet d\'ajuster sa posture immédiatement, sans attendre un bilan. La connaissance du mécanisme change votre façon d\'intervenir dès maintenant.';
+    fb.className='feedback-box show';
+  }
+}
+function unlockLevel2(){
+  document.getElementById('screen1').classList.remove('active');
+  document.getElementById('screen2').classList.add('active');
+  document.getElementById('nav1').classList.add('done');
+  document.getElementById('nav2').classList.add('active');
+  document.getElementById('nav2').disabled=false;
+  updateProg();
+}
+
+/* ---- LEVEL 2 ---- */
+const pFb={
+  1:{
+    good:'✓ Lecture clinique juste. Le mutisme et le regard vide sont des marqueurs d\'hypoactivation (zone bleue), pas de force psychologique. C\'est la réponse de gel (freeze) — le système nerveux est en sidération. L\'absence de larmes est souvent trompeuse. Une présence physique calme, non-verbale, est la bonne posture initiale — pas les questions ou les encouragements à "parler".',
+    medium:'Trop attentiste. Vingt à trente minutes de sidération totale sans aucune intervention, c\'est long. La présence douce et bienveillante ne nécessite pas d\'attendre — elle peut être offerte immédiatement, sans forcer la parole.',
+    bad:'Erreur d\'interprétation fréquente et dangereuse. L\'absence de larmes n\'est pas un signe de bonne gestion émotionnelle — c\'est souvent le signe d\'une hypoactivation profonde. Ce sont les élèves silencieux qui passent le plus souvent inaperçus dans les dispositifs de soutien.'
+  },
+  2:{
+    good:'✓ Approche juste. Le cadre contenant, la voix basse, la distance de sécurité et l\'éloignement des spectateurs sont exactement les bons leviers pour désactiver une réponse de combat. La sanction éventuelle est différée — ce n\'est pas qu\'elle n\'existe pas, c\'est que ce moment n\'est pas le bon. Un cerveau en hyperactivation ne peut pas entendre, ni intégrer une règle ou une conséquence.',
+    medium:'Contre-productif. L\'isolement dans un bureau fermé (stimuli visuels et corporels réduits) peut paradoxalement aggraver l\'hyperactivation — un espace clos sans présence régulatrice amplifie le sentiment de danger. Il doit être accompagné, pas isolé.',
+    bad:'Erreur. Sanctionner immédiatement une réponse de survie, c\'est punir un mécanisme neurobiologique automatique. Cela n\'a aucun effet régulateur, peut aggraver la réponse de combat, et envoie le message institutionnel : "Tes émotions sont une faute." La sanction, si pertinente, doit intervenir dans un second temps, dans le calme partagé.'
+  },
+  3:{
+    good:'✓ Posture juste et courageuse. Ce que l\'AED décrit — images intrusives, troubles du sommeil, évitement d\'un lieu spécifique — correspond aux critères d\'un état de stress aigu (DSM-5). Le nommer sans diagnostiquer, l\'orienter, et en parler à la direction est votre rôle. Attendre qu\'il "craque" pour agir serait une faute professionnelle par omission. Le personnel traumatisé en poste est aussi un risque pour les élèves dont il a la charge.',
+    medium:'Insuffisant. "Ne pas hésiter à en parler si ça empire" place la responsabilité sur l\'AED, qui minimise déjà. C\'est à vous de créer le pas vers l\'aide — en nommant ce que vous entendez et en proposant un canal concret (médecine du travail, assistante sociale EN).',
+    bad:'Dangereux. "Le temps guérit tout" est un mythe en matière de trauma. Un état de stress aigu non accompagné peut se fixer en TSPT. La "résilience" du personnel de l\'EN n\'est pas une donnée acquise — elle se construit avec des dispositifs de soutien actifs, pas avec de l\'endurance silencieuse.'
+  }
+};
+function choosePhase(n,el,qual){
+  const ph=document.getElementById('phase'+n);
+  ph.querySelectorAll('.phase-choice').forEach(c=>c.classList.remove('good','medium','bad'));
+  el.classList.add(qual);
+  const fb=document.getElementById('pfb'+n);
+  fb.textContent=pFb[n][qual];
+  fb.className='phase-fb show';
+  if(qual==='good'||qual==='medium'){
+    phaseDone[n-1]=true;
+    if(n<3) setTimeout(()=>{ const nxt=document.getElementById('phase'+(n+1)); nxt.style.opacity='1'; nxt.style.pointerEvents='auto'; },600);
+    checkL2Done();
+  }
+}
+function checkL2Done(){
+  if(phaseDone[0]&&phaseDone[1]&&phaseDone[2]){ document.getElementById('btnL2').disabled=false; l2Done=true; updateProg(); }
+}
+function unlockLevel3(){
+  document.getElementById('screen2').classList.remove('active');
+  document.getElementById('screen3').classList.add('active');
+  document.getElementById('nav2').classList.add('done');
+  document.getElementById('nav3').classList.add('active');
+  document.getElementById('nav3').disabled=false;
+  updateProg();
+}
+
+/* ---- LEVEL 3 ---- */
+const xFb={
+  1:{
+    best:'✓ Excellent. Cette recommandation est contre-intuitive mais solidement documentée. Le débriefing psychologique immédiat en groupe (Critical Incident Stress Debriefing) a été abandonné par les recommandations internationales car il force le rappel traumatique sur un système nerveux encore en crise — ce qui peut aggraver les symptômes. La stabilisation prime toujours sur la verbalisation en phase aiguë. La règle : sécuriser, stabiliser, orienter — dans cet ordre.',
+    good:'Mieux, mais la structure proposée reste risquée. Même avec non-directivité, un espace collectif où la parole sur le trauma est explicitement convoquée peut déclencher des réactions de contagion émotionnelle et forcer certains élèves à s\'exposer à des récits traumatiques des autres. J+1, c\'est encore trop tôt pour le groupe.',
+    bad:'Non. Cette croyance — "libérer la parole = thérapeutique" — est intuitive mais infirmée par les données. Verbalization forcée trop précoce peut réactiver le circuit de la mémoire traumatique avant que le système soit stabilisé. Le résultat peut être une aggravation des symptômes de stress aigu.'
+  },
+  2:{
+    best:'✓ Lecture juste et nuancée. La dissociation défensive (coupure entre cognition et affect) et l\'évitement cognitif sont des mécanismes neurobiologiques fréquents post-trauma — parfois très efficaces à court terme. L\'élève peut "fonctionner" tout en étant en souffrance encapsulée. J+30 est une date sensible documentée (anniversaire du premier mois). Votre vigilance protège mieux que le faux confort d\'une présentation normale.',
+    good:'Prudent mais insuffisant. Trois semaines sans symptômes visibles peut sembler rassurant, mais un seul entretien informel et une alerte au médecin scolaire ne coûtent rien et peuvent faire toute la différence. L\'enjeu : ne pas rater la fenêtre de J+30.',
+    bad:'Erreur par déférence. La confiance dans l\'enseignant est légitime, mais elle ne remplace pas votre propre lecture de situation. L\'enseignant observe les comportements visibles — vous avez une connaissance des mécanismes de dissociation qu\'il n\'a peut-être pas. La coordination des regards est votre force.'
+  },
+  3:{
+    best:'✓ Auto-observation lucide et attitude juste. Ce que vous décrivez — intrusion (images), hyperactivation (colère disproportionnée), difficultés de débranchement — correspond à des symptômes de traumatisation vicariante ou de fatigue compassionnelle. Ce ne sont pas des signes de faiblesse : ce sont des signes que votre système nerveux a absorbé la charge traumatique de la proximité avec la souffrance. Agir tôt, documenter, consulter : vous protéger, c\'est aussi protéger vos élèves.',
+    good:'Bon début mais insuffisant. Le collègue peut être un soutien émotionnel, mais il ne peut pas vous offrir un accompagnement thérapeutique ou professionnel. La parole à un pair réduit l\'isolement — elle ne traite pas les symptômes. Le risque : en parler une fois et ne pas aller plus loin.',
+    bad:'Erreur grave. "Tenir bon" en présence de symptômes persistants de traumatisation vicariante aggrave exponentiellement le risque d\'effondrement. Ce métier a un taux de burnout et de troubles post-traumatiques parmi les plus élevés des fonctions éducatives. Le courage professionnel, ici, c\'est de consulter — pas de se taire.'
+  }
+};
+function chooseXfer(n,el,qual){
+  const c=el.closest('.xfer-card');
+  c.querySelectorAll('.xfer-choice').forEach(x=>x.classList.remove('best','good','bad'));
+  el.classList.add(qual);
+  const fb=document.getElementById('xfb'+n);
+  fb.textContent=xFb[n][qual];
+  fb.className='xfer-fb show';
+  if(qual==='best'||qual==='good'){ xferDone[n-1]=true; checkCert(); }
+}
+function checkCert(){
+  if(xferDone[0]&&xferDone[1]&&xferDone[2]){ document.getElementById('btnCert').disabled=false; updateProg(); }
+}
+
+/* ---- COMPLETE ---- */
+function completeMod(){
+  if(!localStorage.getItem('kairos_xp_'+MODULE_ID)){
+    let tot=parseInt(localStorage.getItem('kairos_xp_total')||'0');
+    tot+=XP_VALUE;
+    localStorage.setItem('kairos_xp_total', tot);
+    localStorage.setItem('kairos_xp_'+MODULE_ID, XP_VALUE);
+  }
+  localStorage.setItem('CERT_KAIROS_'+MODULE_ID, 'true');
+  if(window.parent&&window.parent!==window){
+    window.parent.postMessage({type:'pvs_bridge_event',event:'MODULE_COMPLETE',data:{module:MODULE_ID,xp:XP_VALUE}},'*');
+  }
+  document.getElementById('screen3').classList.remove('active');
+  document.getElementById('screenFin').classList.add('active');
+  document.getElementById('progFill').style.width='100%';
+}
+
+/* ---- NAV ---- */
+function goLevel(n){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen'+n).classList.add('active');
+  document.querySelectorAll('.lnav-btn').forEach((b,i)=>{ b.classList.remove('active'); if(i===n-1)b.classList.add('active'); });
+}
+function goHub(){
+  if(window.parent&&window.parent!==window){
+    window.parent.postMessage({type:'pvs_bridge_event',event:'GO_HUB',data:{}},'*');
+  } else {
+    window.location.href='index_KAIROS.html';
+  }
+}
+function updateProg(){
+  const steps=[l1Done,l2Done,xferDone[0]||xferDone[1]||xferDone[2]];
+  const done=steps.filter(Boolean).length;
+  document.getElementById('progFill').style.width=(done/3*100)+'%';
+}
+
+/* ---- INIT ---- */
+(function init(){
+  if(localStorage.getItem('CERT_KAIROS_'+MODULE_ID)){
+    document.getElementById('nav2').disabled=false;
+    document.getElementById('nav3').disabled=false;
+    l1Done=l2Done=true; xferDone=[true,true,true]; phaseDone=[true,true,true];
+    updateProg();
+  }
+})();
+</script>
+</body>
+</html>

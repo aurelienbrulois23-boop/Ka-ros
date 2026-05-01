@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KAIROS · CRISE 04 · Contagion Suicidaire</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary:#dc2626; --primary-dim:rgba(220,38,38,.12); --primary-glow:rgba(220,38,38,.35);
+  --bg:#070000; --bg2:#0f0202; --panel:#1a0707; --panel2:#220a0a;
+  --text:#f5e0e0; --text-m:#b07070; --text-d:#5a1e1e;
+  --green:#10b981; --gold:#f59e0b; --blue:#3b82f6; --purple:#8b5cf6; --border:rgba(220,38,38,.22);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 20% 0%,rgba(220,38,38,.08) 0%,transparent 50%),
+             radial-gradient(ellipse at 80% 100%,rgba(220,38,38,.04) 0%,transparent 50%);}
+.mod-header{padding:28px 24px 20px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:16px;}
+.mod-icon{font-size:2.8rem;filter:drop-shadow(0 0 12px var(--primary-glow));flex-shrink:0;}
+.mod-meta{flex:1;}
+.mod-pilier{font-family:'Orbitron',sans-serif;font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--primary);margin-bottom:4px;}
+.mod-title{font-family:'Orbitron',sans-serif;font-size:1.4rem;color:#fff;margin-bottom:4px;}
+.mod-sub{font-size:.88rem;color:var(--text-m);line-height:1.5;}
+.mod-ref{font-size:.72rem;color:var(--text-d);font-style:italic;margin-top:4px;}
+.xp-chip{background:var(--primary-dim);border:1px solid var(--border);padding:4px 12px;border-radius:20px;font-size:.75rem;color:var(--primary);font-family:'Orbitron',sans-serif;white-space:nowrap;}
+.prog-bar{height:3px;background:rgba(255,255,255,.06);}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--primary),#f87171);transition:width .5s ease;}
+.level-nav{display:flex;gap:0;border-bottom:1px solid var(--border);}
+.lnav-btn{flex:1;padding:10px 8px;text-align:center;font-size:.7rem;font-family:'Orbitron',sans-serif;letter-spacing:1px;text-transform:uppercase;color:var(--text-d);cursor:pointer;border-bottom:2px solid transparent;transition:.2s;background:none;border-top:none;border-left:none;border-right:none;}
+.lnav-btn.active{color:var(--primary);border-bottom-color:var(--primary);}
+.lnav-btn.done{color:var(--green);}
+.lnav-btn:disabled{opacity:.35;cursor:not-allowed;}
+#app{max-width:800px;margin:0 auto;padding-bottom:80px;}
+.screen{display:none;padding:24px 20px;}
+.screen.active{display:block;animation:fadeUp .4s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.section-title{font-family:'Orbitron',sans-serif;font-size:.8rem;letter-spacing:2px;text-transform:uppercase;color:var(--primary);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.narr-block{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:14px;font-size:.95rem;line-height:1.8;color:var(--text);}
+.narr-block strong{color:#fca5a5;}
+.narr-block em{color:var(--primary);font-style:italic;}
+/* Unique à CRISE_04 : effets Werther/Papageno */
+.effet-duel{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;}
+.effet-card{border-radius:12px;padding:16px 18px;}
+.effet-card.werther{background:rgba(220,38,38,.1);border:1px solid rgba(220,38,38,.35);}
+.effet-card.papageno{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.3);}
+.effet-tag{font-family:'Orbitron',sans-serif;font-size:.62rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+.effet-card.werther .effet-tag{color:#fca5a5;}
+.effet-card.papageno .effet-tag{color:#10b981;}
+.effet-title{font-size:1rem;font-weight:700;margin-bottom:6px;}
+.effet-card.werther .effet-title{color:#fca5a5;}
+.effet-card.papageno .effet-title{color:#10b981;}
+.effet-desc{font-size:.82rem;color:var(--text-m);line-height:1.55;}
+.effet-desc strong{color:var(--text);}
+/* Facteurs risque cluster */
+.risk-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+.risk-item{background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;display:flex;align-items:flex-start;gap:10px;}
+.risk-icon{font-size:1.1rem;flex-shrink:0;margin-top:2px;}
+.risk-body{}
+.risk-label{font-size:.72rem;font-weight:600;color:#fca5a5;margin-bottom:2px;}
+.risk-desc{font-size:.78rem;color:var(--text-m);line-height:1.4;}
+/* Safe messaging : ce qu'on dit / ne dit pas */
+.msg-row{background:var(--panel2);border-radius:9px;padding:12px 16px;margin-bottom:8px;display:grid;grid-template-columns:1fr 1fr;gap:12px;border:1px solid var(--border);}
+.msg-bad{font-size:.82rem;color:#fca5a5;line-height:1.4;}
+.msg-bad::before{content:'✗ ';font-weight:700;}
+.msg-good{font-size:.82rem;color:#a7f3d0;line-height:1.4;}
+.msg-good::before{content:'✓ ';font-weight:700;}
+.msg-header{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:6px;}
+.msg-hcol{font-family:'Orbitron',sans-serif;font-size:.6rem;letter-spacing:2px;text-transform:uppercase;}
+.msg-hcol.bad{color:var(--primary);}
+.msg-hcol.good{color:var(--green);}
+/* Standard */
+.quote-block{background:var(--panel2);border-left:3px solid var(--primary);border-radius:0 8px 8px 0;padding:14px 20px;margin-bottom:16px;font-size:.92rem;font-style:italic;color:var(--text-m);line-height:1.7;}
+.quote-block cite{display:block;margin-top:8px;font-size:.78rem;color:var(--text-d);font-style:normal;}
+.reflect-q{font-size:1rem;color:#fca5a5;font-style:italic;margin-bottom:14px;padding:14px 18px;background:var(--primary-dim);border:1px solid var(--border);border-radius:8px;}
+.opts-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.opt-btn{background:var(--panel);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:14px 18px;text-align:left;cursor:pointer;font-size:.92rem;color:var(--text);font-family:'Exo 2',sans-serif;transition:.2s;}
+.opt-btn:hover,.opt-btn.selected{border-color:var(--primary);background:var(--primary-dim);}
+.feedback-box{background:rgba(220,38,38,.1);border:1px solid var(--border);border-radius:8px;padding:12px 16px;font-size:.88rem;color:#fca5a5;line-height:1.6;margin-bottom:16px;display:none;}
+.feedback-box.show{display:block;}
+.sim-phase{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:14px;}
+.phase-label{font-size:.65rem;font-family:'Orbitron',sans-serif;color:var(--text-d);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;}
+.phase-q{font-size:.9rem;color:#fca5a5;margin-bottom:12px;}
+.phase-intro{font-size:.88rem;color:var(--text-m);line-height:1.6;margin-bottom:14px;padding:12px 16px;background:var(--panel2);border-radius:8px;border:1px solid var(--border);}
+.phase-choice{background:var(--panel2);border:1px solid rgba(255,255,255,.08);border-radius:7px;padding:11px 14px;cursor:pointer;margin-bottom:8px;font-size:.88rem;color:var(--text);transition:.2s;}
+.phase-choice:hover{border-color:var(--primary);}
+.phase-choice.good{border-color:var(--green);background:rgba(16,185,129,.08);}
+.phase-choice.medium{border-color:var(--gold);background:rgba(245,158,11,.08);}
+.phase-choice.bad{border-color:#dc2626;background:rgba(220,38,38,.08);}
+.phase-fb{padding:10px 14px;border-radius:7px;font-size:.85rem;line-height:1.6;margin-bottom:10px;display:none;}
+.phase-fb.show{display:block;background:var(--panel2);border:1px solid var(--border);color:var(--text-m);}
+.xfer-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:20px;}
+.xfer-title{font-size:.75rem;font-family:'Orbitron',sans-serif;color:var(--primary);margin-bottom:10px;letter-spacing:.5px;}
+.xfer-scenario{font-size:.95rem;line-height:1.7;margin-bottom:12px;}
+.xfer-q{font-size:.85rem;color:#fca5a5;font-style:italic;margin-bottom:12px;}
+.xfer-choice{background:var(--panel2);border:1px solid rgba(255,255,255,.08);border-radius:7px;padding:11px 14px;cursor:pointer;margin-bottom:8px;font-size:.88rem;color:var(--text);transition:.2s;}
+.xfer-choice:hover{border-color:var(--primary);}
+.xfer-choice.best{border-color:var(--green);background:rgba(16,185,129,.08);}
+.xfer-choice.good{border-color:var(--gold);background:rgba(245,158,11,.06);}
+.xfer-choice.bad{border-color:#dc2626;background:rgba(220,38,38,.06);}
+.xfer-fb{padding:10px 14px;border-radius:7px;font-size:.85rem;line-height:1.6;margin-bottom:10px;display:none;}
+.xfer-fb.show{display:block;background:var(--panel2);border:1px solid var(--border);color:var(--text-m);}
+.btn-primary{background:var(--primary);color:#fff;border:none;padding:12px 28px;font-family:'Orbitron',sans-serif;font-size:.75rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:7px;transition:.2s;margin-top:8px;font-weight:700;}
+.btn-primary:hover{filter:brightness(1.1);transform:translateY(-1px);}
+.btn-primary:disabled{opacity:.3;cursor:not-allowed;transform:none;}
+.fin-zone{text-align:center;padding:40px 20px;}
+.cert-badge{width:90px;height:90px;background:linear-gradient(135deg,var(--primary),#f87171);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.4rem;margin:0 auto 20px;box-shadow:0 0 40px var(--primary-glow);}
+.cert-title{font-family:'Orbitron',sans-serif;font-size:1.1rem;color:#fff;margin-bottom:8px;}
+.cert-sub{font-size:.88rem;color:var(--text-m);margin-bottom:24px;line-height:1.6;}
+.xp-earned{font-family:'Orbitron',sans-serif;font-size:2.2rem;color:var(--primary);margin-bottom:6px;}
+.xp-label{font-size:.75rem;color:var(--text-d);text-transform:uppercase;letter-spacing:2px;margin-bottom:28px;}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <header class="mod-header">
+    <div class="mod-icon">🌊</div>
+    <div class="mod-meta">
+      <div class="mod-pilier">Pilier Comprendre · Module 04</div>
+      <div class="mod-title">Contagion Suicidaire</div>
+      <div class="mod-sub">Comprendre les effets Werther et Papageno, les facteurs de risque de cluster suicidaire, et les règles de communication protectrice (Safe Messaging) en milieu scolaire.</div>
+      <div class="mod-ref">Niederkrotenthaler 2010 · Gould 2001 · IASP Safe Messaging · Papageno Protocol · INPES 2017</div>
+    </div>
+    <div class="xp-chip">+200 XP</div>
+  </header>
+
+  <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+
+  <nav class="level-nav">
+    <button class="lnav-btn active" id="nav1" onclick="goLevel(1)">I · Déconstruction</button>
+    <button class="lnav-btn" id="nav2" onclick="goLevel(2)" disabled>II · Expérimentation</button>
+    <button class="lnav-btn" id="nav3" onclick="goLevel(3)" disabled>III · Transfert</button>
+  </nav>
+
+  <!-- =================== NIVEAU 1 =================== -->
+  <section class="screen active" id="screen1">
+    <div class="section-title">Deux Effets, Une Réalité</div>
+
+    <div class="narr-block">
+      En 1974, le sociologue David Phillips publie une étude montrant que les taux de suicide augmentent significativement dans les semaines suivant la médiatisation intensive d'un suicide célèbre. Il nomme ce phénomène <em>l'effet Werther</em>, en référence au roman de Goethe dont la parution, en 1774, aurait déclenché une vague de suicides en Europe.<br><br>
+      En 2010, Thomas Niederkrotenthaler découvre l'inverse : certains récits médiatiques <strong>réduisent</strong> le risque suicidaire. Il les nomme <em>l'effet Papageno</em>, en référence au personnage de La Flûte Enchantée qui renonce au suicide grâce à l'intervention d'autres personnages. Ce n'est pas ce qu'on dit sur le suicide qui protège ou nuit — c'est <strong>comment on en parle</strong>.
+    </div>
+
+    <div class="effet-duel">
+      <div class="effet-card werther">
+        <div class="effet-tag">⚠️ Effet Werther</div>
+        <div class="effet-title">Contagion suicidaire</div>
+        <div class="effet-desc">Augmentation statistique du risque suicidaire dans une communauté après exposition à un suicide — surtout si <strong>la méthode est détaillée</strong>, si la victime est <strong>identifiée et glorifiée</strong>, ou si le suicide est présenté comme une <strong>solution à un problème</strong>. Risque maximal dans les <strong>2 à 4 semaines</strong> suivant l'événement déclencheur.</div>
+      </div>
+      <div class="effet-card papageno">
+        <div class="effet-tag">🛡️ Effet Papageno</div>
+        <div class="effet-title">Protection par le récit</div>
+        <div class="effet-desc">Réduction du risque suicidaire via des récits présentant <strong>des personnes qui ont traversé une crise suicidaire et trouvé une issue</strong>. La clé : espoir, alternatives, ressources. Pas de glorification, pas de méthode, pas de détails. <strong>Le témoignage de survie protège plus que l'interdiction de parler.</strong></div>
+      </div>
+    </div>
+
+    <div class="section-title">Facteurs de Risque de Cluster Suicidaire</div>
+
+    <div class="narr-block">
+      Un <strong>cluster suicidaire</strong> désigne une série de suicides ou tentatives survenus dans un espace ou une période proches, avec un lien de contagion identifiable. Les établissements scolaires sont des espaces à risque particulier en raison de la densité du réseau social.
+    </div>
+
+    <div class="risk-grid">
+      <div class="risk-item">
+        <div class="risk-icon">👥</div>
+        <div class="risk-body">
+          <div class="risk-label">Identification forte</div>
+          <div class="risk-desc">Ressemblance perçue avec la victime (âge, situation, douleur similaire). Le suicide "parle" à l'autre.</div>
+        </div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-icon">📣</div>
+        <div class="risk-body">
+          <div class="risk-label">Communication non maîtrisée</div>
+          <div class="risk-desc">Médiatisation de la méthode, de la note laissée, de la chambre — tout ce qui romantise l'acte.</div>
+        </div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-icon">🌸</div>
+        <div class="risk-body">
+          <div class="risk-label">Glorification post-mortem</div>
+          <div class="risk-desc">Hommages excessifs, "martyrisation", mémoriaux permanents non cadrés. L'élève mort reçoit une attention qu'il n'avait pas de son vivant.</div>
+        </div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-icon">🔇</div>
+        <div class="risk-body">
+          <div class="risk-label">Silence institutionnel total</div>
+          <div class="risk-desc">L'absence de parole n'arrête pas la contagion — elle la dépolitise et la rend incontrôlable via les réseaux sociaux.</div>
+        </div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-icon">⚡</div>
+        <div class="risk-body">
+          <div class="risk-label">Vulnérabilités préexistantes</div>
+          <div class="risk-desc">Élèves avec antécédents de TS, dépression, deuil récent, isolement. Le drame actuel agit comme réactivation.</div>
+        </div>
+      </div>
+      <div class="risk-item">
+        <div class="risk-icon">📱</div>
+        <div class="risk-body">
+          <div class="risk-label">Réseaux sociaux non monitorés</div>
+          <div class="risk-desc">Diffusion virale de contenu non cadré (photos, notes, messages d'adieu). La vitesse amplifie la contagion.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-title">Safe Messaging — Ce Qu'on Dit, Comment On Le Dit</div>
+
+    <div class="narr-block">
+      Les recommandations de <em>communication protectrice</em> (Safe Messaging) s'appliquent à toute prise de parole institutionnelle après un suicide ou une tentative : annonce aux élèves, communication aux familles, réseaux sociaux, discours de commémoration.
+    </div>
+
+    <div class="msg-header">
+      <div class="msg-hcol bad">✗ À ne pas dire/faire</div>
+      <div class="msg-hcol good">✓ À dire/faire à la place</div>
+    </div>
+    <div class="msg-row">
+      <div class="msg-bad">Mentionner la méthode utilisée ou l'endroit précis</div>
+      <div class="msg-good">« Il est décédé » — sans détails sur la circonstance</div>
+    </div>
+    <div class="msg-row">
+      <div class="msg-bad">« Il était tellement courageux d'avoir mis fin à sa souffrance »</div>
+      <div class="msg-good">Parler de la vie, des qualités, des souvenirs — pas de l'acte</div>
+    </div>
+    <div class="msg-row">
+      <div class="msg-bad">Lire ou diffuser la note laissée, les messages d'adieu</div>
+      <div class="msg-good">Signaler l'existence d'une note sans en divulguer le contenu</div>
+    </div>
+    <div class="msg-row">
+      <div class="msg-bad">Créer un mémorial permanent dans l'établissement sans cadre</div>
+      <div class="msg-good">Rituel de deuil sobre et temporellement borné, avec clôture</div>
+    </div>
+    <div class="msg-row">
+      <div class="msg-bad">Présenter le suicide comme la conséquence logique d'un problème</div>
+      <div class="msg-good">Nommer la souffrance ET les alternatives, les ressources existantes</div>
+    </div>
+
+    <div class="quote-block">
+      « La contagion suicidaire n'est pas une légende urbaine — c'est un phénomène épidémiologique documenté. Et tout comme pour une épidémie, les mesures institutionnelles précoces et coordonnées sont la seule réponse efficace. »
+      <cite>— Madelyn Gould, Columbia University, <em>Suicide and the Media</em>, 2001</cite>
+    </div>
+
+    <div class="reflect-q">
+      Un proviseur envisage de rebaptiser la salle de classe du défunt à son nom, et d'installer une photo encadrée à l'entrée de l'établissement en hommage permanent. Quelle est l'erreur précise que cette décision pourrait commettre ?
+    </div>
+
+    <div class="opts-list" id="opts1">
+      <button class="opt-btn" onclick="chooseOpt1(this,'A')">A — Ce n'est pas une erreur : rendre hommage à un élève décédé est une pratique normale et respectueuse de sa mémoire.</button>
+      <button class="opt-btn" onclick="chooseOpt1(this,'B')">B — Cette décision risque de constituer une glorification post-mortem : l'élève reçoit une visibilité et une importance symbolique qu'il n'avait peut-être pas de son vivant, ce qui peut alimenter chez des élèves vulnérables une identification dangereuse — « si je fais pareil, on m'aimera autant ».</button>
+      <button class="opt-btn" onclick="chooseOpt1(this,'C')">C — L'erreur est de nature juridique : un établissement ne peut pas rebaptiser une salle sans autorisation académique.</button>
+    </div>
+
+    <div class="feedback-box" id="fb1"></div>
+    <button class="btn-primary" id="btnL1" onclick="unlockLevel2()" disabled>Accéder au Niveau II →</button>
+  </section>
+
+  <!-- =================== NIVEAU 2 =================== -->
+  <section class="screen" id="screen2">
+    <div class="section-title">Application — Décisions de Communication</div>
+
+    <!-- Phase 1 -->
+    <div class="sim-phase" id="phase1">
+      <div class="phase-label">Situation 01 / 03</div>
+      <div class="phase-q">Un professeur principal souhaite lire à voix haute la « lettre d'adieu » laissée par l'élève décédé, pour que la classe « comprenne sa détresse ». Il vous demande votre avis.</div>
+      <div class="phase-intro">Safe Messaging : ne jamais diffuser le contenu d'une note d'adieu, même avec une intention pédagogique.</div>
+      <div class="phase-choice" onclick="choosePhase(1,this,'bad')">✗ Accepter : c'est un choix pédagogique du professeur, et comprendre la détresse peut prévenir d'autres passages à l'acte.</div>
+      <div class="phase-choice" onclick="choosePhase(1,this,'medium')">~ Proposer de la résumer oralement plutôt que de la lire intégralement, pour en atténuer l'impact.</div>
+      <div class="phase-choice" onclick="choosePhase(1,this,'good')">✓ Déconseiller fermement la lecture ou tout résumé du contenu. Expliquer : la note est un document personnel dont la diffusion enfreint les règles Safe Messaging, peut alimenter la glorification, et expose les élèves les plus vulnérables à un contenu iatrogène. Proposer à la place de parler de la vie et des qualités de l'élève — pas de l'acte, pas de la souffrance exprimée dans la note.</div>
+      <div class="phase-fb" id="pfb1"></div>
+    </div>
+
+    <!-- Phase 2 -->
+    <div class="sim-phase" id="phase2" style="opacity:.45;pointer-events:none;">
+      <div class="phase-label">Situation 02 / 03</div>
+      <div class="phase-q">Cinq jours après le décès, un élève de terminale vous demande à vous parler. Il vous confie qu'il « comprend » ce qu'a fait son camarade, que lui aussi se sent « invisible », et qu'il « pense à ça ». Comment réagissez-vous ?</div>
+      <div class="phase-intro">Signal de contagion possible. Alerte C3 (vulnérabilité préexistante + identification). Ce n'est plus de la gestion de deuil.</div>
+      <div class="phase-choice" onclick="choosePhase(2,this,'bad')">✗ Le rassurer : « C'est normal de trouver ça triste. Tu as encore plein de choses devant toi. »</div>
+      <div class="phase-choice" onclick="choosePhase(2,this,'medium')">~ L'écouter attentivement pendant 15 minutes, puis lui dire de revenir vous voir s'il a encore ces pensées.</div>
+      <div class="phase-choice" onclick="choosePhase(2,this,'good')">✓ Prendre au sérieux immédiatement. Questionner directement mais avec douceur sur l'intention suicidaire (« Est-ce que tu penses à en finir toi aussi ? »). Alerter le CPE, l'infirmière ou le médecin scolaire. Ne pas le laisser seul. Contacter la famille ce jour même. Ce n'est pas de la surréaction — c'est de la prévention.</div>
+      <div class="phase-fb" id="pfb2"></div>
+    </div>
+
+    <!-- Phase 3 -->
+    <div class="sim-phase" id="phase3" style="opacity:.45;pointer-events:none;">
+      <div class="phase-label">Situation 03 / 03</div>
+      <div class="phase-q">Des élèves ont créé un groupe Instagram en hommage à l'élève décédé, avec des photos et des messages du type « Notre ange parti trop tôt » et « Les âmes pures ne trouvent pas leur place ici-bas ». Que faites-vous ?</div>
+      <div class="phase-intro">Réseau social, glorification, romantisation du suicide. Fenêtre d'action courte.</div>
+      <div class="phase-choice" onclick="choosePhase(3,this,'bad')">✗ Ne pas intervenir : c'est leur façon de faire leur deuil, et censurer aggraverait le sentiment de frustration.</div>
+      <div class="phase-choice" onclick="choosePhase(3,this,'medium')">~ Signaler le contenu à Instagram pour violation des règles, et ne pas en parler aux élèves pour éviter d'amplifier le phénomène.</div>
+      <div class="phase-choice" onclick="choosePhase(3,this,'good')">✓ Alerter immédiatement la direction. Identifier les élèves administrateurs du groupe et les rencontrer individuellement — pas pour les sanctionner, mais pour comprendre leur état et rediriger leur besoin d'hommage vers une forme non iatrogène (témoignages de vie, pas de glorification de l'acte). Proposer un rituel d'hommage institutionnel sobre comme alternative. Informer les familles de l'existence du groupe.</div>
+      <div class="phase-fb" id="pfb3"></div>
+    </div>
+
+    <button class="btn-primary" id="btnL2" onclick="unlockLevel3()" disabled>Accéder au Niveau III →</button>
+  </section>
+
+  <!-- =================== NIVEAU 3 =================== -->
+  <section class="screen" id="screen3">
+    <div class="section-title">Transfert — Décisions en Conditions Réelles</div>
+
+    <div class="xfer-card">
+      <div class="xfer-title">Scénario Professionnel 01 / 03</div>
+      <div class="xfer-scenario">
+        Un journaliste local contacte l'établissement pour rédiger un article « hommage » à l'élève décédé. Il souhaite interviewer des camarades et recueillir des témoignages. La direction hésite.
+      </div>
+      <div class="xfer-q">Que recommandez-vous à la direction ?</div>
+      <div class="xfer-choice" onclick="chooseXfer(1,this,'bad')">○ Accepter : la transparence et la visibilité médiatique permettent à la communauté de faire son deuil collectivement.</div>
+      <div class="xfer-choice" onclick="chooseXfer(1,this,'good')">◎ Accepter sous conditions strictes : pas de mention de la méthode, pas de photos du lieu du drame, pas d'interview d'élèves mineurs sans accord parental.</div>
+      <div class="xfer-choice" onclick="chooseXfer(1,this,'best')">⬤ Refuser poliment mais fermement tout article portant sur l'élève décédé dans l'immédiat (période de risque maximal = 4 premières semaines). Expliquer au journaliste les règles Safe Messaging et les risques d'effet Werther. Si l'article est souhaité après cette période, cadrer strictement : vie de l'élève (pas de l'acte), ressources, numéros d'aide. Aucune interview d'élèves sans accompagnement professionnel.</div>
+      <div class="xfer-fb" id="xfb1"></div>
+    </div>
+
+    <div class="xfer-card">
+      <div class="xfer-title">Scénario Professionnel 02 / 03</div>
+      <div class="xfer-scenario">
+        Trois semaines après le drame, deux autres élèves de l'établissement ont été hospitalisés suite à des tentatives de suicide. La direction parle désormais de « cluster ». Un parent d'élève vous interpelle : « Pourquoi vous n'avez pas agi plus tôt ? »
+      </div>
+      <div class="xfer-q">Quelle réponse institutionnelle apportez-vous ?</div>
+      <div class="xfer-choice" onclick="chooseXfer(2,this,'bad')">○ Expliquer que le cluster était imprévisible et que l'établissement a fait de son mieux.</div>
+      <div class="xfer-choice" onclick="chooseXfer(2,this,'good')">◎ Reconnaître la détresse du parent, rappeler les actions déjà mises en place, et annoncer le renforcement du dispositif.</div>
+      <div class="xfer-choice" onclick="chooseXfer(2,this,'best')">⬤ Ne pas se défendre à chaud face à un parent en détresse. Valider sa colère (normale), présenter les mesures déjà actives et les nouvelles actions immédiates (renforcement du repérage des élèves C3, demande de CUMP, supervision des réseaux). Reconnaître que la prévention du cluster est un travail collectif — sans rejeter la culpabilité ni s'auto-accabler. Proposer une réunion d'information parents dans les 48h.</div>
+      <div class="xfer-fb" id="xfb2"></div>
+    </div>
+
+    <div class="xfer-card">
+      <div class="xfer-title">Scénario Professionnel 03 / 03</div>
+      <div class="xfer-scenario">
+        Un élève de terminale vous présente un exposé sur « la beauté du geste de Virginia Woolf » pour un cours de littérature. L'enseignant ne l'a pas relu. Vous êtes en salle des professeurs et entendez la description du projet.
+      </div>
+      <div class="xfer-q">Quelle action prenez-vous ?</div>
+      <div class="xfer-choice" onclick="chooseXfer(3,this,'best')">⬤ Intervenir discrètement auprès de l'enseignant avant l'exposé. Sans juger l'intention littéraire, alerter sur le risque : en période de tension post-traumatique dans l'établissement, un exposé romantisant un suicide de figure culturelle peut activer l'effet Werther. Proposer d'adapter le cadrage (vie et œuvre de Woolf, sans focalisation sur l'acte), ou de reporter à une période moins sensible. Si l'exposé a déjà eu lieu, rencontrer les élèves présents pour un débriefing neutre.</div>
+      <div class="xfer-choice" onclick="chooseXfer(3,this,'good')">◎ Alerter discrètement l'enseignant que le sujet est sensible en ce moment, sans exiger de modification.</div>
+      <div class="xfer-choice" onclick="chooseXfer(3,this,'bad')">○ Ne pas intervenir : c'est un cours de littérature, et encadrer la création littéraire serait de la censure.</div>
+      <div class="xfer-fb" id="xfb3"></div>
+    </div>
+
+    <button class="btn-primary" id="btnCert" onclick="completeMod()" disabled>Valider le Module →</button>
+  </section>
+
+  <!-- FIN -->
+  <section class="screen" id="screenFin">
+    <div class="fin-zone">
+      <div class="cert-badge">🌊</div>
+      <div class="cert-title">Module CRISE_04 Validé</div>
+      <div class="cert-sub">Tu maîtrises les effets Werther et Papageno, les facteurs de risque de cluster suicidaire en milieu scolaire, et les principes du Safe Messaging. Tu sais maintenant que la façon de communiquer peut protéger — ou nuire — autant que le fait de parler ou non.</div>
+      <div class="xp-earned">+200 XP</div>
+      <div class="xp-label">Points acquis</div>
+      <button class="btn-primary" onclick="goHub()">Retour au Hub KAIROS</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const MODULE_ID = 'CRISE_04';
+const XP_VALUE  = 200;
+
+let l1Done=false, l2Done=false, xferDone=[false,false,false], phaseDone=[false,false,false];
+
+function chooseOpt1(btn, val){
+  document.querySelectorAll('#opts1 .opt-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  const fb=document.getElementById('fb1');
+  if(val==='B'){
+    fb.textContent='✓ Exact. C\'est la définition précise de la glorification post-mortem : un élève qui n\'était peut-être pas particulièrement visible ou valorisé de son vivant se voit attribuer une visibilité symbolique permanente après sa mort par suicide. Pour des élèves en souffrance et en quête de reconnaissance, ce message peut être perçu inconsciemment comme : "le suicide attire l\'amour et l\'attention que je n\'ai pas." Les recommandations Safe Messaging sont unanimes : honorer la vie, pas l\'acte, et éviter les hommages permanents non cadrés.';
+    fb.className='feedback-box show';
+    document.getElementById('btnL1').disabled=false;
+    l1Done=true; updateProg();
+  } else if(val==='A'){
+    fb.textContent='Partiellement. Rendre hommage est légitime — mais la manière compte. Un hommage sobre, temporellement limité, portant sur la vie de l\'élève est très différent d\'un mémorial permanent qui risque d\'alimenter la glorification. L\'intention est bonne ; la forme peut être iatrogène.';
+    fb.className='feedback-box show';
+  } else {
+    fb.textContent='La question juridique est réelle mais secondaire. L\'erreur principale est de nature psycho-sociale : le risque de glorification post-mortem et ses effets sur les élèves vulnérables. Les règles académiques peuvent valider ou refuser un tel hommage — la question prioritaire est celle de l\'impact sur la communauté scolaire en deuil.';
+    fb.className='feedback-box show';
+  }
+}
+
+function unlockLevel2(){
+  document.getElementById('screen1').classList.remove('active');
+  document.getElementById('screen2').classList.add('active');
+  document.getElementById('nav1').classList.add('done');
+  document.getElementById('nav2').classList.add('active');
+  document.getElementById('nav2').disabled=false;
+  updateProg();
+}
+
+const pFb={
+  1:{
+    good:'✓ Refus argumenté et juste. La note d\'adieu, même résumée, est un contenu iatrogène à fort potentiel de glorification. "Comprendre la détresse" est une intention louable — mais elle peut être servie par d\'autres modalités (témoignages de gens qui ont traversé une crise suicidaire et s\'en sont sortis, ressources, numéros). Jamais par le contenu d\'une note.',
+    medium:'Insuffisant. Même résumée, la note expose les élèves à la logique interne de l\'acte — ce qui est précisément ce que le Safe Messaging interdit. La forme du résumé ne neutralise pas le risque du fond.',
+    bad:'Grave erreur. La diffusion d\'une note d\'adieu, même avec une intention pédagogique, enfreint toutes les recommandations Safe Messaging. Elle expose les élèves à une narrativisation du suicide comme "explication compréhensible", renforce l\'identification et peut déclencher un effet Werther direct dans la classe.'
+  },
+  2:{
+    good:'✓ Réponse juste et proportionnée. L\'identification à un camarade décédé par suicide + déclaration de se sentir "invisible" + pensées à "ça" constituent des signaux de contagion suicidaire clairs. La question directe sur l\'intention suicidaire (recommandée par l\'OMS) ne met pas l\'idée dans la tête — elle ouvre un espace de parole et évalue le risque réel. L\'alerte immédiate est non-négociable.',
+    medium:'Trop passif face à un niveau de risque élevé. 15 minutes d\'écoute sans alerte, sans évaluation du risque, sans contact avec la famille — c\'est insuffisant en présence de signes de contagion suicidaire active. L\'orientation vers "revenir si ça empire" laisse l\'élève seul avec un risque en cours.',
+    bad:'Gravement insuffisant. Minimiser avec "tu as plein de choses devant toi" est non seulement inefficace sur le plan neurobiologique (le cerveau en crise ne traite pas les arguments futurs) mais peut être ressenti comme une invalidation de sa souffrance — ce qui renforce l\'isolement.'
+  },
+  3:{
+    good:'Partiellement juste. Le signalement à Instagram est une bonne action parallèle, mais agir uniquement en arrière-plan sans engagement direct avec les élèves laisse un vide : les élèves auteurs ont besoin de comprendre, pas juste d\'être censurés. La suppression sans dialogue peut aggraver le sentiment d\'incompréhension et alimenter un hommage encore plus difficile à contrôler.',
+    medium:'Non. L\'absence d\'intervention laisse un contenu à fort potentiel Werther se propager librement. La censure brutale sans dialogue est effectivement contre-productive — mais l\'inaction l\'est tout autant. La voie juste est entre les deux.',
+    bad:'Erreur. Ce groupe est une forme de glorification qui cumule plusieurs facteurs de risque : romantisation ("âmes pures"), absence de ressources, audience large. La légitimité émotionnelle des auteurs ne rend pas le contenu inoffensif. Intervenir est une responsabilité de protection, pas de censure.'
+  }
+};
+
+function choosePhase(n,el,qual){
+  const ph=document.getElementById('phase'+n);
+  ph.querySelectorAll('.phase-choice').forEach(c=>c.classList.remove('good','medium','bad'));
+  el.classList.add(qual);
+  const fb=document.getElementById('pfb'+n);
+  fb.textContent=pFb[n][qual];
+  fb.className='phase-fb show';
+  if(qual==='good'||qual==='medium'){
+    phaseDone[n-1]=true;
+    if(n<3) setTimeout(()=>{ const nxt=document.getElementById('phase'+(n+1)); nxt.style.opacity='1'; nxt.style.pointerEvents='auto'; },600);
+    checkL2Done();
+  }
+}
+function checkL2Done(){
+  if(phaseDone[0]&&phaseDone[1]&&phaseDone[2]){ document.getElementById('btnL2').disabled=false; l2Done=true; updateProg(); }
+}
+function unlockLevel3(){
+  document.getElementById('screen2').classList.remove('active');
+  document.getElementById('screen3').classList.add('active');
+  document.getElementById('nav2').classList.add('done');
+  document.getElementById('nav3').classList.add('active');
+  document.getElementById('nav3').disabled=false;
+  updateProg();
+}
+
+const xFb={
+  1:{
+    best:'✓ Recommandation optimale. Pendant les 4 premières semaines, tout article "hommage" centré sur l\'élève décédé est un facteur de risque Werther documenté. Refuser clairement, proposer un alternative cadrée (ressources, prévention, témoignages de vie) plus tard, et protéger les élèves d\'interviews non accompagnées. La presse locale comprend généralement si vous expliquez les enjeux — et vous devenez une ressource pour eux aussi.',
+    good:'Les conditions proposées vont dans le bon sens, mais accepter l\'article "hommage" même cadré dans les 4 premières semaines reste un risque élevé. La période de risque maximal est documentée — en dessous de ce délai, le refus est la recommandation prioritaire.',
+    bad:'Grave erreur de Safe Messaging. Un article hommage non cadré, avec témoignages d\'élèves, en période de risque maximal est exactement la configuration qui maximise l\'effet Werther. La transparence médiatique n\'est pas protectrice ici — elle est iatrogène.'
+  },
+  2:{
+    best:'✓ Réponse institutionnelle juste. Face à un parent en colère et en douleur, la défensivité aggrave. La validation de sa détresse, la présentation claire des mesures passées et futures, et la proposition d\'un espace de dialogue (réunion parents) montrent que l\'institution est en mouvement — sans nier les insuffisances éventuelles. C\'est le dosage équitable entre transparence et protection de l\'institution.',
+    good:'Bonne orientation, mais "expliquer les actions passées" sans d\'abord valider la colère parentale est souvent perçu comme de la justification. L\'ordre est important : d\'abord accueillir, ensuite informer.',
+    bad:'Erreur relationnelle et stratégique. "Imprévisible" peut être exact, mais en contexte de détresse, ce mot est perçu comme un désengagement de responsabilité. Et "de son mieux" sonne creux après 3 hospitalisations. Ce n\'est pas le bon moment pour les explications — c\'est le moment pour l\'écoute et l\'action visible.'
+  },
+  3:{
+    best:'✓ Posture juste et courageuse. Intervenir discrètement auprès de l\'enseignant avant l\'exposé, en expliquant le contexte plutôt qu\'en imposant une interdiction, est la bonne approche. La littérature peut et doit aborder le suicide — mais la temporalité et le cadrage comptent. En période post-traumatique active, un exposé romantisant un suicide célèbre est un facteur Werther identifiable. Proposer une adaptation n\'est pas de la censure — c\'est de la responsabilité professionnelle.',
+    good:'Correct mais incomplet. Alerter sans proposer d\'alternative ou de solution laisse l\'enseignant sans levier — et ne protège pas les élèves si l\'exposé se fait quand même. L\'alerte est la condition nécessaire, pas suffisante.',
+    bad:'Erreur de cadre. La liberté pédagogique est réelle et doit être respectée — mais elle ne s\'exerce pas dans un vide de contexte. Après un suicide dans l\'établissement, tout contenu romantisant un acte suicidaire (fût-il littéraire) entre dans le champ de la prévention de la contagion. Ce n\'est pas de la censure — c\'est de la protection.'
+  }
+};
+
+function chooseXfer(n,el,qual){
+  const c=el.closest('.xfer-card');
+  c.querySelectorAll('.xfer-choice').forEach(x=>x.classList.remove('best','good','bad'));
+  el.classList.add(qual);
+  const fb=document.getElementById('xfb'+n);
+  fb.textContent=xFb[n][qual];
+  fb.className='xfer-fb show';
+  if(qual==='best'||qual==='good'){ xferDone[n-1]=true; checkCert(); }
+}
+function checkCert(){
+  if(xferDone[0]&&xferDone[1]&&xferDone[2]){ document.getElementById('btnCert').disabled=false; updateProg(); }
+}
+
+function completeMod(){
+  if(!localStorage.getItem('kairos_xp_'+MODULE_ID)){
+    let tot=parseInt(localStorage.getItem('kairos_xp_total')||'0');
+    tot+=XP_VALUE;
+    localStorage.setItem('kairos_xp_total', tot);
+    localStorage.setItem('kairos_xp_'+MODULE_ID, XP_VALUE);
+  }
+  localStorage.setItem('CERT_KAIROS_'+MODULE_ID, 'true');
+  if(window.parent&&window.parent!==window){
+    window.parent.postMessage({type:'pvs_bridge_event',event:'MODULE_COMPLETE',data:{module:MODULE_ID,xp:XP_VALUE}},'*');
+  }
+  document.getElementById('screen3').classList.remove('active');
+  document.getElementById('screenFin').classList.add('active');
+  document.getElementById('progFill').style.width='100%';
+}
+
+function goLevel(n){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen'+n).classList.add('active');
+  document.querySelectorAll('.lnav-btn').forEach((b,i)=>{ b.classList.remove('active'); if(i===n-1)b.classList.add('active'); });
+}
+function goHub(){
+  if(window.parent&&window.parent!==window){
+    window.parent.postMessage({type:'pvs_bridge_event',event:'GO_HUB',data:{}},'*');
+  } else {
+    window.location.href='index_KAIROS.html';
+  }
+}
+function updateProg(){
+  const steps=[l1Done,l2Done,xferDone[0]||xferDone[1]||xferDone[2]];
+  const done=steps.filter(Boolean).length;
+  document.getElementById('progFill').style.width=(done/3*100)+'%';
+}
+
+(function init(){
+  if(localStorage.getItem('CERT_KAIROS_'+MODULE_ID)){
+    document.getElementById('nav2').disabled=false;
+    document.getElementById('nav3').disabled=false;
+    l1Done=l2Done=true; xferDone=[true,true,true]; phaseDone=[true,true,true];
+    updateProg();
+  }
+})();
+</script>
+</body>
+</html>

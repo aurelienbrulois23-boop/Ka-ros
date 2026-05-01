@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KAIROS ONDES · S1E02 · Ce que la CUMP fait vraiment</title>
+
+<!-- ══════════════════════════════════════════════════════════
+     PODCAST METADATA — détecté automatiquement par le hub
+     ══════════════════════════════════════════════════════════ -->
+<script id="PODCAST_META" type="application/json">
+{
+  "num": "02",
+  "saison": 1,
+  "episode": 2,
+  "title": "Ce que la CUMP fait vraiment",
+  "subtitle": "Démystifier l'intervention des équipes médico-psychologiques d'urgence en milieu scolaire",
+  "pillar": "COMPRENDRE",
+  "pillarColor": "#dc2626",
+  "pillarIcon": "🧠",
+  "duration": "38 min",
+  "icon": "🏥",
+  "description": "Beaucoup d'établissements ont entendu parler de la CUMP sans jamais en avoir vu une à l'œuvre. Quand la déclencher ? Qui la compose ? Que fait-elle, concrètement, dans les premières 48 heures ? Une psychiatre et un psychologue de CUMP expliquent leur métier depuis l'intérieur.",
+  "date": "2026-05-08",
+  "tags": ["CUMP", "urgence médico-psychologique", "cellule de crise", "SAMU", "postvention"]
+}
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary:#dc2626; --primary-dim:rgba(220,38,38,.1); --primary-glow:rgba(220,38,38,.35);
+  --purple:#8b5cf6; --purple-dim:rgba(139,92,246,.12); --purple-glow:rgba(139,92,246,.4);
+  --bg:#07000a; --bg2:#0d0012; --panel:#130820; --panel2:#1a0f2a;
+  --text:#ede0ff; --text-m:#a080c0; --text-d:#4a2d6a;
+  --green:#10b981; --gold:#f59e0b; --border:rgba(139,92,246,.2);
+  --teal:#06b6d4; --teal-dim:rgba(6,182,212,.1);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 30% 0%,rgba(139,92,246,.08) 0%,transparent 55%),
+             radial-gradient(ellipse at 70% 100%,rgba(6,182,212,.04) 0%,transparent 55%);}
+
+/* ── HEADER ── */
+.pod-header{padding:28px 24px 20px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:18px;}
+.pod-art{width:80px;height:80px;background:linear-gradient(135deg,#0e7490,#6d28d9);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:2.4rem;flex-shrink:0;box-shadow:0 0 30px rgba(6,182,212,.35);}
+.pod-meta{flex:1;}
+.pod-series{font-family:'Orbitron',sans-serif;font-size:.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
+.pod-title{font-family:'Orbitron',sans-serif;font-size:1.3rem;color:#fff;margin-bottom:5px;line-height:1.3;}
+.pod-subtitle{font-size:.9rem;color:var(--text-m);margin-bottom:10px;line-height:1.5;}
+.pod-tags{display:flex;flex-wrap:wrap;gap:5px;}
+.pod-tag{font-size:.65rem;padding:2px 9px;border-radius:10px;border:1px solid var(--border);color:var(--text-d);font-family:'Orbitron',sans-serif;letter-spacing:.5px;}
+.pod-duration-chip{background:var(--purple-dim);border:1px solid rgba(139,92,246,.3);padding:4px 12px;border-radius:20px;font-size:.72rem;color:var(--purple);font-family:'Orbitron',sans-serif;white-space:nowrap;align-self:flex-start;}
+
+/* ── PLAYER BAR ── */
+.player-bar{background:var(--panel);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:10;}
+.play-btn{width:40px;height:40px;border-radius:50%;background:var(--purple);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;color:#fff;flex-shrink:0;transition:.2s;box-shadow:0 0 14px var(--purple-glow);}
+.play-btn:hover{filter:brightness(1.15);}
+.player-info{flex:1;}
+.player-track{font-size:.78rem;color:var(--text);margin-bottom:5px;}
+.player-prog-bar{height:3px;background:rgba(255,255,255,.08);border-radius:2px;cursor:pointer;position:relative;}
+.player-prog-fill{height:100%;background:linear-gradient(90deg,var(--purple),#06b6d4);border-radius:2px;transition:width .3s ease;}
+.player-times{display:flex;justify-content:space-between;margin-top:4px;}
+.player-t{font-size:.62rem;color:var(--text-d);font-family:'Orbitron',sans-serif;}
+.player-chap-label{font-size:.68rem;color:var(--purple);font-family:'Orbitron',sans-serif;letter-spacing:1px;white-space:nowrap;}
+
+/* ── CONTENT ── */
+#app{max-width:780px;margin:0 auto;padding:24px 20px 80px;}
+
+.chapter{background:var(--panel);border:1px solid var(--border);border-radius:12px;margin-bottom:14px;overflow:hidden;transition:.2s;}
+.chapter.active{border-color:rgba(139,92,246,.5);box-shadow:0 0 20px rgba(139,92,246,.1);}
+.chapter-header{display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;transition:.15s;}
+.chapter-header:hover{background:var(--purple-dim);}
+.chap-num{font-family:'Orbitron',sans-serif;font-size:.65rem;color:var(--purple);letter-spacing:2px;white-space:nowrap;}
+.chap-title{flex:1;font-size:.9rem;font-weight:600;color:var(--text);}
+.chap-dur{font-size:.65rem;color:var(--text-d);font-family:'Orbitron',sans-serif;white-space:nowrap;}
+.chap-arrow{font-size:.8rem;color:var(--text-d);transition:.2s;}
+.chapter.open .chap-arrow{transform:rotate(90deg);}
+.chapter-body{display:none;padding:0 18px 18px;}
+.chapter.open .chapter-body{display:block;}
+
+.narr{font-size:.92rem;line-height:1.85;color:var(--text);margin-bottom:14px;}
+.narr em{color:#c4b5fd;font-style:italic;}
+.narr strong{color:#fde68a;}
+.voice-block{background:var(--panel2);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0;font-size:.92rem;line-height:1.75;color:var(--text);}
+.voice-block em{color:#c4b5fd;font-style:normal;}
+.voice-block.teal{border-left-color:var(--teal);}
+.voice-label{font-size:.6rem;font-family:'Orbitron',sans-serif;letter-spacing:2px;text-transform:uppercase;color:var(--purple);margin-bottom:6px;}
+.voice-label.teal{color:var(--teal);}
+.pullquote{background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.2);border-radius:10px;padding:16px 20px;margin:14px 0;font-size:1rem;font-style:italic;color:#c4b5fd;line-height:1.7;}
+.pullquote cite{display:block;margin-top:8px;font-size:.75rem;color:var(--text-d);font-style:normal;font-family:'Orbitron',sans-serif;letter-spacing:1px;}
+.key-point{background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.2);border-radius:8px;padding:12px 16px;margin:12px 0;font-size:.88rem;color:#6ee7b7;line-height:1.6;}
+.key-point::before{content:'▸ ';font-weight:700;}
+.warn-point{background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.25);border-radius:8px;padding:12px 16px;margin:12px 0;font-size:.88rem;color:#fde68a;line-height:1.6;}
+.warn-point::before{content:'⚠ ';font-weight:700;}
+.ref-block{background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:12px 0;font-size:.82rem;color:var(--text-d);line-height:1.6;}
+.ref-block strong{color:var(--text-m);}
+
+/* ── SCHEMA CUMP ── */
+.cump-schema{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0;}
+.cump-card{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;}
+.cump-card-icon{font-size:1.4rem;margin-bottom:6px;}
+.cump-card-title{font-family:'Orbitron',sans-serif;font-size:.68rem;color:var(--purple);letter-spacing:1px;margin-bottom:5px;}
+.cump-card-body{font-size:.82rem;color:var(--text-m);line-height:1.55;}
+.cump-card.teal .cump-card-title{color:var(--teal);}
+.cump-card.teal{border-color:rgba(6,182,212,.25);}
+
+/* ── TIMELINE TRIGGER ── */
+.trigger-table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.83rem;}
+.trigger-table th{font-family:'Orbitron',sans-serif;font-size:.6rem;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-d);padding:8px 12px;border-bottom:1px solid var(--border);text-align:left;}
+.trigger-table td{padding:9px 12px;border-bottom:1px solid rgba(139,92,246,.08);color:var(--text);vertical-align:top;}
+.trigger-table tr:last-child td{border-bottom:none;}
+.trigger-table td:first-child{color:var(--purple);font-weight:600;white-space:nowrap;}
+.trigger-table tr.warn td:first-child{color:#f59e0b;}
+.trigger-table tr.ok td:first-child{color:var(--green);}
+
+/* ── PHASE LIST ── */
+.phase-list{margin:12px 0;}
+.phase-item{display:flex;gap:14px;margin-bottom:14px;align-items:flex-start;}
+.phase-dot{width:32px;height:32px;border-radius:50%;background:var(--purple-dim);border:2px solid var(--purple);display:flex;align-items:center;justify-content:center;font-family:'Orbitron',sans-serif;font-size:.65rem;color:var(--purple);flex-shrink:0;margin-top:2px;}
+.phase-content{flex:1;}
+.phase-label{font-family:'Orbitron',sans-serif;font-size:.7rem;color:var(--purple);letter-spacing:1px;margin-bottom:4px;}
+.phase-body{font-size:.87rem;color:var(--text-m);line-height:1.6;}
+
+/* ── SECTION TITLES ── */
+.section-title{font-family:'Orbitron',sans-serif;font-size:.75rem;letter-spacing:2px;text-transform:uppercase;color:var(--purple);margin:24px 0 12px;display:flex;align-items:center;gap:10px;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* ── NOTES & SOURCES ── */
+.sources-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
+.source-item{background:var(--panel2);border:1px solid var(--border);border-radius:7px;padding:10px 12px;}
+.source-type{font-size:.58rem;font-family:'Orbitron',sans-serif;letter-spacing:1.5px;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
+.source-ref{font-size:.78rem;color:var(--text-m);line-height:1.4;}
+
+/* ── FIN ── */
+.fin-zone{text-align:center;padding:32px 20px;background:var(--panel);border:1px solid rgba(139,92,246,.3);border-radius:14px;margin-top:20px;display:none;}
+.fin-icon{font-size:2.5rem;margin-bottom:12px;}
+.fin-title{font-family:'Orbitron',sans-serif;font-size:.9rem;color:#fff;margin-bottom:8px;}
+.fin-desc{font-size:.85rem;color:var(--text-m);margin-bottom:20px;line-height:1.6;}
+.btn-hub{background:var(--purple);color:#fff;border:none;padding:11px 28px;font-family:'Orbitron',sans-serif;font-size:.72rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:7px;transition:.2s;font-weight:700;}
+.btn-hub:hover{filter:brightness(1.12);transform:translateY(-1px);}
+.next-ep{background:var(--teal-dim);border:1px solid rgba(6,182,212,.3);border-radius:10px;padding:14px 18px;margin-top:16px;text-align:left;}
+.next-ep-label{font-size:.58rem;font-family:'Orbitron',sans-serif;letter-spacing:2px;color:var(--teal);margin-bottom:5px;text-transform:uppercase;}
+.next-ep-title{font-size:.9rem;font-weight:600;color:var(--text);}
+.next-ep-desc{font-size:.8rem;color:var(--text-m);margin-top:4px;line-height:1.5;}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="pod-header">
+  <div class="pod-art">🏥</div>
+  <div class="pod-meta">
+    <div class="pod-series">KAIROS ONDES · Saison 1 · Épisode 02</div>
+    <div class="pod-title">Ce que la CUMP fait vraiment</div>
+    <div class="pod-subtitle">Beaucoup d'établissements ont entendu parler de la CUMP sans jamais en avoir vu une à l'œuvre. Quand la déclencher ? Qui la compose ? Que fait-elle, concrètement, dans les premières 48 heures ?</div>
+    <div class="pod-tags">
+      <span class="pod-tag">CUMP</span>
+      <span class="pod-tag">Urgence médico-psy</span>
+      <span class="pod-tag">Cellule de crise</span>
+      <span class="pod-tag">SAMU</span>
+      <span class="pod-tag">Postvention</span>
+    </div>
+  </div>
+  <div class="pod-duration-chip">⏱ 38 min</div>
+</div>
+
+<!-- PLAYER BAR -->
+<div class="player-bar">
+  <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
+  <div class="player-info">
+    <div class="player-track" id="playerTrack">Chapitre 1 — « Ce que n'est pas la CUMP »</div>
+    <div class="player-prog-bar" id="progBar" onclick="seekTo(event)">
+      <div class="player-prog-fill" id="progFill" style="width:0%"></div>
+    </div>
+    <div class="player-times">
+      <span class="player-t" id="timeElapsed">00:00</span>
+      <span class="player-t" id="timeTotal">38:00</span>
+    </div>
+  </div>
+  <div class="player-chap-label" id="chapLabel">● CHAPITRE 1</div>
+</div>
+
+<div id="app">
+
+<!-- ══════════════════════════════════════
+     CHAPTER 1
+     ══════════════════════════════════════ -->
+<div class="chapter active open" id="chap1" data-start="0" data-end="456" data-label="CHAPITRE 1">
+  <div class="chapter-header" onclick="toggleChap(1)">
+    <div class="chap-num">01</div>
+    <div class="chap-title">« Ce que n'est pas la CUMP »</div>
+    <div class="chap-dur">0:00 → 7:36</div>
+    <div class="chap-arrow">›</div>
+  </div>
+  <div class="chapter-body">
+    <div class="narr">
+      Dans cet épisode, deux professionnels ont accepté de témoigner sous couvert d'anonymat : <strong>Isabelle</strong>, psychiatre coordinatrice de CUMP dans un CHU d'Île-de-France, et <strong>Romain</strong>, psychologue clinicien rattaché à la même CUMP depuis six ans. Ils interviennent régulièrement en milieu scolaire — lycées, collèges, parfois écoles primaires — après des crises collectives.
+    </div>
+
+    <div class="voice-label">Isabelle, psychiatre coordinatrice CUMP</div>
+    <div class="voice-block">
+      « La première chose que je veux corriger, c'est une image. Quand les gens pensent à la CUMP, ils imaginent une équipe de psys qui débarque, ferme les yeux aux élèves, et les fait pleurer pour "vider leur trop-plein". <em>Ce n'est pas du tout ça.</em>
+      <br><br>
+      La CUMP — Cellule d'Urgence Médico-Psychologique — est un dispositif <strong>de l'État</strong>, rattaché au SAMU, financé par l'ARS. Elle est activée sur réquisition, pas sur simple appel. Et son rôle premier n'est pas thérapeutique : c'est un rôle de <em>triage, de contenance et de prévention de la chronicisation du trauma</em>. »
+    </div>
+
+    <div class="narr">
+      La CUMP est née officiellement après l'attentat de Saint-Michel en 1995, qui a fait voir l'ampleur des besoins psychologiques immédiats sur les lieux d'une catastrophe. Depuis, son cadre a évolué. Il existe aujourd'hui une CUMP départementale dans chaque département français, et des CUMP régionales pour les événements de grande ampleur.
+    </div>
+
+    <div class="warn-point">
+      La CUMP n'est pas un service de psychothérapie. Les professionnels qu'elle déploie ne suivent pas les victimes sur le long terme. Leur intervention se limite, par définition, à la phase aiguë post-traumatique.
+    </div>
+
+    <div class="voice-label teal">Romain, psychologue clinicien CUMP</div>
+    <div class="voice-block teal">
+      « Ce qui surprend souvent les proviseurs ou les CPE quand on arrive, c'est qu'on ne demande pas à voir les élèves les plus "fragiles" en priorité. On demande à comprendre <em>la configuration de l'événement</em> : qui était là, dans quelle relation avec la victime, qui a découvert quoi. C'est une cartographie humaine qu'on fait avant tout. »
+    </div>
+
+    <div class="key-point">
+      La CUMP ne remplace pas le rôle de la cellule de crise de l'établissement. Elle y contribue, en apportant une expertise médico-psychologique que les équipes éducatives n'ont pas vocation à avoir seules.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CHAPTER 2
+     ══════════════════════════════════════ -->
+<div class="chapter" id="chap2" data-start="456" data-end="912" data-label="CHAPITRE 2">
+  <div class="chapter-header" onclick="toggleChap(2)">
+    <div class="chap-num">02</div>
+    <div class="chap-title">Qui déclenche la CUMP, comment, et quand</div>
+    <div class="chap-dur">7:36 → 15:12</div>
+    <div class="chap-arrow">›</div>
+  </div>
+  <div class="chapter-body">
+    <div class="section-title">Les seuils de déclenchement</div>
+
+    <div class="narr">
+      La question que posent le plus souvent les chefs d'établissement : <em>« À partir de quand est-ce qu'on appelle la CUMP ? »</em> La réponse est moins intuitive qu'il n'y paraît.
+    </div>
+
+    <div class="voice-label">Isabelle, psychiatre coordinatrice CUMP</div>
+    <div class="voice-block">
+      « Il y a une idée reçue tenace : la CUMP, c'est pour les grandes catastrophes. Les attentats. Les accidents de car avec morts. En réalité, on est de plus en plus sollicités pour des événements d'échelle scolaire : un suicide dans l'établissement, un élève qui fait un malaise grave en cours, un enseignant qui décède brutalement. <em>Ce ne sont pas des petits événements.</em> Pour une communauté scolaire, c'est un choc collectif qui peut laisser des traces durables si on n'intervient pas bien dans les premières heures. »
+    </div>
+
+    <table class="trigger-table">
+      <tr>
+        <th>Situation</th>
+        <th>Niveau d'urgence CUMP</th>
+        <th>Canal de déclenchement</th>
+      </tr>
+      <tr class="ok">
+        <td>Suicide dans l'établissement</td>
+        <td>Activation prioritaire recommandée</td>
+        <td>IA-DASEN → SAMU 15 ou CUMP directe</td>
+      </tr>
+      <tr class="ok">
+        <td>Décès brutal d'un élève ou d'un adulte de la communauté</td>
+        <td>Activation prioritaire recommandée</td>
+        <td>IA-DASEN → SAMU 15 ou CUMP directe</td>
+      </tr>
+      <tr class="warn">
+        <td>Accident grave avec hospitalisation</td>
+        <td>Évaluation au cas par cas</td>
+        <td>IA-DASEN → CUMP pour conseil</td>
+      </tr>
+      <tr class="warn">
+        <td>Tentative de suicide découverte dans l'établissement</td>
+        <td>Évaluation au cas par cas</td>
+        <td>CUMP pour conseil sur la suite</td>
+      </tr>
+      <tr>
+        <td>Crise collective (automutilation groupée, panique)</td>
+        <td>Selon ampleur</td>
+        <td>IA-DASEN + CUMP en parallèle</td>
+      </tr>
+    </table>
+
+    <div class="narr">
+      En pratique, dans l'Éducation Nationale, la chaîne de déclenchement passe presque toujours par <strong>l'IA-DASEN</strong> (l'inspecteur d'académie ou son adjoint). C'est lui qui, après avoir été informé par le chef d'établissement, prend la décision de solliciter la CUMP et en fait la demande auprès du SAMU ou directement auprès de la CUMP départementale.
+    </div>
+
+    <div class="voice-label teal">Romain, psychologue clinicien CUMP</div>
+    <div class="voice-block teal">
+      « Ce qui nous fait perdre du temps — beaucoup de temps — c'est quand l'établissement attend. Soit parce qu'il ne sait pas qu'il peut appeler, soit parce qu'il pense que les choses vont "se calmer toutes seules", soit parce qu'il a peur du regard de la hiérarchie. <em>L'heure zéro du trauma, c'est là où on peut le plus prévenir la chronicisation.</em> Six heures plus tard, c'est déjà une autre configuration. »
+    </div>
+
+    <div class="key-point">
+      En cas de doute sur l'opportunité de déclencher la CUMP, un simple appel au 15 (SAMU) permet d'obtenir un conseil professionnel. La régulation médicale peut orienter vers la CUMP locale sans engagement d'intervention.
+    </div>
+
+    <div class="warn-point">
+      Ne pas confondre CUMP et EMPP (Équipes Mobiles Psychiatrie Précarité) ou CMP (Centres Médico-Psychologiques). Ces structures ont des missions différentes et des délais d'intervention sans commune mesure avec la CUMP.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CHAPTER 3
+     ══════════════════════════════════════ -->
+<div class="chapter" id="chap3" data-start="912" data-end="1440" data-label="CHAPITRE 3">
+  <div class="chapter-header" onclick="toggleChap(3)">
+    <div class="chap-num">03</div>
+    <div class="chap-title">Les 48 premières heures — ce qui se passe vraiment</div>
+    <div class="chap-dur">15:12 → 24:00</div>
+    <div class="chap-arrow">›</div>
+  </div>
+  <div class="chapter-body">
+    <div class="narr">
+      Isabelle décrit le déroulement type d'une intervention de CUMP dans un lycée, après un suicide survenu la veille au soir et découvert via les réseaux sociaux par les élèves dans la nuit.
+    </div>
+
+    <div class="voice-label">Isabelle, psychiatre coordinatrice CUMP</div>
+    <div class="voice-block">
+      « On arrive le matin, avant l'ouverture des grilles. C'est voulu. On veut rencontrer le chef d'établissement, le CPE, l'infirmière scolaire <em>avant</em> que les élèves arrivent. On a besoin de comprendre le contexte : qui était proche du jeune, quelles classes sont concernées, est-ce qu'il y a des élèves particulièrement à risque signalés, quel est l'état de l'équipe enseignante. »
+    </div>
+
+    <div class="phase-list">
+      <div class="phase-item">
+        <div class="phase-dot">J0</div>
+        <div class="phase-content">
+          <div class="phase-label">Arrivée et briefing institutionnel</div>
+          <div class="phase-body">La CUMP installe un espace de permanence discret (bureau, salle de permanence), distinct de l'infirmerie. Elle reçoit le briefing de la direction et établit sa cartographie des personnes concernées. Elle ne déambule pas dans les couloirs.</div>
+        </div>
+      </div>
+      <div class="phase-item">
+        <div class="phase-dot">J0</div>
+        <div class="phase-content">
+          <div class="phase-label">Première vague — élèves orientés</div>
+          <div class="phase-body">Les enseignants sont briefés sur comment orienter (pas forcer) les élèves qui semblent en détresse vers l'espace CUMP. Les passages sont volontaires. La CUMP ne convoque jamais.</div>
+        </div>
+      </div>
+      <div class="phase-item">
+        <div class="phase-dot">J0+</div>
+        <div class="phase-content">
+          <div class="phase-label">Triage et orientation</div>
+          <div class="phase-body">Chaque entretien dure 20 à 40 minutes. L'objectif n'est pas de débriefing émotionnel mais d'évaluation : réaction normale au stress ou signe de décompensation ? Orientation vers suivi externe si nécessaire.</div>
+        </div>
+      </div>
+      <div class="phase-item">
+        <div class="phase-dot">J1</div>
+        <div class="phase-content">
+          <div class="phase-label">Bilan avec l'institution</div>
+          <div class="phase-body">En fin de journée, la CUMP transmet à la direction et à l'IA-DASEN un bilan non nominatif : nombre de personnes vues, profil général des réactions, recommandations pour les jours suivants.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="voice-label teal">Romain, psychologue clinicien CUMP</div>
+    <div class="voice-block teal">
+      « Ce qui se passe en pratique, c'est qu'on voit beaucoup d'adultes. Les enseignants, les AED, la secrétaire. Les adultes qui ont vu des choses, ou qui connaissaient bien l'élève décédé. <em>On sous-estime systématiquement l'impact sur l'équipe adulte.</em> Les adultes pensent qu'ils doivent "tenir" pour les élèves. Mais si l'adulte est en état de choc, il ne peut pas aider l'élève. »
+    </div>
+
+    <div class="cump-schema">
+      <div class="cump-card">
+        <div class="cump-card-icon">👥</div>
+        <div class="cump-card-title">Composition type</div>
+        <div class="cump-card-body">1 psychiatre ou médecin + 2 à 4 psychologues/infirmiers psychiatriques, selon l'ampleur. Équipe pluridisciplinaire.</div>
+      </div>
+      <div class="cump-card teal">
+        <div class="cump-card-icon">📋</div>
+        <div class="cump-card-title">Outil principal</div>
+        <div class="cump-card-body">L'entretien structuré de débriefing psychologique individuel — <em>pas</em> le CISD collectif de Mitchell, dont l'efficacité est contestée.</div>
+      </div>
+      <div class="cump-card">
+        <div class="cump-card-icon">🔒</div>
+        <div class="cump-card-title">Confidentialité</div>
+        <div class="cump-card-body">Les entretiens sont couverts par le secret médical. La CUMP ne transmet aucune information individuelle à la direction ou à l'EN.</div>
+      </div>
+      <div class="cump-card teal">
+        <div class="cump-card-icon">📍</div>
+        <div class="cump-card-title">Durée d'intervention</div>
+        <div class="cump-card-body">En général 1 à 2 jours sur site, avec possibilité de retour à J+7 pour un bilan de suivi si l'institution le demande.</div>
+      </div>
+    </div>
+
+    <div class="pullquote">
+      « On ne vient pas faire de la thérapie. On vient poser un filet de sécurité — identifier ceux qui ont besoin d'un suivi, rassurer ceux qui n'en ont pas besoin, et permettre à l'institution de reprendre son fonctionnement normal le plus vite possible. »
+      <cite>— Isabelle, psychiatre CUMP</cite>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CHAPTER 4
+     ══════════════════════════════════════ -->
+<div class="chapter" id="chap4" data-start="1440" data-end="1980" data-label="CHAPITRE 4">
+  <div class="chapter-header" onclick="toggleChap(4)">
+    <div class="chap-num">04</div>
+    <div class="chap-title">Les erreurs que l'établissement fait — et comment les éviter</div>
+    <div class="chap-dur">24:00 → 33:00</div>
+    <div class="chap-arrow">›</div>
+  </div>
+  <div class="chapter-body">
+    <div class="narr">
+      Isabelle et Romain ont tous les deux une longue liste d'erreurs récurrentes qu'ils observent dans les établissements. Pas des erreurs de mauvaise volonté — des erreurs de méconnaissance du dispositif, ou de croyances fausses sur le trauma et sa gestion.
+    </div>
+
+    <div class="section-title">Ce qu'il ne faut pas faire</div>
+
+    <div class="voice-label">Isabelle, psychiatre coordinatrice CUMP</div>
+    <div class="voice-block">
+      « L'erreur numéro un, c'est de rassembler tous les élèves en amphi pour une annonce collective. L'intuition est bonne — on veut que tout le monde soit informé en même temps, que personne ne l'apprenne d'une mauvaise façon. Mais mettre 400 élèves dans une salle pour leur dire que leur camarade est mort, c'est créer une <em>expérience émotionnelle collective non contrôlée</em>. On ne peut pas gérer 400 réactions en simultané. »
+    </div>
+
+    <div class="warn-point">
+      Annonce collective en grand groupe = amplificateur de trauma. L'annonce doit être faite classe par classe, par le professeur principal, accompagné si possible d'un adulte de référence. La CUMP peut briefer ces enseignants sur le protocole d'annonce.
+    </div>
+
+    <div class="voice-label teal">Romain, psychologue clinicien CUMP</div>
+    <div class="voice-block teal">
+      « L'erreur numéro deux : laisser les réseaux sociaux raconter à la place de l'institution. Dans beaucoup de situations où on est intervenus, les élèves avaient déjà vu des photos, des messages, des détails sur la façon dont c'est arrivé — parce que les adultes avaient pris trop de temps avant de faire une annonce officielle. <em>Le vide informationnel est toujours comblé par du bruit</em> — souvent pire que la vérité. »
+    </div>
+
+    <div class="key-point">
+      Règle de l'annonce rapide : l'institution doit prendre la parole avant que les rumeurs s'installent. Même une annonce partielle ("un événement grave s'est produit, nous vous informerons dès que possible") vaut mieux que le silence.
+    </div>
+
+    <div class="voice-label">Isabelle, psychiatre coordinatrice CUMP</div>
+    <div class="voice-block">
+      « L'erreur numéro trois — celle qui m'affecte le plus personnellement — c'est l'établissement qui dit aux élèves : <em>"Si vous avez besoin de parler, vous pouvez aller voir le psy."</em> Comme si le fait de voir un psy était un aveu de faiblesse ou une mesure de crise. Résultat : personne ne va. Ou seulement ceux qui sont déjà dans une relation thérapeutique et qui n'ont pas forcément le plus besoin d'aide aiguë. »
+    </div>
+
+    <div class="cump-schema">
+      <div class="cump-card">
+        <div class="cump-card-icon">🚫</div>
+        <div class="cump-card-title">Ne pas faire</div>
+        <div class="cump-card-body">Annonce en grand groupe. Minimiser l'événement. Laisser les adultes "tenir" sans soutien. Attendre que les élèves demandent de l'aide.</div>
+      </div>
+      <div class="cump-card teal">
+        <div class="cump-card-icon">✓</div>
+        <div class="cump-card-title">À faire</div>
+        <div class="cump-card-body">Annonce classe par classe. Présence CUMP visible et accessible. Autoriser les adultes à recevoir du soutien. Briefer les enseignants.</div>
+      </div>
+    </div>
+
+    <div class="pullquote">
+      « Ce que les établissements gèrent le mieux, ce sont ceux où la direction a compris que sa propre fragilité est légitime. Quand le proviseur dit aux équipes "c'est difficile pour moi aussi", il leur donne la permission d'avoir du mal. »
+      <cite>— Romain, psychologue CUMP</cite>
+    </div>
+
+    <div class="ref-block">
+      <strong>Cadre réglementaire.</strong> Circulaire interministérielle n°DGS/DHOS/2003/236 du 20 mai 2003 relative aux CUMP. Actualisation par le plan ORSAN-AMAVI (2014). Référentiel de formation CUMP (SAMU de France, 2016). Plan particulier de mise en sûreté (PPMS) : B.O. n°30 du 26 juillet 2018.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CHAPTER 5
+     ══════════════════════════════════════ -->
+<div class="chapter" id="chap5" data-start="1980" data-end="2280" data-label="CHAPITRE 5">
+  <div class="chapter-header" onclick="toggleChap(5)">
+    <div class="chap-num">05</div>
+    <div class="chap-title">Ce que ça veut dire pour votre établissement maintenant</div>
+    <div class="chap-dur">33:00 → 38:00</div>
+    <div class="chap-arrow">›</div>
+  </div>
+  <div class="chapter-body">
+    <div class="narr">
+      En clôture, Isabelle et Romain partagent chacun un conseil pratique — quelque chose de concret que les professionnels de l'EN peuvent faire <em>aujourd'hui</em>, avant toute crise.
+    </div>
+
+    <div class="voice-label">Isabelle, psychiatre coordinatrice CUMP</div>
+    <div class="voice-block">
+      « Mon conseil : appelez votre CUMP départementale. Pas parce qu'il se passe quelque chose. Juste pour vous présenter. Avoir un contact. Savoir qui décrocha si vous appelez à 7h du matin un lundi. <em>La crise, ce n'est pas le moment de faire connaissance avec un dispositif.</em>
+      <br><br>
+      Chaque CUMP a des référents qui peuvent venir dans les établissements pour des formations ou des sensibilisations préventives. C'est un service gratuit, peu utilisé, qui existe pourtant. »
+    </div>
+
+    <div class="voice-label teal">Romain, psychologue clinicien CUMP</div>
+    <div class="voice-block teal">
+      « Le mien est encore plus simple. Écrivez le numéro de votre CUMP dans votre téléphone. Ce soir. Pas demain — ce soir.
+      <br><br>
+      En Île-de-France, c'est le 01 45 67 50 50 — le SAMU, qui vous redirigera. Mais chaque département a son propre protocole. Votre IA-DASEN a la liste. La cellule de veille académique aussi.
+      <br><br>
+      <em>Vous ne l'appellerez peut-être jamais. Mais si vous en avez besoin, vous ne voudrez pas perdre dix minutes à chercher le numéro.</em> »
+    </div>
+
+    <div class="key-point">
+      Action immédiate : identifier les coordonnées de la CUMP de votre département et les inscrire dans votre protocole de gestion de crise. Votre DASEN, votre ISST ou votre médecin de l'EN peut vous aider à les obtenir.
+    </div>
+
+    <div class="section-title">Sources et références</div>
+    <div class="sources-grid">
+      <div class="source-item">
+        <div class="source-type">Cadre institutionnel</div>
+        <div class="source-ref">Circulaire CUMP 2003/236. Plan ORSAN-AMAVI, 2014. Instruction DGS/CORRUSS, 2017.</div>
+      </div>
+      <div class="source-item">
+        <div class="source-type">Recherche clinique</div>
+        <div class="source-ref">Rose et al. (2002) — révision Cochrane sur le débriefing psychologique. INSERM. Rapport IGAS 2019 sur les CUMP.</div>
+      </div>
+      <div class="source-item">
+        <div class="source-type">Protocoles EN</div>
+        <div class="source-ref">Guide de gestion de crise, MENJS/DGESCO, 2021. Vade-mecum sur la prévention du suicide en milieu scolaire, MEN, 2019.</div>
+      </div>
+      <div class="source-item">
+        <div class="source-type">Formation CUMP</div>
+        <div class="source-ref">Référentiel de compétences CUMP, SAMU de France, 2016. Formation interuniversitaire de psychotraumatologie (DU).</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FIN ZONE -->
+<div class="fin-zone" id="finZone">
+  <div class="fin-icon">🏥</div>
+  <div class="fin-title">Épisode terminé</div>
+  <div class="fin-desc">
+    Vous avez parcouru les 5 chapitres de cet épisode.<br>
+    <strong>Action clé à retenir :</strong> identifier et noter les coordonnées de votre CUMP départementale avant toute crise.
+  </div>
+  <button class="btn-hub" onclick="markComplete()">✓ Marquer comme écouté</button>
+
+  <div class="next-ep">
+    <div class="next-ep-label">Prochain épisode</div>
+    <div class="next-ep-title">S1E03 · « L'élève qui ne dit rien »</div>
+    <div class="next-ep-desc">Comment reconnaître les signes silencieux de détresse psychologique chez les adolescents — et pourquoi les signaux les plus discrets sont souvent les plus sérieux.</div>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<script>
+/* ══════════════════════════════════════════════════════
+   AUTO-REGISTRATION — détection par le hub
+   ══════════════════════════════════════════════════════ */
+(function register(){
+  const rawMeta = document.getElementById('PODCAST_META');
+  const meta = JSON.parse(rawMeta.textContent.trim());
+  localStorage.setItem('kairos_ondes_reg_' + meta.num, JSON.stringify(meta));
+  if(window.parent && window.parent !== window){
+    window.parent.postMessage({type:'pvs_bridge_event', event:'PODCAST_REGISTERED', data:meta}, '*');
+  }
+})();
+
+/* ══════════════════════════════════════════════════════
+   PLAYER SIMULATION
+   ══════════════════════════════════════════════════════ */
+const TOTAL = 2280; // 38 min in seconds
+let elapsed = 0, playing = false, timer = null;
+
+const chapters = [
+  {start:0,    end:456,  label:'CHAPITRE 1', track:'Chapitre 1 — « Ce que n\'est pas la CUMP »'},
+  {start:456,  end:912,  label:'CHAPITRE 2', track:'Chapitre 2 — Qui déclenche la CUMP'},
+  {start:912,  end:1440, label:'CHAPITRE 3', track:'Chapitre 3 — Les 48 premières heures'},
+  {start:1440, end:1980, label:'CHAPITRE 4', track:'Chapitre 4 — Les erreurs à éviter'},
+  {start:1980, end:2280, label:'CHAPITRE 5', track:'Chapitre 5 — Ce que ça veut dire pour vous'}
+];
+
+function fmt(s){
+  const m=Math.floor(s/60), sec=Math.floor(s%60);
+  return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+}
+
+function updateUI(){
+  document.getElementById('progFill').style.width = (elapsed/TOTAL*100)+'%';
+  document.getElementById('timeElapsed').textContent = fmt(elapsed);
+  document.getElementById('timeTotal').textContent = fmt(TOTAL);
+  const chap = chapters.findIndex(c=>elapsed>=c.start && elapsed<c.end);
+  if(chap>=0){
+    document.getElementById('playerTrack').textContent = chapters[chap].track;
+    document.getElementById('chapLabel').textContent = '● '+chapters[chap].label;
+  }
+}
+
+function togglePlay(){
+  playing=!playing;
+  document.getElementById('playBtn').textContent = playing?'⏸':'▶';
+  if(playing){
+    timer=setInterval(()=>{
+      elapsed = Math.min(elapsed+5, TOTAL);
+      updateUI();
+      // auto-open chapters as they're reached
+      chapters.forEach((c,i)=>{
+        if(elapsed>=c.start && elapsed<c.end){
+          const el=document.getElementById('chap'+(i+1));
+          if(el && !el.classList.contains('open')){
+            chapRead[i]=true;
+            el.classList.add('open','active');
+            el.querySelector('.chapter-body').style.display='block';
+            checkAllRead();
+          }
+        }
+      });
+      if(elapsed>=TOTAL){ clearInterval(timer); playing=false; document.getElementById('playBtn').textContent='▶'; showFin(); }
+    },200);
+  } else { clearInterval(timer); }
+}
+
+function seekTo(e){
+  const bar=document.getElementById('progBar');
+  const ratio=e.offsetX/bar.clientWidth;
+  elapsed=Math.floor(ratio*TOTAL);
+  updateUI();
+}
+
+/* ══════════════════════════════════════════════════════
+   CHAPTER TOGGLES
+   ══════════════════════════════════════════════════════ */
+const chapRead = [false,false,false,false,false];
+
+function toggleChap(n){
+  const el=document.getElementById('chap'+n);
+  const wasOpen=el.classList.contains('open');
+  document.querySelectorAll('.chapter').forEach(c=>{
+    c.classList.remove('open','active');
+    c.querySelector('.chapter-body').style.display='none';
+  });
+  if(!wasOpen){
+    el.classList.add('open','active');
+    el.querySelector('.chapter-body').style.display='block';
+    chapRead[n-1]=true;
+    checkAllRead();
+  }
+}
+
+function checkAllRead(){
+  const readCount=chapRead.filter(Boolean).length;
+  if(readCount>=4) showFin();
+}
+
+function showFin(){
+  document.getElementById('finZone').style.display='block';
+  document.getElementById('finZone').scrollIntoView({behavior:'smooth'});
+}
+
+/* ══════════════════════════════════════════════════════
+   COMPLETION
+   ══════════════════════════════════════════════════════ */
+function markComplete(){
+  localStorage.setItem('kairos_podcast_done_02','true');
+  if(window.parent && window.parent!==window){
+    window.parent.postMessage({
+      type:'pvs_bridge_event',
+      event:'PODCAST_COMPLETE',
+      data:{num:'02', title:'Ce que la CUMP fait vraiment'}
+    },'*');
+  }
+  const btn=document.querySelector('.fin-zone .btn-hub');
+  btn.textContent='✓ Écouté';
+  btn.style.background='#10b981';
+  btn.disabled=true;
+}
+
+// Init
+if(localStorage.getItem('kairos_podcast_done_02')){
+  const btn=document.querySelector ? document.querySelector('.fin-zone .btn-hub') : null;
+  if(btn){btn.textContent='✓ Déjà écouté';btn.style.background='#10b981';btn.disabled=true;}
+}
+updateUI();
+</script>
+</body>
+</html>

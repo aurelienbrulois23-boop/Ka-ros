@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KAIROS ONDES · S1E01 · Le Jour où tout a basculé</title>
+
+<!-- ══════════════════════════════════════════════════════════
+     PODCAST METADATA — détecté automatiquement par le hub
+     ══════════════════════════════════════════════════════════ -->
+<script id="PODCAST_META" type="application/json">
+{
+  "num": "01",
+  "saison": 1,
+  "episode": 1,
+  "title": "Le Jour où tout a basculé",
+  "subtitle": "Un CPE raconte sa première crise de plein exercice",
+  "pillar": "COMPRENDRE",
+  "pillarColor": "#dc2626",
+  "pillarIcon": "🧠",
+  "duration": "34 min",
+  "icon": "🎙️",
+  "description": "Témoignage reconstitué : comment un CPE expérimenté a vécu sa première crise suicidaire sur site. Ce qu'il a fait, ce qu'il aurait dû faire, et ce que ça lui a appris sur lui-même.",
+  "date": "2026-05-01",
+  "tags": ["CPE", "crise suicidaire", "premières heures", "témoignage", "retour d'expérience"]
+}
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary:#dc2626; --primary-dim:rgba(220,38,38,.1); --primary-glow:rgba(220,38,38,.35);
+  --purple:#8b5cf6; --purple-dim:rgba(139,92,246,.12); --purple-glow:rgba(139,92,246,.4);
+  --bg:#07000a; --bg2:#0d0012; --panel:#130820; --panel2:#1a0f2a;
+  --text:#ede0ff; --text-m:#a080c0; --text-d:#4a2d6a;
+  --green:#10b981; --gold:#f59e0b; --border:rgba(139,92,246,.2);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 30% 0%,rgba(139,92,246,.08) 0%,transparent 55%),
+             radial-gradient(ellipse at 70% 100%,rgba(139,92,246,.04) 0%,transparent 55%);}
+
+/* ── HEADER ── */
+.pod-header{padding:28px 24px 20px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:18px;}
+.pod-art{width:80px;height:80px;background:linear-gradient(135deg,var(--purple),#6d28d9);border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:2.4rem;flex-shrink:0;box-shadow:0 0 30px var(--purple-glow);}
+.pod-meta{flex:1;}
+.pod-series{font-family:'Orbitron',sans-serif;font-size:.58rem;letter-spacing:3px;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
+.pod-title{font-family:'Orbitron',sans-serif;font-size:1.3rem;color:#fff;margin-bottom:5px;line-height:1.3;}
+.pod-subtitle{font-size:.9rem;color:var(--text-m);margin-bottom:10px;line-height:1.5;}
+.pod-tags{display:flex;flex-wrap:wrap;gap:5px;}
+.pod-tag{font-size:.65rem;padding:2px 9px;border-radius:10px;border:1px solid var(--border);color:var(--text-d);font-family:'Orbitron',sans-serif;letter-spacing:.5px;}
+.pod-duration-chip{background:var(--purple-dim);border:1px solid rgba(139,92,246,.3);padding:4px 12px;border-radius:20px;font-size:.72rem;color:var(--purple);font-family:'Orbitron',sans-serif;white-space:nowrap;align-self:flex-start;}
+
+/* ── PLAYER BAR ── */
+.player-bar{background:var(--panel);border-bottom:1px solid var(--border);padding:12px 24px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:10;}
+.play-btn{width:40px;height:40px;border-radius:50%;background:var(--purple);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;color:#fff;flex-shrink:0;transition:.2s;box-shadow:0 0 14px var(--purple-glow);}
+.play-btn:hover{filter:brightness(1.15);}
+.player-info{flex:1;}
+.player-track{font-size:.78rem;color:var(--text);margin-bottom:5px;}
+.player-prog-bar{height:3px;background:rgba(255,255,255,.08);border-radius:2px;cursor:pointer;position:relative;}
+.player-prog-fill{height:100%;background:linear-gradient(90deg,var(--purple),#a78bfa);border-radius:2px;transition:width .3s ease;}
+.player-times{display:flex;justify-content:space-between;margin-top:4px;}
+.player-t{font-size:.62rem;color:var(--text-d);font-family:'Orbitron',sans-serif;}
+.player-chap-label{font-size:.68rem;color:var(--purple);font-family:'Orbitron',sans-serif;letter-spacing:1px;white-space:nowrap;}
+
+/* ── CONTENT ── */
+#app{max-width:780px;margin:0 auto;padding:24px 20px 80px;}
+
+.chapter{background:var(--panel);border:1px solid var(--border);border-radius:12px;margin-bottom:14px;overflow:hidden;transition:.2s;}
+.chapter.active{border-color:rgba(139,92,246,.5);box-shadow:0 0 20px rgba(139,92,246,.1);}
+.chapter-header{display:flex;align-items:center;gap:14px;padding:14px 18px;cursor:pointer;transition:.15s;}
+.chapter-header:hover{background:var(--purple-dim);}
+.chap-num{font-family:'Orbitron',sans-serif;font-size:.65rem;color:var(--purple);letter-spacing:2px;white-space:nowrap;}
+.chap-title{flex:1;font-size:.9rem;font-weight:600;color:var(--text);}
+.chap-dur{font-size:.65rem;color:var(--text-d);font-family:'Orbitron',sans-serif;white-space:nowrap;}
+.chap-arrow{font-size:.8rem;color:var(--text-d);transition:.2s;}
+.chapter.open .chap-arrow{transform:rotate(90deg);}
+.chapter-body{display:none;padding:0 18px 18px;}
+.chapter.open .chapter-body{display:block;}
+
+.narr{font-size:.92rem;line-height:1.85;color:var(--text);margin-bottom:14px;}
+.narr em{color:#c4b5fd;font-style:italic;}
+.narr strong{color:#fde68a;}
+.voice-block{background:var(--panel2);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0;font-size:.92rem;line-height:1.75;color:var(--text);}
+.voice-block em{color:#c4b5fd;font-style:normal;}
+.voice-label{font-size:.6rem;font-family:'Orbitron',sans-serif;letter-spacing:2px;text-transform:uppercase;color:var(--purple);margin-bottom:6px;}
+.pullquote{background:rgba(139,92,246,.08);border:1px solid rgba(139,92,246,.2);border-radius:10px;padding:16px 20px;margin:14px 0;font-size:1rem;font-style:italic;color:#c4b5fd;line-height:1.7;}
+.pullquote cite{display:block;margin-top:8px;font-size:.75rem;color:var(--text-d);font-style:normal;font-family:'Orbitron',sans-serif;letter-spacing:1px;}
+.key-point{background:rgba(16,185,129,.07);border:1px solid rgba(16,185,129,.2);border-radius:8px;padding:12px 16px;margin:12px 0;font-size:.88rem;color:#6ee7b7;line-height:1.6;}
+.key-point::before{content:'▸ ';font-weight:700;}
+.ref-block{background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:12px 0;font-size:.82rem;color:var(--text-d);line-height:1.6;}
+.ref-block strong{color:var(--text-m);}
+
+/* ── SECTION TITLES ── */
+.section-title{font-family:'Orbitron',sans-serif;font-size:.75rem;letter-spacing:2px;text-transform:uppercase;color:var(--purple);margin:24px 0 12px;display:flex;align-items:center;gap:10px;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+
+/* ── NOTES & SOURCES ── */
+.sources-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;}
+.source-item{background:var(--panel2);border:1px solid var(--border);border-radius:7px;padding:10px 12px;}
+.source-type{font-size:.58rem;font-family:'Orbitron',sans-serif;letter-spacing:1.5px;text-transform:uppercase;color:var(--purple);margin-bottom:4px;}
+.source-ref{font-size:.78rem;color:var(--text-m);line-height:1.4;}
+
+/* ── FIN ── */
+.fin-zone{text-align:center;padding:32px 20px;background:var(--panel);border:1px solid rgba(139,92,246,.3);border-radius:14px;margin-top:20px;}
+.fin-icon{font-size:2.5rem;margin-bottom:12px;}
+.fin-title{font-family:'Orbitron',sans-serif;font-size:.9rem;color:#fff;margin-bottom:8px;}
+.fin-desc{font-size:.85rem;color:var(--text-m);margin-bottom:20px;line-height:1.6;}
+.btn-hub{background:var(--purple);color:#fff;border:none;padding:11px 28px;font-family:'Orbitron',sans-serif;font-size:.72rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:7px;transition:.2s;font-weight:700;}
+.btn-hub:hover{filter:brightness(1.12);transform:translateY(-1px);}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="pod-header">
+  <div class="pod-art">🎙️</div>
+  <div class="pod-meta">
+    <div class="pod-series">KAIROS ONDES · Saison 1 · Épisode 01</div>
+    <div class="pod-title">Le Jour où tout a basculé</div>
+    <div class="pod-subtitle">Un CPE raconte sa première crise suicidaire de plein exercice — ce qu'il a fait, ce qu'il aurait dû faire, et ce que ça lui a appris sur lui-même.</div>
+    <div class="pod-tags">
+      <span class="pod-tag">CPE</span>
+      <span class="pod-tag">Crise suicidaire</span>
+      <span class="pod-tag">Témoignage</span>
+      <span class="pod-tag">Premières heures</span>
+      <span class="pod-tag">Retour d'expérience</span>
+    </div>
+  </div>
+  <div class="pod-duration-chip">⏱ 34 min</div>
+</div>
+
+<!-- PLAYER BAR -->
+<div class="player-bar">
+  <button class="play-btn" id="playBtn" onclick="togglePlay()">▶</button>
+  <div class="player-info">
+    <div class="player-track" id="playerTrack">Chapitre 1 — « Mardi matin, 8h47 »</div>
+    <div class="player-prog-bar" id="progBar" onclick="seekTo(event)">
+      <div class="player-prog-fill" id="progFill" style="width:0%"></div>
+    </div>
+    <div class="player-times">
+      <span class="player-t" id="timeElapsed">00:00</span>
+      <span class="player-t" id="timeTotal">34:00</span>
+    </div>
+  </div>
+  <div class="player-chap-label" id="chapLabel">● CHAPITRE 1</div>
+</div>
+
+<div id="app">
+
+<!-- ══════════════════════════════════════
+     CHAPTER 1
+     ══════════════════════════════════════ -->
+<div class="chapter active open" id="chap1" data-start="0" data-end="480" data-label="CHAPITRE 1">
+  <div class="chapter-header" onclick="toggleChap(1)">
+    <div class="chap-num">01</div>
+    <div class="chap-title">« Mardi matin, 8h47 »</div>
+    <div class="chap-dur">0:00 → 8:00</div>
+    <div class="chap-arrow">›</div>
+  </div>
+  <div class="chapter-body">
+    <div class="narr">
+      Ce témoignage est celui de <strong>Mathieu D.</strong>, CPE depuis onze ans dans un lycée de 1 400 élèves en région parisienne. Il a accepté de partager cette expérience sous forme de récit, à condition que ni son établissement ni les élèves impliqués ne soient identifiables. Les prénoms ont été modifiés.
+    </div>
+
+    <div class="voice-label">Mathieu D., CPE</div>
+    <div class="voice-block">
+      « C'était un mardi. Je m'en souviens parce que le mardi matin, j'ai toujours une réunion avec les CPE du secteur à 9h. Je venais juste d'allumer mon ordinateur quand une AED a ouvert la porte de mon bureau — sans frapper, ce qui ne lui ressemblait pas.
+      <br><br>
+      Elle m'a dit : "<em>Y'a Lena qui est dans les toilettes du couloir D. Elle pleure, elle parle pas, et elle a du sang sur les bras.</em>"
+      <br><br>
+      J'ai mis deux secondes à comprendre ce que ça voulait dire. Et dans ces deux secondes — je le réalise aujourd'hui — mon cerveau a fait exactement ce que le cerveau fait : il a d'abord cherché l'explication la plus anodine possible. Une chute. Une bagarre. Une mauvaise journée. <strong>Pas ça.</strong> »
+    </div>
+
+    <div class="narr">
+      Lena a 16 ans. Terminale ES. Son professeur principal la décrit comme « discrète, sérieuse, un peu seule ». Elle n'est jamais passée par le bureau du CPE pour une mauvaise raison. Mathieu ne la connaît que de vue.
+    </div>
+
+    <div class="pullquote">
+      « Le premier réflexe a été d'appeler l'infirmière. Pas de la rejoindre moi-même. Ce n'était pas de la lâcheté — c'était le protocole dans ma tête. Envoyer quelqu'un de "compétent". Sauf que l'infirmière était absente ce mardi-là. Et que le téléphone de l'infirmerie sonnait dans le vide. »
+      <cite>— Mathieu D.</cite>
+    </div>
+
+    <div class="key-point">
+      En situation de crise aiguë, l'attente de "quelqu'un de plus compétent" est l'une des erreurs les plus fréquentes et les plus dangereuses. Le premier arrivant est le premier intervenant — qu'il soit CPE, AED, ou enseignant.
+    </div>
+
+    <div class="voice-label">Mathieu D.</div>
+    <div class="voice-block">
+      « J'ai raccrochéle téléphone. J'ai dit à l'AED de rester à l'extérieur des toilettes et de ne laisser entrer personne. Et j'y suis allé.
+      <br><br>
+      Elle était assise par terre, dos contre le mur. Elle avait relevé ses manches. Ce que j'ai vu m'a arrêté net. Pas parce que c'était horrible — c'était superficiel, ça ne saignait plus vraiment. Mais parce que ça voulait dire quelque chose de précis, et je savais exactement quoi. Et je ne savais absolument pas comment répondre à ça. »
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CHAPTER 2
+     ══════════════════════════════════════ -->
+<div class="chapter" id="chap2" data-start="480" data-end="1020" data-label="CHAPITRE 2">
+  <div class="chapter-header" onclick="toggleChap(2)">
+    <div class="chap-num">02</div>
+    <div class="chap-title">Ce qu'il a fait. Ce qu'il aurait dû faire.</div>
+    <div class="chap-dur">8:00 → 17:00</div>
+    <div class="chap-arrow">›</div>
+  </div>
+  <div class="chapter-body">
+    <div class="voice-label">Mathieu D.</div>
+    <div class="voice-block">
+      « Ma première phrase — et j'ai honte de la dire — c'était : "<em>Qu'est-ce qui s'est passé ?</em>" Une question ouverte. Exactement ce qu'il ne faut pas faire. Je le sais maintenant. Je ne le savais pas à ce moment-là.
+      <br><br>
+      Elle n'a pas répondu. Elle a juste regardé ses bras. Et j'ai enchaîné avec la deuxième erreur : "<em>Tu peux me parler, tu sais.</em>" Comme si ne pas parler était le problème.
+      <br><br>
+      Ce qui s'est passé ensuite, c'est que je me suis assis par terre. Par instinct. Pas parce que j'avais été formé à ça. Parce que debout face à elle, j'avais l'impression d'être en position d'autorité. Et que ça n'avait aucun sens là. »
+    </div>
+
+    <div class="narr">
+      La décision de Mathieu de s'asseoir au niveau de Lena, sans le savoir, correspond à l'une des actions fondamentales des Premiers Secours Psychologiques (PFA-S) : <em>réduire la différence de posture</em> pour signaler une présence, pas une évaluation.
+    </div>
+
+    <div class="pullquote">
+      « Je suis resté silencieux peut-être trois minutes. Ce sont les trois minutes les plus longues de ma vie professionnelle. Je regardais un point sur le mur. Pas elle — pour ne pas la mettre sous pression. Et à un moment, elle a dit : "<em>Je voulais juste que ça s'arrête.</em>"
+      <br><br>
+      C'est là que j'ai su que je n'étais plus dans la gestion d'un élève en difficulté. J'étais dans une urgence psychiatrique. »
+      <cite>— Mathieu D.</cite>
+    </div>
+
+    <div class="key-point">
+      La phrase « Je voulais juste que ça s'arrête » est une verbalisation de l'idéation suicidaire. Elle doit déclencher immédiatement : (1) ne pas laisser la personne seule, (2) alerter un professionnel de santé, (3) ne pas promettre la confidentialité.
+    </div>
+
+    <div class="voice-label">Mathieu D.</div>
+    <div class="voice-block">
+      « J'ai sorti mon téléphone — avec sa permission, je lui ai dit ce que je faisais — et j'ai appelé le 15. Pas l'infirmière. Pas le proviseur. Le SAMU. C'était la bonne décision, et c'est la seule que j'ai prise de façon instinctivement juste ce matin-là.
+      <br><br>
+      Pendant les vingt minutes d'attente, je n'ai pas essayé de lui faire raconter. Je n'ai pas cherché la raison. J'ai juste dit : "<em>Je reste là. Tu n'es pas seule.</em>" Et j'ai repris ce même silence actif, en ayant l'air beaucoup plus calme que je ne l'étais. »
+    </div>
+
+    <div class="ref-block">
+      <strong>À retenir :</strong> En présence de scarifications et de verbalisation d'une envie de "que ça s'arrête", le protocole recommandé est le 15 (SAMU) — pas le simple passage par l'infirmerie. La décision d'hospitalisation appartient aux médecins, pas à l'équipe scolaire.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CHAPTER 3
+     ══════════════════════════════════════ -->
+<div class="chapter" id="chap3" data-start="1020" data-end="1500" data-label="CHAPITRE 3">
+  <div class="chapter-header" onclick="toggleChap(3)">
+    <div class="chap-num">03</div>
+    <div class="chap-title">L'après immédiat — La cellule, les parents, les élèves</div>
+    <div class="chap-dur">17:00 → 25:00</div>
+    <div class="chap-arrow">›</div>
+  </div>
+  <div class="chapter-body">
+    <div class="narr">
+      Le SAMU est arrivé onze minutes après l'appel. Lena a été prise en charge et hospitalisée. La matinée est encore là, mais le lycée vient d'entrer dans une crise — silencieuse, invisible pour la plupart des élèves, mais réelle pour ceux qui l'ont vue être emmenée.
+    </div>
+
+    <div class="voice-label">Mathieu D.</div>
+    <div class="voice-block">
+      « Ma troisième erreur — et c'est celle qui m'a coûté le plus — c'est d'avoir voulu gérer seul pendant les deux premières heures qui ont suivi. J'ai alerté le proviseur. Il m'a dit "<em>Tenez-moi au courant.</em>" Et je suis parti me débrouiller.
+      <br><br>
+      J'aurais dû dire : "<em>On a besoin d'activer la cellule de crise maintenant.</em>" J'aurais dû appeler la cellule de crise de l'académie dans l'heure. J'aurais dû identifier immédiatement les élèves qui avaient pu voir ou apprendre quelque chose — les cercles C1 et C2 de Lena.
+      <br><br>
+      Au lieu de ça, j'ai géré les parents qui appelaient — parce que ça se savait déjà dans la cour — j'ai répondu aux profs, j'ai essayé de calmer tout le monde. Seul. Jusqu'à ce que je m'effondre dans mon bureau à 14h. »
+    </div>
+
+    <div class="pullquote">
+      « Le proviseur est venu me voir à 14h30. Il m'a trouvé la tête dans les mains. Il m'a dit une chose qui m'a marqué : "<em>Pourquoi vous n'avez pas appelé la cellule ? C'est fait pour ça.</em>" Et j'ai réalisé que je ne savais pas vraiment à quoi servait la cellule. Je croyais que c'était pour les crises "officielles". Pas pour "juste" une élève hospitalisée. »
+      <cite>— Mathieu D.</cite>
+    </div>
+
+    <div class="key-point">
+      La cellule de crise académique n'est pas réservée aux drames collectifs. Elle peut être activée dès qu'un événement dépasse les ressources habituelles de l'établissement — y compris une hospitalisation psychiatrique d'urgence avec exposition d'autres élèves.
+    </div>
+
+    <div class="voice-label">Mathieu D.</div>
+    <div class="voice-block">
+      « Les parents de Lena ont appelé dans l'après-midi. Ils étaient soulagés qu'elle soit hospitalisée, mais dévastés. La mère m'a demandé : "<em>Est-ce que vous le saviez ? Est-ce qu'il y avait des signes ?</em>" Et je n'avais pas la réponse. Je n'avais pas regardé son dossier de la journée. Ses absences. Ses notes. Elle avait décroché en deux mois — et personne n'avait fait le lien. »
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CHAPTER 4
+     ══════════════════════════════════════ -->
+<div class="chapter" id="chap4" data-start="1500" data-end="1920" data-label="CHAPITRE 4">
+  <div class="chapter-header" onclick="toggleChap(4)">
+    <div class="chap-num">04</div>
+    <div class="chap-title">Ce que ça lui a appris — et ce qu'il ferait différemment</div>
+    <div class="chap-dur">25:00 → 32:00</div>
+    <div class="chap-arrow">›</div>
+  </div>
+  <div class="chapter-body">
+    <div class="voice-label">Mathieu D.</div>
+    <div class="voice-block">
+      « J'ai demandé à bénéficier d'un accompagnement de médecine du travail. Pas parce que j'allais mal — enfin si, j'allais mal, mais je ne le formulais pas comme ça. Je l'ai formulé comme "<em>un besoin de debriefing professionnel</em>" pour que ça soit accepté institutionnellement.
+      <br><br>
+      Le médecin du travail m'a posé une question que je n'attendais pas : "<em>Est-ce que vous vous êtes occupé de vous ce jour-là ?</em>" Et j'ai réalisé que non. J'avais mangé deux biscuits. Je n'avais pas bu de café. J'avais géré des dizaines de personnes sans prendre une seule pause. »
+    </div>
+
+    <div class="pullquote">
+      « Il y a une chose que je dis maintenant à tous les nouveaux CPE qui arrivent dans mon bassin : la crise ne commence pas quand l'AED entre dans votre bureau. Elle commence dans les semaines qui précèdent, quand les signaux ont été là et qu'on ne les a pas vus. Et elle ne finit pas quand les secours arrivent. Elle finit — si elle finit — quand tout le monde, vous y compris, a été pris en charge. »
+      <cite>— Mathieu D.</cite>
+    </div>
+
+    <div class="section-title">Ce qu'il ferait différemment</div>
+
+    <div class="key-point">
+      <strong>1. Aller vers Lena lui-même, immédiatement</strong> — sans attendre l'infirmière.
+    </div>
+    <div class="key-point">
+      <strong>2. Ne pas poser de question ouverte</strong> — "Est-ce que tu peux m'entendre ?" plutôt que "Qu'est-ce qui s'est passé ?".
+    </div>
+    <div class="key-point">
+      <strong>3. Appeler le 15 dès la vision des blessures</strong> — pas après la verbalisation.
+    </div>
+    <div class="key-point">
+      <strong>4. Activer la cellule de crise académique dans l'heure</strong> — pas gérer seul.
+    </div>
+    <div class="key-point">
+      <strong>5. Cartographier les cercles C1-C2 dans les deux premières heures</strong> — identifier les élèves qui avaient vu ou appris quelque chose.
+    </div>
+    <div class="key-point">
+      <strong>6. Se faire accompagner soi-même</strong> — médecine du travail, pas de la "résistance" solitaire.
+    </div>
+
+    <div class="voice-label">Mathieu D.</div>
+    <div class="voice-block">
+      « Lena est revenue au lycée six semaines après. Je l'ai revue. Pas pour parler de ce qui s'était passé — elle n'en avait pas envie. Pour qu'elle sache que je savais qu'elle était là, et que c'était bien qu'elle soit là.
+      <br><br>
+      Elle a dit un truc que je n'oublierai pas : "<em>Vous étiez pas obligé de rester par terre avec moi.</em>" Et j'ai répondu : "<em>Si. C'était exactement ce qu'il fallait faire.</em>" »
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     CHAPTER 5 — ANALYSE & SOURCES
+     ══════════════════════════════════════ -->
+<div class="chapter" id="chap5" data-start="1920" data-end="2040" data-label="CHAPITRE 5">
+  <div class="chapter-header" onclick="toggleChap(5)">
+    <div class="chap-num">05</div>
+    <div class="chap-title">Analyse · Pour aller plus loin</div>
+    <div class="chap-dur">32:00 → 34:00</div>
+    <div class="chap-arrow">›</div>
+  </div>
+  <div class="chapter-body">
+    <div class="narr">
+      Le témoignage de Mathieu D. illustre plusieurs points documentés dans la littérature sur la gestion de crise en milieu scolaire.
+    </div>
+
+    <div class="section-title">Les erreurs documentées dans ce récit</div>
+
+    <div class="ref-block">
+      <strong>Attente de "quelqu'un de plus compétent" :</strong> La littérature PFA (OMS, 2011) identifie ce mécanisme comme l'un des principaux facteurs de retard d'intervention. Le premier intervenant dispose toujours des ressources minimales pour les premiers secours psychologiques — présence, calme, contact.
+    </div>
+
+    <div class="ref-block">
+      <strong>Question ouverte en phase de contact :</strong> "Qu'est-ce qui s'est passé ?" sollicite une narration du trauma avant stabilisation. Les PFA-S recommandent des questions courtes et fermées en phase initiale : "Est-ce que tu peux m'entendre ?" "Est-ce que tu veux qu'on reste là ?"
+    </div>
+
+    <div class="ref-block">
+      <strong>Gestion solitaire de la crise :</strong> L'isolement du CPE est un facteur de risque documenté pour la traumatisation vicariante. La cellule de crise académique n'est pas une ressource d'urgence extrême — c'est un filet de soutien professionnel accessible dès le premier incident grave.
+    </div>
+
+    <div class="section-title">Ce qui était juste</div>
+
+    <div class="key-point">S'asseoir au niveau de l'élève — posture PFA-S action 1 (contact et engagement).</div>
+    <div class="key-point">Maintenir le silence actif sur trois minutes — action 3 (stabilisation sans forcer la parole).</div>
+    <div class="key-point">Appeler le 15 dès la verbalisation — action 8 (lien avec services spécialisés).</div>
+    <div class="key-point">Demander un accompagnement médecin du travail — action protectrice pour soi-même.</div>
+
+    <div class="section-title">Sources</div>
+    <div class="sources-grid">
+      <div class="source-item">
+        <div class="source-type">Guide</div>
+        <div class="source-ref">OMS — <em>Guide des Premiers Secours Psychologiques</em>, 2011</div>
+      </div>
+      <div class="source-item">
+        <div class="source-type">Guide</div>
+        <div class="source-ref">NCTSN — <em>PFA School Version</em>, 2024</div>
+      </div>
+      <div class="source-item">
+        <div class="source-type">Académique</div>
+        <div class="source-ref">Van der Kolk — <em>The Body Keeps the Score</em>, 2014</div>
+      </div>
+      <div class="source-item">
+        <div class="source-type">Institutionnel</div>
+        <div class="source-ref">Académie de Limoges — <em>Guide d'intervention post-traumatique</em>, 2023</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FIN -->
+<div class="fin-zone" id="finZone" style="display:none;">
+  <div class="fin-icon">🎙️</div>
+  <div class="fin-title">Épisode terminé</div>
+  <div class="fin-desc">Merci d'avoir écouté <em>Le Jour où tout a basculé</em>.<br>Le prochain épisode : <strong>« Ce que la CUMP fait vraiment »</strong> — démystifier l'intervention des équipes médico-psychologiques d'urgence en milieu scolaire.</div>
+  <button class="btn-hub" onclick="goHub()">← Retour au Hub KAIROS</button>
+</div>
+
+</div><!-- /app -->
+
+<script>
+/* ── PODCAST META REGISTRATION (auto-détection par le hub) ── */
+(function register(){
+  const rawMeta = document.getElementById('PODCAST_META');
+  if(!rawMeta) return;
+  try{
+    const meta = JSON.parse(rawMeta.textContent.trim());
+    // Persist in localStorage for hub to discover
+    localStorage.setItem('kairos_ondes_reg_' + meta.num, JSON.stringify(meta));
+    // Notify parent hub if loaded in iframe
+    if(window.parent && window.parent !== window){
+      window.parent.postMessage({type:'pvs_bridge_event', event:'PODCAST_REGISTERED', data:meta}, '*');
+    }
+  } catch(e){}
+})();
+
+/* ── PLAYER SIMULATION ── */
+const TOTAL_DURATION = 2040; // seconds (34 min)
+const CHAPTER_STARTS = [0, 480, 1020, 1500, 1920];
+let currentTime = 0;
+let playing = false;
+let timer = null;
+let chaptersRead = [false,false,false,false,false];
+
+// Chapter data
+const chapData = [
+  {label:'CHAPITRE 1', title:'« Mardi matin, 8h47 »'},
+  {label:'CHAPITRE 2', title:'Ce qu\'il a fait. Ce qu\'il aurait dû faire.'},
+  {label:'CHAPITRE 3', title:'L\'après immédiat'},
+  {label:'CHAPITRE 4', title:'Ce que ça lui a appris'},
+  {label:'CHAPITRE 5', title:'Analyse · Pour aller plus loin'}
+];
+
+function getCurrentChapIdx(){
+  let idx=0;
+  for(let i=0;i<CHAPTER_STARTS.length;i++){
+    if(currentTime>=CHAPTER_STARTS[i]) idx=i;
+  }
+  return idx;
+}
+
+function formatTime(s){
+  const m=Math.floor(s/60);
+  const sec=Math.floor(s%60);
+  return String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+}
+
+function updatePlayerUI(){
+  const pct=(currentTime/TOTAL_DURATION)*100;
+  document.getElementById('progFill').style.width=pct+'%';
+  document.getElementById('timeElapsed').textContent=formatTime(currentTime);
+  const idx=getCurrentChapIdx();
+  document.getElementById('chapLabel').textContent='● '+chapData[idx].label;
+  document.getElementById('playerTrack').textContent=chapData[idx].title;
+  // Auto-open current chapter
+  for(let i=0;i<5;i++){
+    const el=document.getElementById('chap'+(i+1));
+    if(!el) continue;
+    if(i===idx && !el.classList.contains('open')){
+      el.classList.add('open','active');
+      el.scrollIntoView({behavior:'smooth',block:'start'});
+    }
+    if(i===idx) chaptersRead[i]=true;
+  }
+}
+
+function togglePlay(){
+  if(playing){ pause(); } else { play(); }
+}
+function play(){
+  playing=true;
+  document.getElementById('playBtn').textContent='⏸';
+  timer=setInterval(()=>{
+    currentTime+=1;
+    if(currentTime>=TOTAL_DURATION){ currentTime=TOTAL_DURATION; pause(); onComplete(); return; }
+    updatePlayerUI();
+  },200); // 5x speed for demo
+}
+function pause(){
+  playing=false;
+  document.getElementById('playBtn').textContent='▶';
+  if(timer){ clearInterval(timer); timer=null; }
+}
+function seekTo(e){
+  const bar=document.getElementById('progBar');
+  const rect=bar.getBoundingClientRect();
+  const pct=(e.clientX-rect.left)/rect.width;
+  currentTime=Math.floor(pct*TOTAL_DURATION);
+  updatePlayerUI();
+}
+
+/* ── CHAPTERS ── */
+function toggleChap(n){
+  const el=document.getElementById('chap'+n);
+  const wasOpen=el.classList.contains('open');
+  // Close all
+  for(let i=1;i<=5;i++) document.getElementById('chap'+i).classList.remove('open','active');
+  if(!wasOpen){ el.classList.add('open','active'); chaptersRead[n-1]=true; }
+  checkAllRead();
+}
+
+function checkAllRead(){
+  // Mark as complete if user opened at least 4 chapters (they may skip analysis)
+  const readCount=chaptersRead.filter(Boolean).length;
+  if(readCount>=4){
+    document.getElementById('finZone').style.display='block';
+    document.getElementById('finZone').scrollIntoView({behavior:'smooth',block:'start'});
+  }
+}
+
+/* ── COMPLETE ── */
+function onComplete(){
+  const rawMeta=document.getElementById('PODCAST_META');
+  let num='01';
+  try{ num=JSON.parse(rawMeta.textContent.trim()).num; }catch(e){}
+  localStorage.setItem('kairos_podcast_done_'+num,'true');
+  if(window.parent && window.parent!==window){
+    window.parent.postMessage({type:'pvs_bridge_event', event:'PODCAST_COMPLETE', data:{num}},'*');
+  }
+  document.getElementById('finZone').style.display='block';
+}
+
+function goHub(){
+  // Mark as listened even if player not finished (user read through)
+  const rawMeta=document.getElementById('PODCAST_META');
+  let num='01';
+  try{ num=JSON.parse(rawMeta.textContent.trim()).num; }catch(e){}
+  localStorage.setItem('kairos_podcast_done_'+num,'true');
+  if(window.parent && window.parent!==window){
+    window.parent.postMessage({type:'pvs_bridge_event',event:'PODCAST_COMPLETE',data:{num}},'*');
+  } else {
+    window.location.href='index_KAIROS.html';
+  }
+}
+
+/* ── INIT ── */
+// Open first chapter on load
+document.getElementById('chap1').classList.add('open','active');
+chaptersRead[0]=true;
+updatePlayerUI();
+</script>
+</body>
+</html>

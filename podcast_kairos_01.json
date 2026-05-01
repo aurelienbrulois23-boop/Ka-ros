@@ -1,0 +1,23 @@
+{
+  "num": "01",
+  "saison": 1,
+  "episode": 1,
+  "title": "Le Jour où tout a basculé",
+  "subtitle": "Un CPE raconte sa première crise suicidaire de plein exercice",
+  "pillar": "COMPRENDRE",
+  "pillarColor": "#dc2626",
+  "pillarIcon": "🧠",
+  "duration": "34 min",
+  "icon": "🎙️",
+  "description": "Témoignage reconstitué : comment un CPE expérimenté a vécu sa première crise suicidaire sur site. Ce qu'il a fait, ce qu'il aurait dû faire, et ce que ça lui a appris sur lui-même.",
+  "date": "2026-05-01",
+  "tags": ["CPE", "crise suicidaire", "premières heures", "témoignage", "retour d'expérience"],
+  "file_mp3": "podcast_kairos_01.mp3",
+  "chapters": [
+    { "num": "01", "title": "Mardi matin, 8h47", "start": "0:00", "end": "8:00" },
+    { "num": "02", "title": "Ce qu'il a fait — et ce qu'il aurait dû faire", "start": "8:00", "end": "16:20" },
+    { "num": "03", "title": "L'après-midi et la cellule de crise", "start": "16:20", "end": "22:40" },
+    { "num": "04", "title": "Ce que ça lui a appris sur lui-même", "start": "22:40", "end": "30:00" },
+    { "num": "05", "title": "Analyse & sources", "start": "30:00", "end": "34:00" }
+  ]
+}

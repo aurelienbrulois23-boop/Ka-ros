@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KAIROS · CRISE 03 · Premiers Secours Psychologiques</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Exo+2:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary:#dc2626; --primary-dim:rgba(220,38,38,.12); --primary-glow:rgba(220,38,38,.35);
+  --bg:#070000; --bg2:#0f0202; --panel:#1a0707; --panel2:#220a0a;
+  --text:#f5e0e0; --text-m:#b07070; --text-d:#5a1e1e;
+  --green:#10b981; --gold:#f59e0b; --blue:#3b82f6; --teal:#14b8a6; --border:rgba(220,38,38,.22);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;
+  background:radial-gradient(ellipse at 20% 0%,rgba(220,38,38,.08) 0%,transparent 50%),
+             radial-gradient(ellipse at 80% 100%,rgba(220,38,38,.04) 0%,transparent 50%);}
+.mod-header{padding:28px 24px 20px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:16px;}
+.mod-icon{font-size:2.8rem;filter:drop-shadow(0 0 12px var(--primary-glow));flex-shrink:0;}
+.mod-meta{flex:1;}
+.mod-pilier{font-family:'Orbitron',sans-serif;font-size:.6rem;letter-spacing:3px;text-transform:uppercase;color:var(--primary);margin-bottom:4px;}
+.mod-title{font-family:'Orbitron',sans-serif;font-size:1.4rem;color:#fff;margin-bottom:4px;}
+.mod-sub{font-size:.88rem;color:var(--text-m);line-height:1.5;}
+.mod-ref{font-size:.72rem;color:var(--text-d);font-style:italic;margin-top:4px;}
+.xp-chip{background:var(--primary-dim);border:1px solid var(--border);padding:4px 12px;border-radius:20px;font-size:.75rem;color:var(--primary);font-family:'Orbitron',sans-serif;white-space:nowrap;}
+.prog-bar{height:3px;background:rgba(255,255,255,.06);}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--primary),#f87171);transition:width .5s ease;}
+.level-nav{display:flex;gap:0;border-bottom:1px solid var(--border);}
+.lnav-btn{flex:1;padding:10px 8px;text-align:center;font-size:.7rem;font-family:'Orbitron',sans-serif;letter-spacing:1px;text-transform:uppercase;color:var(--text-d);cursor:pointer;border-bottom:2px solid transparent;transition:.2s;background:none;border-top:none;border-left:none;border-right:none;}
+.lnav-btn.active{color:var(--primary);border-bottom-color:var(--primary);}
+.lnav-btn.done{color:var(--green);}
+.lnav-btn:disabled{opacity:.35;cursor:not-allowed;}
+#app{max-width:800px;margin:0 auto;padding-bottom:80px;}
+.screen{display:none;padding:24px 20px;}
+.screen.active{display:block;animation:fadeUp .4s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.section-title{font-family:'Orbitron',sans-serif;font-size:.8rem;letter-spacing:2px;text-transform:uppercase;color:var(--primary);margin-bottom:16px;display:flex;align-items:center;gap:10px;}
+.section-title::after{content:'';flex:1;height:1px;background:var(--border);}
+.narr-block{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:18px 20px;margin-bottom:14px;font-size:.95rem;line-height:1.8;color:var(--text);}
+.narr-block strong{color:#fca5a5;}
+.narr-block em{color:var(--primary);font-style:italic;}
+/* Unique à CRISE_03 : PFA-S actions steps */
+.pfa-step{display:flex;align-items:flex-start;gap:14px;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;margin-bottom:10px;}
+.pfa-num{font-family:'Orbitron',sans-serif;font-size:1.5rem;color:var(--primary);min-width:36px;font-weight:900;line-height:1;}
+.pfa-body{}
+.pfa-action{font-size:.88rem;font-weight:700;color:#fca5a5;margin-bottom:3px;}
+.pfa-desc{font-size:.83rem;color:var(--text-m);line-height:1.5;}
+.pfa-desc strong{color:var(--text);}
+/* Do / Don't */
+.do-dont{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.do-col,.dont-col{background:var(--panel2);border-radius:10px;padding:14px 16px;}
+.do-col{border-top:2px solid var(--green);}
+.dont-col{border-top:2px solid var(--primary);}
+.dd-title{font-family:'Orbitron',sans-serif;font-size:.62rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;}
+.do-col .dd-title{color:var(--green);}
+.dont-col .dd-title{color:var(--primary);}
+.dd-item{font-size:.82rem;color:var(--text-m);padding:4px 0;border-bottom:1px solid rgba(255,255,255,.05);line-height:1.4;}
+.dd-item:last-child{border-bottom:none;}
+.dd-item strong{color:var(--text);}
+/* PFA vs Debriefing comparison */
+.compare-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.cmp-card{background:var(--panel2);border-radius:10px;padding:14px 16px;}
+.cmp-card.pfa{border-left:3px solid var(--green);}
+.cmp-card.deb{border-left:3px solid var(--primary);}
+.cmp-tag{font-size:.6rem;font-family:'Orbitron',sans-serif;letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;}
+.cmp-card.pfa .cmp-tag{color:var(--green);}
+.cmp-card.deb .cmp-tag{color:var(--primary);}
+.cmp-title{font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:6px;}
+.cmp-item{font-size:.78rem;color:var(--text-m);padding:2px 0;line-height:1.4;}
+.cmp-item::before{content:'• ';color:inherit;opacity:.5;}
+/* Standard elements */
+.quote-block{background:var(--panel2);border-left:3px solid var(--primary);border-radius:0 8px 8px 0;padding:14px 20px;margin-bottom:16px;font-size:.92rem;font-style:italic;color:var(--text-m);line-height:1.7;}
+.quote-block cite{display:block;margin-top:8px;font-size:.78rem;color:var(--text-d);font-style:normal;}
+.reflect-q{font-size:1rem;color:#fca5a5;font-style:italic;margin-bottom:14px;padding:14px 18px;background:var(--primary-dim);border:1px solid var(--border);border-radius:8px;}
+.opts-list{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+.opt-btn{background:var(--panel);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:14px 18px;text-align:left;cursor:pointer;font-size:.92rem;color:var(--text);font-family:'Exo 2',sans-serif;transition:.2s;}
+.opt-btn:hover,.opt-btn.selected{border-color:var(--primary);background:var(--primary-dim);}
+.feedback-box{background:rgba(220,38,38,.1);border:1px solid var(--border);border-radius:8px;padding:12px 16px;font-size:.88rem;color:#fca5a5;line-height:1.6;margin-bottom:16px;display:none;}
+.feedback-box.show{display:block;}
+.sim-phase{background:var(--panel);border:1px solid var(--border);border-radius:10px;padding:16px 18px;margin-bottom:14px;}
+.phase-label{font-size:.65rem;font-family:'Orbitron',sans-serif;color:var(--text-d);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px;}
+.phase-q{font-size:.9rem;color:#fca5a5;margin-bottom:12px;}
+.phase-intro{font-size:.88rem;color:var(--text-m);line-height:1.6;margin-bottom:14px;padding:12px 16px;background:var(--panel2);border-radius:8px;border:1px solid var(--border);}
+.phase-choice{background:var(--panel2);border:1px solid rgba(255,255,255,.08);border-radius:7px;padding:11px 14px;cursor:pointer;margin-bottom:8px;font-size:.88rem;color:var(--text);transition:.2s;}
+.phase-choice:hover{border-color:var(--primary);}
+.phase-choice.good{border-color:var(--green);background:rgba(16,185,129,.08);}
+.phase-choice.medium{border-color:var(--gold);background:rgba(245,158,11,.08);}
+.phase-choice.bad{border-color:#dc2626;background:rgba(220,38,38,.08);}
+.phase-fb{padding:10px 14px;border-radius:7px;font-size:.85rem;line-height:1.6;margin-bottom:10px;display:none;}
+.phase-fb.show{display:block;background:var(--panel2);border:1px solid var(--border);color:var(--text-m);}
+.xfer-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:18px 20px;margin-bottom:20px;}
+.xfer-title{font-size:.75rem;font-family:'Orbitron',sans-serif;color:var(--primary);margin-bottom:10px;letter-spacing:.5px;}
+.xfer-scenario{font-size:.95rem;line-height:1.7;margin-bottom:12px;}
+.xfer-q{font-size:.85rem;color:#fca5a5;font-style:italic;margin-bottom:12px;}
+.xfer-choice{background:var(--panel2);border:1px solid rgba(255,255,255,.08);border-radius:7px;padding:11px 14px;cursor:pointer;margin-bottom:8px;font-size:.88rem;color:var(--text);transition:.2s;}
+.xfer-choice:hover{border-color:var(--primary);}
+.xfer-choice.best{border-color:var(--green);background:rgba(16,185,129,.08);}
+.xfer-choice.good{border-color:var(--gold);background:rgba(245,158,11,.06);}
+.xfer-choice.bad{border-color:#dc2626;background:rgba(220,38,38,.06);}
+.xfer-fb{padding:10px 14px;border-radius:7px;font-size:.85rem;line-height:1.6;margin-bottom:10px;display:none;}
+.xfer-fb.show{display:block;background:var(--panel2);border:1px solid var(--border);color:var(--text-m);}
+.btn-primary{background:var(--primary);color:#fff;border:none;padding:12px 28px;font-family:'Orbitron',sans-serif;font-size:.75rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;border-radius:7px;transition:.2s;margin-top:8px;font-weight:700;}
+.btn-primary:hover{filter:brightness(1.1);transform:translateY(-1px);}
+.btn-primary:disabled{opacity:.3;cursor:not-allowed;transform:none;}
+.fin-zone{text-align:center;padding:40px 20px;}
+.cert-badge{width:90px;height:90px;background:linear-gradient(135deg,var(--primary),#f87171);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.4rem;margin:0 auto 20px;box-shadow:0 0 40px var(--primary-glow);}
+.cert-title{font-family:'Orbitron',sans-serif;font-size:1.1rem;color:#fff;margin-bottom:8px;}
+.cert-sub{font-size:.88rem;color:var(--text-m);margin-bottom:24px;line-height:1.6;}
+.xp-earned{font-family:'Orbitron',sans-serif;font-size:2.2rem;color:var(--primary);margin-bottom:6px;}
+.xp-label{font-size:.75rem;color:var(--text-d);text-transform:uppercase;letter-spacing:2px;margin-bottom:28px;}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- HEADER -->
+  <header class="mod-header">
+    <div class="mod-icon">🫂</div>
+    <div class="mod-meta">
+      <div class="mod-pilier">Pilier Comprendre · Module 03</div>
+      <div class="mod-title">Premiers Secours Psychologiques</div>
+      <div class="mod-sub">Maîtriser les 8 actions des PFA-S (OMS) adaptées au cadre scolaire. Distinguer soutien de première ligne et prise en charge spécialisée. Éviter les erreurs communes.</div>
+      <div class="mod-ref">OMS — Guide des PSP 2011 · PFA-S Éducation Nationale · NCTSN PFA School Version · Hobfoll et al. 2007</div>
+    </div>
+    <div class="xp-chip">+200 XP</div>
+  </header>
+
+  <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+
+  <!-- NAV -->
+  <nav class="level-nav">
+    <button class="lnav-btn active" id="nav1" onclick="goLevel(1)">I · Déconstruction</button>
+    <button class="lnav-btn" id="nav2" onclick="goLevel(2)" disabled>II · Expérimentation</button>
+    <button class="lnav-btn" id="nav3" onclick="goLevel(3)" disabled>III · Transfert</button>
+  </nav>
+
+  <!-- =================== NIVEAU 1 =================== -->
+  <section class="screen active" id="screen1">
+    <div class="section-title">Les PFA-S — Ce que C'est et Ce que Ce n'est Pas</div>
+
+    <div class="narr-block">
+      Les <strong>Premiers Secours Psychologiques (PSP / PFA)</strong> désignent un ensemble de soutiens humains élémentaires — non thérapeutiques — destinés à aider des personnes en détresse aiguë. Ils ont été formalisés par l'OMS en 2011 et adaptés au contexte scolaire (PFA-S).<br><br>
+      Les PSP ne sont pas de la psychothérapie. Ils ne demandent pas de formation clinique. <em>Tout personnel scolaire formé peut les mettre en œuvre</em> — et leur efficacité repose sur leur qualité relationnelle, pas sur leur technicité.
+    </div>
+
+    <div class="compare-row">
+      <div class="cmp-card pfa">
+        <div class="cmp-tag">✓ PFA-S — C'est</div>
+        <div class="cmp-title">Premiers Secours Psychologiques</div>
+        <div class="cmp-item">Soutien humain pratique et compassionnel</div>
+        <div class="cmp-item">Écoute sans forcer la parole</div>
+        <div class="cmp-item">Satisfaction des besoins immédiats</div>
+        <div class="cmp-item">Lien vers ressources spécialisées</div>
+        <div class="cmp-item">Protection de la dignité et de la sécurité</div>
+        <div class="cmp-item">Adapté à tous les personnels scolaires</div>
+      </div>
+      <div class="cmp-card deb">
+        <div class="cmp-tag">✗ PFA-S — Ce n'est pas</div>
+        <div class="cmp-title">Ce qu'on confond souvent</div>
+        <div class="cmp-item">Débriefing psychologique (reconstituer l'événement)</div>
+        <div class="cmp-item">Encourager à "tout raconter"</div>
+        <div class="cmp-item">Thérapie ou analyse psychologique</div>
+        <div class="cmp-item">Diagnostic ou étiquetage clinique</div>
+        <div class="cmp-item">Minimiser la souffrance ("ça ira")</div>
+        <div class="cmp-item">Réservé aux psychologues</div>
+      </div>
+    </div>
+
+    <div class="section-title">Les 8 Actions PFA-S</div>
+
+    <div class="pfa-step">
+      <div class="pfa-num">1</div>
+      <div class="pfa-body">
+        <div class="pfa-action">Contact et engagement</div>
+        <div class="pfa-desc">S'approcher <strong>calmement, avec douceur</strong>. Se présenter. Demander la permission de s'asseoir à côté. Ne pas forcer le contact physique. <em>« Tu veux bien que je reste avec toi un moment ? »</em></div>
+      </div>
+    </div>
+
+    <div class="pfa-step">
+      <div class="pfa-num">2</div>
+      <div class="pfa-body">
+        <div class="pfa-action">Sécurité et confort immédiats</div>
+        <div class="pfa-desc">Éloigner de la scène si possible. Trouver un <strong>espace calme</strong>, couverture si choc physique, eau. Réduire les stimuli environnementaux (bruits, spectateurs). La sécurité physique précède la sécurité psychique.</div>
+      </div>
+    </div>
+
+    <div class="pfa-step">
+      <div class="pfa-num">3</div>
+      <div class="pfa-body">
+        <div class="pfa-action">Stabilisation si nécessaire</div>
+        <div class="pfa-desc">Si la personne est en hyperactivation (panique, pleurs intenses) ou hypoactivation (sidération) : <strong>ancrage sensoriel</strong>. « Pose tes deux pieds à plat sur le sol. Dis-moi 3 choses que tu vois. » Voix douce, rythme lent. Pas de questions ouvertes en ce moment.</div>
+      </div>
+    </div>
+
+    <div class="pfa-step">
+      <div class="pfa-num">4</div>
+      <div class="pfa-body">
+        <div class="pfa-action">Recueil des besoins et des préoccupations</div>
+        <div class="pfa-desc">Explorer, sans interrogatoire, <strong>ce qui pèse maintenant</strong>. « Est-ce qu'il y a quelque chose dont tu as besoin ? » « Y a-t-il quelqu'un que tu voudrais qu'on appelle ? » Prioriser les besoins concrets (famille, soins, information).</div>
+      </div>
+    </div>
+
+    <div class="pfa-step">
+      <div class="pfa-num">5</div>
+      <div class="pfa-body">
+        <div class="pfa-action">Soutien pratique</div>
+        <div class="pfa-desc"><strong>Résoudre ce qui peut l'être</strong> immédiatement : contacter un parent, déplacer une évaluation, aviser un enseignant, accompagner à l'infirmerie. L'action concrète restaure un sentiment de contrôle — puissant régulateur neurobiologique.</div>
+      </div>
+    </div>
+
+    <div class="pfa-step">
+      <div class="pfa-num">6</div>
+      <div class="pfa-body">
+        <div class="pfa-action">Connexion au soutien social</div>
+        <div class="pfa-desc">Identifier et activer le <strong>réseau naturel de soutien</strong> : ami(e), famille, personne de confiance. « Y a-t-il un(e) ami(e) que tu voudrais qu'on aille chercher ? » L'isolement est un facteur de risque majeur — la connexion sociale est un facteur de protection.</div>
+      </div>
+    </div>
+
+    <div class="pfa-step">
+      <div class="pfa-num">7</div>
+      <div class="pfa-body">
+        <div class="pfa-action">Information sur les réactions normales</div>
+        <div class="pfa-desc">Normaliser sans minimiser : <em>« Ce que tu ressens — les tremblements, les larmes, le vide — c'est une réaction normale face à quelque chose d'anormal. »</em> <strong>Ne pas promettre que ça ira.</strong> Donner une information simple sur les ressources disponibles.</div>
+      </div>
+    </div>
+
+    <div class="pfa-step">
+      <div class="pfa-num">8</div>
+      <div class="pfa-body">
+        <div class="pfa-action">Lien avec les services spécialisés</div>
+        <div class="pfa-desc">Identifier si un <strong>soutien professionnel est nécessaire</strong> (signes de risque suicidaire, état de choc persistant, antécédents de vulnérabilité). Orienter vers : infirmière scolaire, psychologue EN, médecin, CUMP. Transmettre la main — ne pas lâcher sans relais.</div>
+      </div>
+    </div>
+
+    <div class="section-title">Ce qu'il Faut Éviter</div>
+
+    <div class="do-dont">
+      <div class="do-col">
+        <div class="dd-title">✓ Posture juste</div>
+        <div class="dd-item"><strong>Être présent</strong> sans envahir</div>
+        <div class="dd-item">Écouter <strong>sans interpréter</strong></div>
+        <div class="dd-item">Valider : « C'est normal de ressentir ça »</div>
+        <div class="dd-item"><strong>Questions fermées</strong> en phase aiguë</div>
+        <div class="dd-item">Respecter le silence</div>
+        <div class="dd-item">Transmettre à un professionnel si besoin</div>
+      </div>
+      <div class="dont-col">
+        <div class="dd-title">✗ À éviter absolument</div>
+        <div class="dd-item">« Raconte-moi ce qui s'est passé »</div>
+        <div class="dd-item">« Il faut que tu sois fort(e) »</div>
+        <div class="dd-item">« Tu vas voir, ça ira »</div>
+        <div class="dd-item">Promettre des choses incertaines</div>
+        <div class="dd-item">Laisser seul sans relais</div>
+        <div class="dd-item">Partager ses propres histoires de deuil</div>
+      </div>
+    </div>
+
+    <div class="quote-block">
+      « Les PSP reposent sur cinq principes empiriquement validés : promouvoir un sentiment de <em>sécurité</em>, de <em>calme</em>, d'<em>auto-efficacité</em>, de <em>connectivité</em> et d'<em>espoir</em>. Ces cinq éléments réduisent le risque de développer des troubles post-traumatiques. »
+      <cite>— Hobfoll et al., <em>Five Essential Elements of Immediate and Mid-Term Mass Trauma Intervention</em>, 2007</cite>
+    </div>
+
+    <div class="reflect-q">
+      Parmi les 8 actions des PFA-S, laquelle est souvent la plus difficile à respecter pour un adulte de l'Éducation Nationale, et pourquoi ?
+    </div>
+
+    <div class="opts-list" id="opts1">
+      <button class="opt-btn" onclick="chooseOpt1(this,'A')">A — Action 1 (Contact) : s'approcher sans être invité est difficile culturellement pour les personnels habituellement en position d'autorité.</button>
+      <button class="opt-btn" onclick="chooseOpt1(this,'B')">B — Action 4 (Recueil des besoins) : les personnels EN sont formés à donner des réponses, pas à accueillir des besoins sans solution immédiate. Mais c'est l'action 3 (Stabilisation) qui est le plus difficile à maîtriser — car elle exige de renoncer aux questions et aux mots pour travailler par le corps et la présence.</button>
+      <button class="opt-btn" onclick="chooseOpt1(this,'C')">C — Action 8 (Lien services) : les personnels manquent souvent d'information sur les ressources disponibles, et ont du mal à "passer la main".</button>
+    </div>
+
+    <div class="feedback-box" id="fb1"></div>
+    <button class="btn-primary" id="btnL1" onclick="unlockLevel2()" disabled>Accéder au Niveau II →</button>
+  </section>
+
+  <!-- =================== NIVEAU 2 =================== -->
+  <section class="screen" id="screen2">
+    <div class="section-title">Application — Identifier l'Action PFA-S Juste</div>
+
+    <!-- Phase 1 -->
+    <div class="sim-phase" id="phase1">
+      <div class="phase-label">Situation 01 / 03</div>
+      <div class="phase-q">Un élève vient d'apprendre la mort de son père. Il est dans le couloir, assis à même le sol, les genoux contre la poitrine, et pleure silencieusement. Vous êtes l'AED de service. Que dites-vous en premier ?</div>
+      <div class="phase-intro">Phase : contact et stabilisation. Le risque : trop parler, trop demander, ou au contraire fuir le moment.</div>
+      <div class="phase-choice" onclick="choosePhase(1,this,'bad')">✗ « Je suis vraiment désolé(e). C'est terrible ce qui t'arrive. Tu veux m'en parler ? »</div>
+      <div class="phase-choice" onclick="choosePhase(1,this,'medium')">~ S'asseoir à côté de lui sans rien dire, en attendant qu'il parle en premier.</div>
+      <div class="phase-choice" onclick="choosePhase(1,this,'good')">✓ S'asseoir à côté de lui, poser doucement une main sur l'épaule (si pas de signe de rejet), et dire simplement : « Je suis là. Tu n'es pas seul. Je reste avec toi. » Rien d'autre pour l'instant.</div>
+      <div class="phase-fb" id="pfb1"></div>
+    </div>
+
+    <!-- Phase 2 -->
+    <div class="sim-phase" id="phase2" style="opacity:.45;pointer-events:none;">
+      <div class="phase-label">Situation 02 / 03</div>
+      <div class="phase-q">Une élève en panique (hyperventilation, larmes intenses, tremblements) vient d'apprendre par les réseaux sociaux une rumeur de tentative de suicide d'une amie. Elle est incontrôlable dans le couloir. Quelle est votre première priorité ?</div>
+      <div class="phase-intro">Hyperactivation aiguë. Stabilisation physique avant tout dialogue.</div>
+      <div class="phase-choice" onclick="choosePhase(2,this,'bad')">✗ Lui expliquer calmement que les réseaux sociaux sont souvent faux et qu'il ne faut pas s'emballer.</div>
+      <div class="phase-choice" onclick="choosePhase(2,this,'medium')">~ L'emmener dans un bureau, s'asseoir face à elle, et lui demander ce qu'elle a vu exactement sur les réseaux.</div>
+      <div class="phase-choice" onclick="choosePhase(2,this,'good')">✓ L'emmener dans un espace calme (action 2 : sécurité), se mettre à sa hauteur, voix basse et lente : « Regarde-moi. On respire ensemble. Pose tes pieds par terre. » Exercice d'ancrage sensoriel (action 3 : stabilisation). Aucune information, aucune question ouverte tant que la stabilisation n'est pas amorcée.</div>
+      <div class="phase-fb" id="pfb2"></div>
+    </div>
+
+    <!-- Phase 3 -->
+    <div class="sim-phase" id="phase3" style="opacity:.45;pointer-events:none;">
+      <div class="phase-label">Situation 03 / 03</div>
+      <div class="phase-q">Après 20 minutes de soutien PFA-S, l'élève est stabilisée. Elle vous confie qu'elle a des pensées noires depuis plusieurs semaines, mais qu'elle ne veut « surtout pas que ses parents soient prévenus ». Que faites-vous ?</div>
+      <div class="phase-intro">Action 8 (lien services) vs secret partagé. Limite du rôle de l'AED. Enjeu de sécurité.</div>
+      <div class="phase-choice" onclick="choosePhase(3,this,'good')">✓ Valider sa confiance : « Merci de me faire confiance. » Expliquer honnêtement vos obligations : « Ce que tu me dis m'inquiète pour toi. Je ne peux pas garder ça seul(e) — pas parce que je veux te trahir, mais parce que je tiens à toi. Je vais alerter l'infirmière ou le CPE ensemble avec toi. Tu peux choisir comment et ce qu'on dit. »</div>
+      <div class="phase-choice" onclick="choosePhase(3,this,'medium')">~ Respecter sa demande pour cette fois, en lui faisant promettre de ne pas se faire de mal, et en alertant le CPE discrètement sans lui dire.</div>
+      <div class="phase-choice" onclick="choosePhase(3,this,'bad')">✗ Respecter strictement son choix de confidentialité : la confiance de l'élève est prioritaire, et la briser pourrait aggraver la situation.</div>
+      <div class="phase-fb" id="pfb3"></div>
+    </div>
+
+    <button class="btn-primary" id="btnL2" onclick="unlockLevel3()" disabled>Accéder au Niveau III →</button>
+  </section>
+
+  <!-- =================== NIVEAU 3 =================== -->
+  <section class="screen" id="screen3">
+    <div class="section-title">Transfert — Décisions en Conditions Réelles</div>
+
+    <!-- Xfer 1 -->
+    <div class="xfer-card">
+      <div class="xfer-title">Scénario Professionnel 01 / 03</div>
+      <div class="xfer-scenario">
+        Un enseignant, visiblement ému, vient vous voir après l'annonce du drame. Il vous dit : « J'ai essayé de lui parler, j'ai tout raté. Je lui ai dit que ça allait aller et je lui ai posé plein de questions. Elle a fini par s'énerver. Je suis nul. »
+      </div>
+      <div class="xfer-q">Que lui répondez-vous, et que faites-vous ?</div>
+      <div class="xfer-choice" onclick="chooseXfer(1,this,'bad')">○ Lui dire qu'il a effectivement fait des erreurs et lui expliquer les 8 actions PFA-S pour la prochaine fois.</div>
+      <div class="xfer-choice" onclick="chooseXfer(1,this,'good')">◎ Le rassurer : « Tu as au moins essayé, c'est l'essentiel. » Lui proposer de prendre le relais pour la suite.</div>
+      <div class="xfer-choice" onclick="chooseXfer(1,this,'best')">⬤ D'abord appliquer les PFA-S à l'enseignant lui-même (il est en détresse, c'est un adulte C4). Valider : « Tu as fait ce que tu pouvais avec ce que tu savais. » Normaliser ses erreurs — elles sont communes. Prendre le relais pour l'élève. Et si possible, plus tard, partager brièvement les repères PFA-S de façon non-culpabilisante, comme une ressource pour l'avenir.</div>
+      <div class="xfer-fb" id="xfb1"></div>
+    </div>
+
+    <!-- Xfer 2 -->
+    <div class="xfer-card">
+      <div class="xfer-title">Scénario Professionnel 02 / 03</div>
+      <div class="xfer-scenario">
+        Il est 17h. La journée de crise est terminée. Vous avez appliqué les PFA-S toute la journée avec plusieurs élèves et adultes. Vous êtes épuisé(e). Un collègue vous propose de « faire un débriefing » ensemble : chacun raconte les cas difficiles qu'il a vécus.
+      </div>
+      <div class="xfer-q">Que répondez-vous à cette proposition ?</div>
+      <div class="xfer-choice" onclick="chooseXfer(2,this,'best')">⬤ Distinguer débriefing informel entre pairs (partage de ressenti, pas de reconstitution de cas) et débriefing des cas (qui expose aux récits traumatiques des autres et peut provoquer une traumatisation vicariante secondaire). Proposer plutôt : « On peut se retrouver pour souffler ensemble, mais je préfère qu'on ne détaille pas les cas. Et si l'un de nous a besoin d'un soutien professionnel, il faut qu'on puisse se le dire. »</div>
+      <div class="xfer-choice" onclick="chooseXfer(2,this,'good')">◎ Accepter brièvement, mais couper si ça devient trop lourd émotionnellement.</div>
+      <div class="xfer-choice" onclick="chooseXfer(2,this,'bad')">○ Accepter : raconter les cas entre professionnels est un moyen de « vider » la charge émotionnelle accumulée dans la journée.</div>
+      <div class="xfer-fb" id="xfb2"></div>
+    </div>
+
+    <!-- Xfer 3 -->
+    <div class="xfer-card">
+      <div class="xfer-title">Scénario Professionnel 03 / 03</div>
+      <div class="xfer-scenario">
+        Pendant une formation PFA-S dans votre établissement, un stagiaire AED demande : « Mais si on n'est pas psychologue, est-ce qu'on a le droit de faire ça ? Et si on aggrave les choses ? »
+      </div>
+      <div class="xfer-q">Quelle réponse factuelle et rassurante donnez-vous ?</div>
+      <div class="xfer-choice" onclick="chooseXfer(3,this,'bad')">○ « C'est vrai que c'est risqué — il vaut mieux laisser ça aux professionnels de santé et se contenter d'alerter. »</div>
+      <div class="xfer-choice" onclick="chooseXfer(3,this,'good')">◎ « Les PFA-S sont simples à utiliser et l'OMS les a conçus pour des non-spécialistes. Du moment qu'on ne fait pas de thérapie, il n'y a pas de risque. »</div>
+      <div class="xfer-choice" onclick="chooseXfer(3,this,'best')">⬤ « L'OMS et le NCTSN ont conçu les PFA précisément pour des intervenants de première ligne, non cliniciens. Les recherches montrent que c'est le manque d'intervention humaine — l'isolement — qui est le principal facteur de risque, pas l'intervention maladroite. Le vrai risque de "mal faire" se limite à quelques postures documentées (forcer la narration, promettre l'impossible, laisser seul). Vous allez les apprendre. Et vous n'agissez jamais seul — vous êtes un maillon du relais, pas le prestataire final. »</div>
+      <div class="xfer-fb" id="xfb3"></div>
+    </div>
+
+    <button class="btn-primary" id="btnCert" onclick="completeMod()" disabled>Valider le Module →</button>
+  </section>
+
+  <!-- FIN -->
+  <section class="screen" id="screenFin">
+    <div class="fin-zone">
+      <div class="cert-badge">🫂</div>
+      <div class="cert-title">Module CRISE_03 Validé</div>
+      <div class="cert-sub">Tu maîtrises les 8 actions des Premiers Secours Psychologiques (PFA-S), la distinction avec le débriefing clinique, les postures à éviter, et les limites du rôle de première ligne. Tu es un maillon essentiel de la chaîne de soutien.</div>
+      <div class="xp-earned">+200 XP</div>
+      <div class="xp-label">Points acquis</div>
+      <button class="btn-primary" onclick="goHub()">Retour au Hub KAIROS</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const MODULE_ID = 'CRISE_03';
+const XP_VALUE  = 200;
+
+let l1Done=false, l2Done=false, xferDone=[false,false,false], phaseDone=[false,false,false];
+
+/* ---- LEVEL 1 ---- */
+function chooseOpt1(btn, val){
+  document.querySelectorAll('#opts1 .opt-btn').forEach(b=>b.classList.remove('selected'));
+  btn.classList.add('selected');
+  const fb=document.getElementById('fb1');
+  if(val==='B'){
+    fb.textContent='✓ Les deux dimensions que vous pointez sont justes, mais la plus documentée est la difficulté de la stabilisation (action 3). En milieu éducatif, les adultes sont conditionnés à parler, expliquer, rassurer par les mots — et la stabilisation sensorielle (ancrage, présence corporelle calme, silence actif) exige de tout faire à rebours de cet automatisme. C\'est souvent la compétence la plus transformative à acquérir.';
+    fb.className='feedback-box show';
+    document.getElementById('btnL1').disabled=false;
+    l1Done=true; updateProg();
+  } else if(val==='A'){
+    fb.textContent='La difficulté du contact est réelle, mais ce n\'est pas la plus difficile à maîtriser. L\'action 1 est souvent la plus naturelle — s\'approcher avec douceur est un réflexe humain. La difficulté véritable est dans ce qui suit : rester sans parler, stabiliser par le corps, et ne pas poser de questions.';
+    fb.className='feedback-box show';
+  } else {
+    fb.textContent='Vous touchez quelque chose de réel — le manque d\'information sur les ressources (CUMP, médecin scolaire, n° utiles) est un frein documenté. Mais la difficulté la plus universelle reste l\'action 3 (stabilisation), qui exige de sortir du réflexe verbal et de travailler par le corps et la présence silencieuse.';
+    fb.className='feedback-box show';
+  }
+}
+function unlockLevel2(){
+  document.getElementById('screen1').classList.remove('active');
+  document.getElementById('screen2').classList.add('active');
+  document.getElementById('nav1').classList.add('done');
+  document.getElementById('nav2').classList.add('active');
+  document.getElementById('nav2').disabled=false;
+  updateProg();
+}
+
+/* ---- LEVEL 2 ---- */
+const pFb={
+  1:{
+    good:'✓ Parfait. Cette réponse cumule les actions 1 (contact bienveillant), 2 (confort) et 3 (stabilisation par la présence). Pas de questions, pas de débordement verbal — juste une présence corporelle ancrée. Le silence actif, accompagné d\'une phrase courte de connexion, est souvent plus puissant que les mots. La sobriété ici est une forme de respect de l\'état neurobiologique de l\'élève.',
+    medium:'Correct mais incomplet. S\'asseoir en silence est une bonne action 1 et 2 — mais attendre passivement n\'est pas la même chose qu\'une présence active. Une phrase simple ("Je suis là. Tu n\'es pas seul.") ancre la relation sans rien demander. Le silence seul peut être ressenti comme un abandon.',
+    bad:'Erreur fréquente. "Tu veux m\'en parler ?" est une question ouverte en phase de contact initial — elle peut déclencher un récit non maîtrisé, placer l\'élève en position de "devoir raconter", et mettre du verbal là où le corps a besoin de calme. De plus, "ça ira" est précisément à bannir des PFA-S.'
+  },
+  2:{
+    good:'✓ Séquence juste. Espace calme (action 2) + ancrage sensoriel (action 3) avant tout dialogue. L\'information sur les réseaux sociaux peut attendre — ce que le cerveau de l\'élève a besoin entendre en ce moment, ce n\'est pas un raisonnement, c\'est un signal de sécurité. La voix basse et le rythme lent sont des régulateurs neurobiologiques prouvés.',
+    medium:'Partiellement juste (emmener dans un bureau = action 2), mais "lui demander ce qu\'elle a vu" est une erreur d\'action 3. En phase d\'hyperactivation, le questionnement amplifie la surcharge. La priorité absolue est de descendre le niveau d\'activation avant d\'obtenir des informations.',
+    bad:'Erreur cognitive. Expliquer quelque chose à un cerveau en hyperactivation est inutile — le cortex préfrontal est hors-jeu. L\'élève n\'entend pas les arguments, elle ressent une menace. La rationalisation viendra plus tard, une fois la stabilisation amorcée.'
+  },
+  3:{
+    good:'✓ Posture éthiquement et professionnellement juste. En présence de signes de risque suicidaire actifs, la confidentialité absolue ne s\'applique pas — c\'est le "secret partagé maîtrisé" (partager avec les professionnels indispensables, dans le cadre de la protection de la personne). Ce qui est remarquable dans votre réponse : vous le faites AVEC l\'élève, pas DERRIÈRE elle. Cela préserve la confiance tout en assurant la sécurité.',
+    medium:'Risqué. Alerter "discrètement" sans elle préserve son sentiment de confiance à court terme, mais si elle apprend la transmission, la confiance est brisée définitivement. La "promesse de ne pas se faire de mal" n\'a aucune valeur thérapeutique — elle amplifie la culpabilité en cas de passage à l\'acte. L\'honnêteté avec bienveillance est toujours préférable.',
+    bad:'Grave erreur. En présence de signes de risque suicidaire (pensées noires persistantes), l\'obligation de sécurité prime sur la confidentialité. Ce n\'est pas une trahison — c\'est la définition du "secret partagé maîtrisé". L\'AED n\'est pas en mesure d\'assumer seul la sécurité d\'un élève à risque — c\'est au-delà de son rôle et de sa formation.'
+  }
+};
+function choosePhase(n,el,qual){
+  const ph=document.getElementById('phase'+n);
+  ph.querySelectorAll('.phase-choice').forEach(c=>c.classList.remove('good','medium','bad'));
+  el.classList.add(qual);
+  const fb=document.getElementById('pfb'+n);
+  fb.textContent=pFb[n][qual];
+  fb.className='phase-fb show';
+  if(qual==='good'||qual==='medium'){
+    phaseDone[n-1]=true;
+    if(n<3) setTimeout(()=>{ const nxt=document.getElementById('phase'+(n+1)); nxt.style.opacity='1'; nxt.style.pointerEvents='auto'; },600);
+    checkL2Done();
+  }
+}
+function checkL2Done(){
+  if(phaseDone[0]&&phaseDone[1]&&phaseDone[2]){ document.getElementById('btnL2').disabled=false; l2Done=true; updateProg(); }
+}
+function unlockLevel3(){
+  document.getElementById('screen2').classList.remove('active');
+  document.getElementById('screen3').classList.add('active');
+  document.getElementById('nav2').classList.add('done');
+  document.getElementById('nav3').classList.add('active');
+  document.getElementById('nav3').disabled=false;
+  updateProg();
+}
+
+/* ---- LEVEL 3 ---- */
+const xFb={
+  1:{
+    best:'✓ Lecture complète. L\'enseignant est lui-même en détresse (cercle C4) — la priorité est de lui appliquer d\'abord les PFA-S avant de le "former". Valider, normaliser, prendre le relais. Puis, dans un second temps, offrir les repères de façon non-culpabilisante. Cette approche transforme un moment difficile en levier de formation par l\'expérience vécue.',
+    good:'Correct pour le relais, mais la réassurance "tu as au moins essayé" sans validation de son état émotionnel reste insuffisante. L\'enseignant a besoin d\'être reconnu dans sa détresse avant d\'être aidé dans sa compétence.',
+    bad:'Erreur relationnelle. Pointer les erreurs à chaud est contre-productif et iatrogène — l\'enseignant est en état de stress aigu, son amygdale est activée. La critique, même constructive, sera vécue comme une attaque. C\'est l\'inverse de la PFA-S.'
+  },
+  2:{
+    best:'✓ Distinction essentielle. Le soutien entre pairs (partage de ressenti, solidarité) est protecteur et recommandé. Le débriefing de cas (exposition aux récits traumatiques de l\'autre) est un facteur de traumatisation vicariante — surtout après une journée d\'intervention intensive. La proposition que vous formulez préserve le lien de soutien tout en évitant la contamination traumatique.',
+    good:'Partiellement juste, mais "couper si c\'est trop lourd" place la responsabilité sur votre propre résistance et non sur la structure de l\'échange. Il vaut mieux délimiter le cadre avant — ce qui protège les deux participants.',
+    bad:'Faux. Le débriefing de cas entre pairs n\'est pas une méthode de régulation émotionnelle validée — au contraire, l\'exposition aux récits traumatiques des collègues peut amplifier votre propre charge, surtout en état d\'épuisement post-journée. C\'est une idée intuitive et erronée.'
+  },
+  3:{
+    best:'✓ Réponse experte. Cette réponse intègre la légitimité institutionnelle (OMS, NCTSN), le mécanisme d\'action protecteur (lutter contre l\'isolement, pas être parfait), le cadre des risques réels (limités et identifiés), et la fonction du stagiaire (maillon du relais). Elle transforme l\'anxiété en compétence sans minimiser la vigilance nécessaire.',
+    good:'Correct mais incomplet. "Pas de risque du moment qu\'on ne fait pas de thérapie" est approximatif — il y a des erreurs documentées à éviter (cf. niveau 1). Mieux vaut les nommer que les minimiser, ce qui renforce la crédibilité de la formation.',
+    bad:'Erreur de positionnement. Décourager les PFA-S chez les non-spécialistes est contraire aux recommandations internationales et aux données probantes. Le risque de l\'absence d\'intervention humaine est documenté comme supérieur au risque d\'une intervention maladroite mais bienveillante.'
+  }
+};
+function chooseXfer(n,el,qual){
+  const c=el.closest('.xfer-card');
+  c.querySelectorAll('.xfer-choice').forEach(x=>x.classList.remove('best','good','bad'));
+  el.classList.add(qual);
+  const fb=document.getElementById('xfb'+n);
+  fb.textContent=xFb[n][qual];
+  fb.className='xfer-fb show';
+  if(qual==='best'||qual==='good'){ xferDone[n-1]=true; checkCert(); }
+}
+function checkCert(){
+  if(xferDone[0]&&xferDone[1]&&xferDone[2]){ document.getElementById('btnCert').disabled=false; updateProg(); }
+}
+
+/* ---- COMPLETE ---- */
+function completeMod(){
+  if(!localStorage.getItem('kairos_xp_'+MODULE_ID)){
+    let tot=parseInt(localStorage.getItem('kairos_xp_total')||'0');
+    tot+=XP_VALUE;
+    localStorage.setItem('kairos_xp_total', tot);
+    localStorage.setItem('kairos_xp_'+MODULE_ID, XP_VALUE);
+  }
+  localStorage.setItem('CERT_KAIROS_'+MODULE_ID, 'true');
+  if(window.parent&&window.parent!==window){
+    window.parent.postMessage({type:'pvs_bridge_event',event:'MODULE_COMPLETE',data:{module:MODULE_ID,xp:XP_VALUE}},'*');
+  }
+  document.getElementById('screen3').classList.remove('active');
+  document.getElementById('screenFin').classList.add('active');
+  document.getElementById('progFill').style.width='100%';
+}
+
+/* ---- NAV ---- */
+function goLevel(n){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById('screen'+n).classList.add('active');
+  document.querySelectorAll('.lnav-btn').forEach((b,i)=>{ b.classList.remove('active'); if(i===n-1)b.classList.add('active'); });
+}
+function goHub(){
+  if(window.parent&&window.parent!==window){
+    window.parent.postMessage({type:'pvs_bridge_event',event:'GO_HUB',data:{}},'*');
+  } else {
+    window.location.href='index_KAIROS.html';
+  }
+}
+function updateProg(){
+  const steps=[l1Done,l2Done,xferDone[0]||xferDone[1]||xferDone[2]];
+  const done=steps.filter(Boolean).length;
+  document.getElementById('progFill').style.width=(done/3*100)+'%';
+}
+
+(function init(){
+  if(localStorage.getItem('CERT_KAIROS_'+MODULE_ID)){
+    document.getElementById('nav2').disabled=false;
+    document.getElementById('nav3').disabled=false;
+    l1Done=l2Done=true; xferDone=[true,true,true]; phaseDone=[true,true,true];
+    updateProg();
+  }
+})();
+</script>
+</body>
+</html>
