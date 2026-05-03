@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FONDEMENTS · Communication 04 · Les fils invisibles</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05070f;--bg2:#090c18;--panel:#0d1122;--panel2:#111828;
+  --accent:#06b6d4;--accent-dim:rgba(6,182,212,.1);--accent-glow:rgba(6,182,212,.25);
+  --gold:#f59e0b;--green:#10b981;--red:#ef4444;--orange:#f97316;
+  --text:#e8eaf6;--text-m:#8892b0;--text-d:#3d4a6b;
+  --border:rgba(6,182,212,.15);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+.topnav{height:48px;background:var(--panel);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:14px;}
+.tnav-back{text-decoration:none;color:var(--text-m);font-size:.75rem;font-family:'Orbitron',sans-serif;letter-spacing:1px;transition:.2s;}
+.tnav-back:hover{color:var(--accent);}
+.tnav-sep{width:1px;height:20px;background:var(--border);}
+.tnav-pill{font-size:.6rem;padding:3px 10px;border-radius:12px;background:rgba(6,182,212,.12);border:1px solid rgba(6,182,212,.25);color:#67e8f9;font-family:'Orbitron',sans-serif;letter-spacing:1px;}
+.tnav-xp{margin-left:auto;font-family:'Orbitron',sans-serif;font-size:.72rem;color:var(--gold);}
+.audio-banner{background:linear-gradient(135deg,rgba(6,182,212,.15),rgba(6,182,212,.05));border:1px solid rgba(6,182,212,.3);border-radius:14px;margin:24px auto;max-width:760px;padding:20px 24px;display:none;}
+.audio-banner.visible{display:block;}
+.ab-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.ab-ico{font-size:1.8rem;}
+.ab-info{flex:1;}
+.ab-tag{font-family:'Orbitron',sans-serif;font-size:.55rem;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:3px;}
+.ab-title{font-size:.9rem;color:#a5f3fc;font-weight:600;}
+.ab-sub{font-size:.72rem;color:var(--text-m);margin-top:2px;}
+.ab-invite{font-size:.78rem;color:#67e8f9;font-style:italic;margin-bottom:12px;line-height:1.5;}
+audio{width:100%;height:40px;filter:invert(1) hue-rotate(160deg) brightness(.8);}
+.mod-wrap{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+.mod-header{padding:32px 0 24px;}
+.mod-eyebrow{font-family:'Orbitron',sans-serif;font-size:.55rem;letter-spacing:4px;color:var(--accent);text-transform:uppercase;margin-bottom:8px;}
+.mod-title{font-family:'Orbitron',sans-serif;font-size:1.6rem;font-weight:900;color:#fff;line-height:1.3;margin-bottom:10px;}
+.mod-sub{font-size:.88rem;color:var(--text-m);line-height:1.6;margin-bottom:18px;}
+.mod-meta{display:flex;gap:16px;flex-wrap:wrap;}
+.mod-tag{font-size:.65rem;padding:3px 10px;border-radius:12px;background:var(--panel2);border:1px solid var(--border);color:var(--text-m);}
+.mod-xp-tag{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.3);color:var(--gold);}
+.section{margin-bottom:36px;}
+.section-label{font-family:'Orbitron',sans-serif;font-size:.6rem;letter-spacing:3px;color:var(--text-d);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+.recit{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:24px 28px;line-height:1.9;font-size:.92rem;color:var(--text-m);position:relative;overflow:hidden;}
+.recit::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--accent),transparent);}
+.recit strong{color:var(--text);}
+.recit em{font-style:normal;color:#a5f3fc;}
+.recit .date{font-family:'Orbitron',sans-serif;font-size:.6rem;letter-spacing:2px;color:var(--accent);display:block;margin-bottom:14px;}
+.researcher{display:flex;align-items:center;gap:16px;background:var(--panel2);border:1px solid rgba(6,182,212,.2);border-radius:10px;padding:14px 18px;margin:16px 0;}
+.researcher-ico{font-size:2.2rem;flex-shrink:0;}
+.researcher-info{flex:1;}
+.researcher-name{font-weight:700;color:#a5f3fc;margin-bottom:3px;}
+.researcher-dates{font-family:'Orbitron',sans-serif;font-size:.58rem;color:var(--text-d);letter-spacing:1px;}
+.researcher-contrib{font-size:.8rem;color:var(--text-m);margin-top:6px;line-height:1.5;}
+.key-figures{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin:16px 0;}
+.kf{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;}
+.kf-n{font-family:'Orbitron',sans-serif;font-size:1.5rem;font-weight:900;color:var(--accent);line-height:1;}
+.kf-l{font-size:.68rem;color:var(--text-m);margin-top:6px;line-height:1.4;}
+.science-block{background:rgba(6,182,212,.06);border:1px solid rgba(6,182,212,.2);border-radius:12px;padding:20px 24px;margin:16px 0;}
+.sb-title{font-family:'Orbitron',sans-serif;font-size:.65rem;letter-spacing:2px;color:var(--accent);margin-bottom:10px;text-transform:uppercase;}
+.sb-body{font-size:.88rem;color:var(--text-m);line-height:1.75;}
+.sb-body strong{color:var(--text);}
+.sb-body em{font-style:normal;color:#a5f3fc;}
+.evidence{display:flex;align-items:center;gap:12px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);}
+.ev-label{font-size:.65rem;color:var(--text-d);letter-spacing:1px;text-transform:uppercase;}
+.ev-stars{color:var(--gold);}
+.ev-note{font-size:.7rem;color:var(--text-m);}
+
+/* ── CIALDINI GRID ── */
+.cialdini-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0;}
+.cial-card{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;position:relative;overflow:hidden;}
+.cial-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
+.cial-card:nth-child(1)::before{background:var(--accent);}
+.cial-card:nth-child(2)::before{background:#818cf8;}
+.cial-card:nth-child(3)::before{background:#34d399;}
+.cial-card:nth-child(4)::before{background:#f59e0b;}
+.cial-card:nth-child(5)::before{background:#f97316;}
+.cial-card:nth-child(6)::before{background:#ec4899;}
+.cial-ico{font-size:1.4rem;margin-bottom:6px;}
+.cial-name{font-family:'Orbitron',sans-serif;font-size:.62rem;letter-spacing:1px;color:var(--text);margin-bottom:5px;font-weight:700;text-transform:uppercase;}
+.cial-def{font-size:.78rem;color:var(--text-m);line-height:1.5;margin-bottom:8px;}
+.cial-school{font-size:.75rem;color:#a5f3fc;font-style:italic;line-height:1.5;}
+
+/* ── REDFLAGS ── */
+.redflag-list{display:flex;flex-direction:column;gap:10px;margin:16px 0;}
+.rf-item{background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.2);border-radius:10px;padding:14px 16px;}
+.rf-header{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+.rf-ico{font-size:1rem;}
+.rf-name{font-family:'Orbitron',sans-serif;font-size:.62rem;letter-spacing:1px;color:#f87171;text-transform:uppercase;}
+.rf-example{font-size:.82rem;color:var(--text-m);line-height:1.6;font-style:italic;margin-bottom:6px;}
+.rf-risk{font-size:.78rem;color:#fca5a5;line-height:1.5;}
+.rf-response{font-size:.78rem;color:#34d399;line-height:1.5;margin-top:6px;}
+.rf-response::before{content:'→ ';font-weight:700;}
+
+/* ── ENGAGEMENT STEPS ── */
+.engagement-steps{display:flex;flex-direction:column;gap:6px;margin:16px 0;}
+.eng-step{display:flex;gap:12px;align-items:flex-start;background:var(--panel2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;}
+.eng-num{font-family:'Orbitron',sans-serif;font-size:.9rem;font-weight:900;color:var(--accent);width:24px;flex-shrink:0;}
+.eng-text{font-size:.85rem;color:var(--text-m);line-height:1.6;}
+.eng-text strong{color:var(--text);}
+
+.citation{border-left:3px solid var(--accent);padding:12px 18px;margin:16px 0;background:rgba(6,182,212,.05);border-radius:0 8px 8px 0;}
+.cit-text{font-size:.88rem;color:#a5f3fc;font-style:italic;line-height:1.7;}
+.cit-source{font-size:.7rem;color:var(--text-d);margin-top:8px;font-family:'Orbitron',sans-serif;letter-spacing:1px;}
+.reveal-card{background:var(--panel2);border:1px solid var(--border);border-radius:10px;margin:10px 0;overflow:hidden;}
+.rc-trigger{padding:12px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:.85rem;color:var(--text-m);}
+.rc-trigger:hover{color:var(--text);}
+.rc-trigger span{margin-left:auto;font-size:.7rem;color:var(--text-d);transition:.2s;}
+.rc-body{padding:0 16px 14px;font-size:.85rem;color:var(--text-m);line-height:1.7;display:none;}
+.rc-body.open{display:block;}
+.rc-ico{font-size:1rem;flex-shrink:0;}
+.interaction{background:var(--panel);border:2px solid rgba(6,182,212,.25);border-radius:12px;padding:22px;margin:24px 0;}
+.int-question{font-size:.95rem;color:#a5f3fc;font-weight:600;margin-bottom:16px;line-height:1.5;}
+.int-options{display:flex;flex-direction:column;gap:8px;}
+.int-opt{padding:12px 16px;border-radius:8px;border:1px solid var(--border);background:var(--panel2);cursor:pointer;font-size:.85rem;color:var(--text-m);transition:.2s;text-align:left;}
+.int-opt:hover{border-color:var(--accent);color:var(--text);}
+.int-opt.correct{background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.4);color:#6ee7b7;pointer-events:none;}
+.int-opt.wrong{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.3);color:#fca5a5;pointer-events:none;}
+.int-feedback{margin-top:14px;padding:12px 16px;border-radius:8px;font-size:.85rem;line-height:1.6;display:none;}
+.int-feedback.show{display:block;}
+.int-feedback.ok{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);color:#6ee7b7;}
+.int-feedback.ko{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#fca5a5;}
+.completion{background:linear-gradient(135deg,rgba(6,182,212,.12),rgba(245,158,11,.08));border:1px solid rgba(6,182,212,.3);border-radius:16px;padding:32px;text-align:center;margin-top:40px;}
+.comp-ico{font-size:3rem;margin-bottom:16px;}
+.comp-title{font-family:'Orbitron',sans-serif;font-size:1rem;color:#67e8f9;margin-bottom:6px;letter-spacing:2px;}
+.comp-xp{font-family:'Orbitron',sans-serif;font-size:2rem;font-weight:900;color:var(--gold);margin-bottom:14px;}
+.comp-btn{background:var(--accent);color:#fff;border:none;padding:13px 32px;font-family:'Orbitron',sans-serif;font-size:.75rem;letter-spacing:2px;cursor:pointer;border-radius:8px;transition:.2s;text-transform:uppercase;}
+.comp-btn:hover{filter:brightness(1.15);}
+.comp-btn:disabled{opacity:.5;cursor:default;}
+.comp-done{font-size:.8rem;color:#10b981;margin-top:12px;display:none;}
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a href="index_FONDEMENTS.html" class="tnav-back">← FONDEMENTS</a>
+  <div class="tnav-sep"></div>
+  <span class="tnav-pill">🗣️ COMMUNICATION · 04</span>
+  <div class="tnav-xp" id="topXp">0 XP</div>
+</div>
+
+<div class="mod-wrap">
+
+<div class="audio-banner" id="audioBanner">
+  <div class="ab-head">
+    <div class="ab-ico">🎧</div>
+    <div class="ab-info">
+      <div class="ab-tag">Narration audio · Immersif</div>
+      <div class="ab-title">Les fils invisibles — Joule, Beauvois, Cialdini</div>
+      <div class="ab-sub">Récit documentaire · 10 min environ</div>
+    </div>
+  </div>
+  <p class="ab-invite">Ce module touche à quelque chose d'inconfortable : les mécanismes qui nous font changer de comportement sans qu'on s'en aperçoive. Écoute l'histoire d'abord — elle te montrera que tu les connais déjà.</p>
+  <audio id="modAudio" controls preload="none">
+    <source src="fond_comm_04.mp3" type="audio/mpeg">
+  </audio>
+</div>
+
+<div class="mod-header">
+  <div class="mod-eyebrow">Communication · Module 04</div>
+  <div class="mod-title">Les fils<br>invisibles</div>
+  <div class="mod-sub">En 1966, deux psychologues californiens frappent à des portes et demandent aux résidents de poser un panneau géant dans leur jardin. Presque tout le monde refuse. Sauf ceux à qui ils avaient posé une petite question deux semaines plus tôt. Cette expérience a fondé la psychologie de l'engagement — et révélé les fils invisibles qui guident nos décisions sans qu'on le sache.</div>
+  <div class="mod-meta">
+    <span class="mod-tag">📍 Palo Alto, Californie — 1966</span>
+    <span class="mod-tag">🔬 Psychologie de l'engagement</span>
+    <span class="mod-tag">👤 Freedman · Fraser · Joule · Beauvois · Cialdini</span>
+    <span class="mod-tag mod-xp-tag">⚡ 150 XP</span>
+  </div>
+</div>
+
+<!-- ══ RÉCIT ══ -->
+<div class="section">
+  <div class="section-label">Le Récit Fondateur</div>
+  <div class="recit">
+    <span class="date">PALO ALTO, CALIFORNIE · 1966 · JONATHAN FREEDMAN & SCOTT FRASER</span>
+    <p>Deux chercheurs en psychologie sociale de Stanford décident de tester une idée simple : <strong>une petite demande peut-elle préparer le terrain pour une grande ?</strong></p>
+    <br>
+    <p>Ils divisent des résidents d'un quartier en deux groupes. Au premier groupe, ils demandent directement : accepteriez-vous qu'on installe un grand panneau peu esthétique dans votre jardin, sur la sécurité routière ? <em>Moins de 20 % acceptent.</em></p>
+    <br>
+    <p>Au deuxième groupe, ils avaient frappé à la porte deux semaines plus tôt avec une demande minuscule : pouvez-vous signer cette petite pétition pour la sécurité routière ? Presque tout le monde avait signé — c'était si peu. Deux semaines plus tard, ils reviennent avec la demande du grand panneau. <strong>Plus de 76 % acceptent.</strong></p>
+    <br>
+    <p>L'explication de Freedman et Fraser : en signant la pétition, les résidents s'étaient <em>définis</em> comme des personnes soucieuses de sécurité routière. Accepter le panneau était désormais <strong>cohérent avec leur identité</strong>. Refuser aurait créé une dissonance insupportable.</p>
+    <br>
+    <p>Ce mécanisme — que Joule et Beauvois vont théoriser en France sous le nom de <em>soumission librement consentie</em> — explique des dizaines de comportements scolaires quotidiens. <strong>Pourquoi un élève qui a signé un contrat de comportement le respecte davantage. Pourquoi un parent qui a participé à une réunion de rentrée est plus coopératif en cas de conflit. Pourquoi la première demande que vous faites à quelqu'un détermine la suivante.</strong></p>
+  </div>
+</div>
+
+<div class="researcher">
+  <div class="researcher-ico">📚</div>
+  <div class="researcher-info">
+    <div class="researcher-name">Joule & Beauvois · Cialdini</div>
+    <div class="researcher-dates">ROBERT-VINCENT JOULE · JEAN-LÉON BEAUVOIS · UNIV. AIX-MARSEILLE & NICE · ROBERT CIALDINI · ARIZONA STATE UNIVERSITY</div>
+    <div class="researcher-contrib">Joule et Beauvois ont publié en 1987 le <em>Petit traité de manipulation à l'usage des honnêtes gens</em>, référence française sur la psychologie de l'engagement. Cialdini a publié <em>Influence</em> en 1984 — l'ouvrage de psychologie sociale le plus vendu de l'histoire. Leurs travaux convergent : les décisions humaines obéissent à des heuristiques prévisibles et manipulables.</div>
+  </div>
+</div>
+
+<div class="key-figures">
+  <div class="kf"><div class="kf-n">76%</div><div class="kf-l">Taux d'acceptation après la technique pied-dans-la-porte (vs 17% sans)</div></div>
+  <div class="kf"><div class="kf-n">6</div><div class="kf-l">Principes d'influence de Cialdini, tous présents dans la vie scolaire quotidienne</div></div>
+  <div class="kf"><div class="kf-n">1987</div><div class="kf-l">Publication du <em>Petit traité de manipulation</em> de Joule & Beauvois</div></div>
+  <div class="kf"><div class="kf-n">PDLP</div><div class="kf-l">Pied-dans-la-porte : la petite demande qui ouvre la porte à la grande</div></div>
+</div>
+
+<!-- ══ ENGAGEMENT ══ -->
+<div class="section">
+  <div class="section-label">La théorie de l'engagement</div>
+
+  <div class="science-block">
+    <div class="sb-title">Joule & Beauvois — Soumission librement consentie</div>
+    <div class="sb-body">
+      L'engagement est le lien qui unit un individu à ses actes comportementaux. Plus un acte est <strong>public, irrévocable, et réalisé avec un sentiment de liberté</strong>, plus il engage l'individu. La clé : <em>la personne doit se percevoir comme l'auteur libre de cet acte</em>. Si elle sent qu'on la force, l'engagement est faible. Si elle choisit — même une petite chose — l'engagement est massif.<br><br>
+      Cette théorie a une conséquence directe pour le travail éducatif : <strong>un élève à qui on impose un comportement n'est pas engagé. Un élève qui choisit un comportement — même guidé — en devient responsable.</strong>
+    </div>
+    <div class="evidence">
+      <span class="ev-label">Niveau de preuve</span>
+      <span class="ev-stars">★★★★★</span>
+      <span class="ev-note">Répliqué des centaines de fois — référence en psychologie sociale appliquée</span>
+    </div>
+  </div>
+
+  <div class="engagement-steps">
+    <div class="eng-step"><div class="eng-num">①</div><div class="eng-text"><strong>Pied-dans-la-porte :</strong> Obtenir un petit accord d'abord. "Peux-tu juste entrer et t'asseoir une minute ?" Une fois assis, la prochaine demande ("Peux-tu me dire ce qui s'est passé ?") est bien plus facile à accepter.</div></div>
+    <div class="eng-step"><div class="eng-num">②</div><div class="eng-text"><strong>Soumission librement consentie :</strong> Ajouter "mais vous êtes libre de refuser" augmente paradoxalement le taux d'acceptation. La liberté perçue réduit la résistance et renforce l'engagement interne.</div></div>
+    <div class="eng-step"><div class="eng-num">③</div><div class="eng-text"><strong>Consistance identitaire :</strong> Rappeler un engagement passé. "Tu m'avais dit en septembre que tu voulais réussir cette année. Comment on fait pour rester dans cette direction ?" L'élève veut être cohérent avec sa propre déclaration.</div></div>
+    <div class="eng-step"><div class="eng-num">④</div><div class="eng-text"><strong>Amorçage — avec prudence éthique :</strong> Proposer un accord sur des bases attrayantes avant de révéler les contraintes. Éthiquement fragile à l'école : peut être vécu comme une trahison si mal utilisé. À réserver à des contextes où les contraintes réelles peuvent être annoncées rapidement.</div></div>
+  </div>
+</div>
+
+<!-- ══ CIALDINI ══ -->
+<div class="section">
+  <div class="section-label">Les 6 principes de Cialdini</div>
+
+  <div class="cialdini-grid">
+    <div class="cial-card">
+      <div class="cial-ico">🔄</div>
+      <div class="cial-name">Réciprocité</div>
+      <div class="cial-def">On se sent obligé de rendre ce qu'on a reçu. Un geste offert crée une dette implicite.</div>
+      <div class="cial-school">Un CPE qui commence un entretien difficile en offrant un verre d'eau ou un temps de parole sans interruption active ce levier. La résistance baisse avant même le premier mot.</div>
+    </div>
+    <div class="cial-card">
+      <div class="cial-ico">📌</div>
+      <div class="cial-name">Engagement & Consistance</div>
+      <div class="cial-def">Nous voulons être cohérents avec nos déclarations et actes passés. Une petite décision engage vers les suivantes.</div>
+      <div class="cial-school">Les contrats de comportement signés publiquement tiennent mieux que les engagements verbaux. La signature est un acte public, irrévocable, ressenti comme libre.</div>
+    </div>
+    <div class="cial-card">
+      <div class="cial-ico">👥</div>
+      <div class="cial-name">Preuve sociale</div>
+      <div class="cial-def">En situation d'incertitude, on imite les autres. L'agitation se propage par ce mécanisme.</div>
+      <div class="cial-school">"La plupart des élèves dans ta situation choisissent de s'expliquer plutôt que de se murer dans le silence." Rassure sur la normalité du comportement attendu — sans pression directe.</div>
+    </div>
+    <div class="cial-card">
+      <div class="cial-ico">🏅</div>
+      <div class="cial-name">Autorité</div>
+      <div class="cial-def">Nous obéissons aux symboles d'autorité — titre, posture, ton, contexte institutionnel.</div>
+      <div class="cial-school">Le professionnel doit incarner une autorité de <em>compétence</em> plutôt que de <em>puissance</em>. "Je t'aide parce que c'est mon rôle et que je sais quoi faire" — pas "parce que je peux te sanctionner".</div>
+    </div>
+    <div class="cial-card">
+      <div class="cial-ico">❤️</div>
+      <div class="cial-name">Sympathie</div>
+      <div class="cial-def">Nous acceptons davantage de ceux que nous apprécions. La relation est un levier d'influence.</div>
+      <div class="cial-school">La construction du rapport (BISM marche 3) active directement ce principe. Un élève qui vous apprécie applique les règles avec moins de résistance — non par peur, mais par lien.</div>
+    </div>
+    <div class="cial-card">
+      <div class="cial-ico">⏳</div>
+      <div class="cial-name">Rareté</div>
+      <div class="cial-def">Ce qui est rare est perçu comme plus précieux. La contrainte temporelle amplifie l'urgence.</div>
+      <div class="cial-school">"C'est maintenant ou jamais" — à utiliser avec une extrême prudence sur des mineurs. Ce levier est le plus susceptible de basculer en manipulation. À éviter sauf nécessité réelle.</div>
+    </div>
+  </div>
+
+  <div class="citation">
+    <div class="cit-text">« L'influence n'est pas une chose que vous faites aux gens. C'est quelque chose qui se passe entre vous. La question éthique n'est pas 'est-ce que j'influence ?' — c'est 'dans quel but, et avec quel respect ?' »</div>
+    <div class="cit-source">D'après Robert Cialdini · Influence, 1984</div>
+  </div>
+</div>
+
+<!-- ══ RED FLAGS ══ -->
+<div class="section">
+  <div class="section-label">Reconnaître la manipulation subie</div>
+
+  <div class="science-block">
+    <div class="sb-title">Quand ces principes se retournent contre vous</div>
+    <div class="sb-body">
+      Ces mécanismes opèrent dans les deux sens. Un parent ou un élève — consciemment ou non — peut activer les mêmes leviers contre vous. <strong>Les reconnaître, c'est s'en protéger.</strong> L'objectif n'est pas la paranoïa — c'est la lucidité.
+    </div>
+  </div>
+
+  <div class="redflag-list">
+    <div class="rf-item">
+      <div class="rf-header"><span class="rf-ico">🚩</span><span class="rf-name">Intimidation par l'autorité</span></div>
+      <div class="rf-example">"Je connais le DASEN personnellement. Vous ne resterez pas longtemps à ce poste."</div>
+      <div class="rf-risk">Risque : peur, perte de lucidité, concession injustifiée.</div>
+      <div class="rf-response">Rester factuel : "Je comprends votre position, mais je dois suivre la procédure interne."</div>
+    </div>
+    <div class="rf-item">
+      <div class="rf-header"><span class="rf-ico">🚩</span><span class="rf-name">Réciprocité inversée (culpabilisation)</span></div>
+      <div class="rf-example">"Après tout ce que j'ai fait pour cette école, vous punissez mon fils ?"</div>
+      <div class="rf-risk">Risque : sentiment d'ingratitude, biais de faveur, décision non fondée.</div>
+      <div class="rf-response">Séparer les sujets : "Nous apprécions votre investissement, mais cet incident est traité séparément."</div>
+    </div>
+    <div class="rf-item">
+      <div class="rf-header"><span class="rf-ico">🚩</span><span class="rf-name">Victimisation excessive</span></div>
+      <div class="rf-example">"Tout le monde est contre nous, vous êtes notre seul espoir."</div>
+      <div class="rf-risk">Risque : sentiment de mission héroïque, prise en charge émotionnelle non professionnelle, épuisement.</div>
+      <div class="rf-response">Nommer le ressenti sans entrer dans le rôle : "Je comprends que vous vous sentiez isolés. Voici ce que je peux faire concrètement."</div>
+    </div>
+    <div class="rf-item">
+      <div class="rf-header"><span class="rf-ico">🚩</span><span class="rf-name">Escalade d'engagement</span></div>
+      <div class="rf-example">Un parent qui demande d'abord un bilan hebdomadaire, puis des appels le soir, puis des SMS directs.</div>
+      <div class="rf-risk">Risque : épuisement professionnel progressif, frontières professionnelles effacées.</div>
+      <div class="rf-response">Poser une limite dès la deuxième demande : "Voici les créneaux et les canaux où je suis disponible."</div>
+    </div>
+  </div>
+
+  <div class="reveal-card">
+    <div class="rc-trigger" onclick="toggleReveal(this)">
+      <span class="rc-ico">⚖️</span> Où commence la manipulation ? Le mini-code d'éthique
+      <span>▼</span>
+    </div>
+    <div class="rc-body">
+      L'influence est inhérente à toute relation humaine. Elle devient manipulation quand elle est <strong>cachée</strong> et <strong>au détriment</strong> de l'autre.<br><br>
+      <strong>Principes pour un usage éthique :</strong><br>
+      • <em>Finalité</em> : j'utilise ces leviers pour protéger, apaiser ou éduquer — jamais pour dominer ou satisfaire un ego.<br>
+      • <em>Transparence</em> : je peux expliquer ma démarche quand le calme revient. "Je t'ai proposé de t'asseoir d'abord parce que je sais que les conversations debout dans un couloir ne fonctionnent pas."<br>
+      • <em>Proportionnalité</em> : j'utilise le levier le moins intrusif possible.<br>
+      • <em>Dignité</em> : aucune de mes techniques ne doit pouvoir humilier l'interlocuteur, même en pleine crise.
+    </div>
+  </div>
+</div>
+
+<!-- ══ INTERACTION 1 ══ -->
+<div class="interaction" id="q1">
+  <div class="int-question">Selon la théorie de l'engagement, pourquoi un contrat de comportement signé publiquement par un élève est-il plus efficace qu'un accord verbal ?</div>
+  <div class="int-options">
+    <button class="int-opt" onclick="answer(this,'q1',false)">Parce que la signature est une preuve que l'école peut utiliser en cas de litige.</button>
+    <button class="int-opt" onclick="answer(this,'q1',true)">Parce que l'acte public, irrévocable et ressenti comme libre crée un engagement identitaire fort — l'élève veut être cohérent avec cet acte.</button>
+    <button class="int-opt" onclick="answer(this,'q1',false)">Parce que les parents voient la signature et exercent une pression sociale sur l'élève.</button>
+    <button class="int-opt" onclick="answer(this,'q1',false)">Parce que l'écrit est plus formel que la parole et l'élève le prend donc plus au sérieux.</button>
+  </div>
+  <div class="int-feedback" id="fb_q1"></div>
+</div>
+
+<!-- ══ INTERACTION 2 ══ -->
+<div class="interaction" id="q2">
+  <div class="int-question">Un parent dit : "Après tout ce que j'ai fait pour l'école, vous pourriez faire une exception pour mon fils." Quel principe de Cialdini est ici activé — et quelle est la bonne réponse ?</div>
+  <div class="int-options">
+    <button class="int-opt" onclick="answer(this,'q2',false)">La preuve sociale — rappeler que les autres parents ne bénéficient pas non plus d'exceptions.</button>
+    <button class="int-opt" onclick="answer(this,'q2',false)">La rareté — lui rappeler que l'exception est rare et donc précieuse.</button>
+    <button class="int-opt" onclick="answer(this,'q2',true)">La réciprocité — reconnaître sa contribution sans laisser créer une dette institutionnelle : séparer les deux sujets explicitement.</button>
+    <button class="int-opt" onclick="answer(this,'q2',false)">L'autorité — rappeler votre position institutionnelle et votre droit de décision.</button>
+  </div>
+  <div class="int-feedback" id="fb_q2"></div>
+</div>
+
+<!-- ══ COMPLÉTION ══ -->
+<div class="completion" id="completion" style="display:none;">
+  <div class="comp-ico">🎯</div>
+  <div class="comp-title">Module complété</div>
+  <div class="comp-xp">+150 XP</div>
+  <button class="comp-btn" id="compBtn" onclick="completeModule()">Valider et continuer</button>
+  <div class="comp-done" id="compDone">✓ Progression enregistrée — retour à FONDEMENTS dans 2s</div>
+</div>
+
+</div>
+
+<script>
+(async function(){try{const r=await fetch('fond_comm_04.mp3',{method:'HEAD'});if(r.status===200){document.getElementById('audioBanner').classList.add('visible');document.getElementById('modAudio').load();}}catch(e){}}());
+const KEY='fond_comm_04';const XP_VAL=150;
+document.getElementById('topXp').textContent=(parseInt(localStorage.getItem(KEY+'_xp')||'0'))+' XP';
+function toggleReveal(el){const b=el.nextElementSibling;b.classList.toggle('open');el.querySelector('span').textContent=b.classList.contains('open')?'▲':'▼';}
+const fbTexts={
+  q1:{ok:"Exactement. Joule et Beauvois identifient trois conditions qui maximisent l'engagement : l'acte doit être public (visible par les autres), irrévocable (difficile à défaire), et ressenti comme libre (la personne se perçoit comme l'auteure de la décision). Ces trois conditions réunies créent un lien identitaire fort avec l'acte — et une pression interne à y être cohérent.",
+      ko:"La bonne réponse est la cohérence identitaire. L'efficacité du contrat signé ne vient pas de sa valeur juridique, de la pression des parents, ou du format écrit en lui-même — mais du fait que l'élève s'est défini comme quelqu'un qui s'engage. Briser ce contrat crée une dissonance cognitive coûteuse."},
+  q2:{ok:"Correct. Le principe de réciprocité est activé : le parent tente d'activer une dette implicite basée sur ses contributions passées. La bonne réponse reconnaît sa contribution sans en faire une monnaie d'échange : 'Nous apprécions votre investissement, mais la gestion de cet incident suit sa propre procédure.' Les deux sujets sont explicitement séparés.",
+      ko:"Le mécanisme ici est la réciprocité — le parent active une dette implicite. Rappeler la position institutionnelle (autorité) peut être perçu comme une attaque. Utiliser la rareté renforce son sentiment d'injustice. La preuve sociale ne répond pas au fond. La seule réponse efficace est de reconnaître sa contribution tout en séparant explicitement les deux dossiers."}
+};
+let q1done=false,q2done=false;
+function answer(btn,q,correct){
+  btn.closest('.interaction').querySelectorAll('.int-opt').forEach(o=>o.disabled=true);
+  btn.classList.add(correct?'correct':'wrong');
+  if(!correct) btn.closest('.interaction').querySelectorAll('.int-opt').forEach(o=>{if(o.getAttribute('onclick').includes('true'))o.classList.add('correct');});
+  const fb=document.getElementById('fb_'+q);fb.textContent=fbTexts[q][correct?'ok':'ko'];fb.className='int-feedback show '+(correct?'ok':'ko');
+  if(q==='q1')q1done=true;if(q==='q2')q2done=true;
+  if(q1done&&q2done)document.getElementById('completion').style.display='block';
+}
+function completeModule(){
+  if(localStorage.getItem(KEY+'_done')==='1')return;
+  localStorage.setItem(KEY+'_done','1');localStorage.setItem(KEY+'_xp',XP_VAL);
+  document.getElementById('compBtn').disabled=true;document.getElementById('compDone').style.display='block';
+  document.getElementById('topXp').textContent=XP_VAL+' XP';
+  setTimeout(()=>{window.location.href='index_FONDEMENTS.html';},2000);
+}
+if(localStorage.getItem(KEY+'_done')==='1')document.getElementById('topXp').textContent=XP_VAL+' XP';
+</script>
+</body>
+</html>

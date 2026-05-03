@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FONDEMENTS · Communication 01 · Les cinq marches</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Exo+2:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05070f;--bg2:#090c18;--panel:#0d1122;--panel2:#111828;
+  --accent:#06b6d4;--accent-dim:rgba(6,182,212,.1);--accent-glow:rgba(6,182,212,.25);
+  --gold:#f59e0b;--green:#10b981;--red:#ef4444;--orange:#f97316;
+  --text:#e8eaf6;--text-m:#8892b0;--text-d:#3d4a6b;
+  --border:rgba(6,182,212,.15);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+.topnav{height:48px;background:var(--panel);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:14px;}
+.tnav-back{text-decoration:none;color:var(--text-m);font-size:.75rem;font-family:'Orbitron',sans-serif;letter-spacing:1px;transition:.2s;}
+.tnav-back:hover{color:var(--accent);}
+.tnav-sep{width:1px;height:20px;background:var(--border);}
+.tnav-pill{font-size:.6rem;padding:3px 10px;border-radius:12px;background:rgba(6,182,212,.12);border:1px solid rgba(6,182,212,.25);color:#67e8f9;font-family:'Orbitron',sans-serif;letter-spacing:1px;}
+.tnav-xp{margin-left:auto;font-family:'Orbitron',sans-serif;font-size:.72rem;color:var(--gold);}
+
+.audio-banner{background:linear-gradient(135deg,rgba(6,182,212,.15),rgba(6,182,212,.05));border:1px solid rgba(6,182,212,.3);border-radius:14px;margin:24px auto;max-width:760px;padding:20px 24px;display:none;}
+.audio-banner.visible{display:block;}
+.ab-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.ab-ico{font-size:1.8rem;filter:drop-shadow(0 0 8px var(--accent-glow));}
+.ab-info{flex:1;}
+.ab-tag{font-family:'Orbitron',sans-serif;font-size:.55rem;letter-spacing:2px;color:var(--accent);text-transform:uppercase;margin-bottom:3px;}
+.ab-title{font-size:.9rem;color:#a5f3fc;font-weight:600;}
+.ab-sub{font-size:.72rem;color:var(--text-m);margin-top:2px;}
+.ab-invite{font-size:.78rem;color:#67e8f9;font-style:italic;margin-bottom:12px;line-height:1.5;}
+audio{width:100%;height:40px;filter:invert(1) hue-rotate(160deg) brightness(.8);}
+
+.mod-wrap{max-width:760px;margin:0 auto;padding:0 24px 80px;}
+.mod-header{padding:32px 0 24px;}
+.mod-eyebrow{font-family:'Orbitron',sans-serif;font-size:.55rem;letter-spacing:4px;color:var(--accent);text-transform:uppercase;margin-bottom:8px;}
+.mod-title{font-family:'Orbitron',sans-serif;font-size:1.6rem;font-weight:900;color:#fff;line-height:1.3;margin-bottom:10px;}
+.mod-sub{font-size:.88rem;color:var(--text-m);line-height:1.6;margin-bottom:18px;}
+.mod-meta{display:flex;gap:16px;flex-wrap:wrap;}
+.mod-tag{font-size:.65rem;padding:3px 10px;border-radius:12px;background:var(--panel2);border:1px solid var(--border);color:var(--text-m);}
+.mod-xp-tag{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.3);color:var(--gold);}
+
+.section{margin-bottom:36px;}
+.section-label{font-family:'Orbitron',sans-serif;font-size:.6rem;letter-spacing:3px;color:var(--text-d);text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border);}
+
+.recit{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:24px 28px;line-height:1.9;font-size:.92rem;color:var(--text-m);position:relative;overflow:hidden;}
+.recit::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%;background:linear-gradient(180deg,var(--accent),transparent);}
+.recit strong{color:var(--text);}
+.recit em{font-style:normal;color:#a5f3fc;}
+.recit .date{font-family:'Orbitron',sans-serif;font-size:.6rem;letter-spacing:2px;color:var(--accent);display:block;margin-bottom:14px;}
+
+.researcher{display:flex;align-items:center;gap:16px;background:var(--panel2);border:1px solid rgba(6,182,212,.2);border-radius:10px;padding:14px 18px;margin:16px 0;}
+.researcher-ico{font-size:2.2rem;flex-shrink:0;}
+.researcher-info{flex:1;}
+.researcher-name{font-weight:700;color:#a5f3fc;margin-bottom:3px;}
+.researcher-dates{font-family:'Orbitron',sans-serif;font-size:.58rem;color:var(--text-d);letter-spacing:1px;}
+.researcher-contrib{font-size:.8rem;color:var(--text-m);margin-top:6px;line-height:1.5;}
+
+.key-figures{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin:16px 0;}
+.kf{background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:14px;text-align:center;}
+.kf-n{font-family:'Orbitron',sans-serif;font-size:1.6rem;font-weight:900;color:var(--accent);line-height:1;}
+.kf-l{font-size:.68rem;color:var(--text-m);margin-top:6px;line-height:1.4;}
+
+.science-block{background:rgba(6,182,212,.06);border:1px solid rgba(6,182,212,.2);border-radius:12px;padding:20px 24px;margin:16px 0;}
+.sb-title{font-family:'Orbitron',sans-serif;font-size:.65rem;letter-spacing:2px;color:var(--accent);margin-bottom:10px;text-transform:uppercase;}
+.sb-body{font-size:.88rem;color:var(--text-m);line-height:1.75;}
+.sb-body strong{color:var(--text);}
+.sb-body em{font-style:normal;color:#a5f3fc;}
+.evidence{display:flex;align-items:center;gap:12px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);}
+.ev-label{font-size:.65rem;color:var(--text-d);letter-spacing:1px;text-transform:uppercase;}
+.ev-stars{color:var(--gold);}
+.ev-note{font-size:.7rem;color:var(--text-m);}
+
+/* ── STAIRWAY VISUAL ── */
+.stairway{margin:20px 0;display:flex;flex-direction:column;gap:8px;}
+.stair{display:flex;align-items:center;gap:14px;background:var(--panel2);border:1px solid var(--border);border-radius:10px;padding:12px 16px;position:relative;overflow:hidden;transition:.2s;}
+.stair::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;}
+.stair.s1::before{background:#06b6d4;}
+.stair.s2::before{background:#818cf8;}
+.stair.s3::before{background:#34d399;}
+.stair.s4::before{background:#f59e0b;}
+.stair.s5::before{background:#f97316;}
+.stair-num{font-family:'Orbitron',sans-serif;font-size:1rem;font-weight:900;width:28px;flex-shrink:0;text-align:center;}
+.stair.s1 .stair-num{color:#06b6d4;}
+.stair.s2 .stair-num{color:#818cf8;}
+.stair.s3 .stair-num{color:#34d399;}
+.stair.s4 .stair-num{color:#f59e0b;}
+.stair.s5 .stair-num{color:#f97316;}
+.stair-info{flex:1;}
+.stair-name{font-weight:700;color:var(--text);font-size:.88rem;margin-bottom:3px;}
+.stair-desc{font-size:.78rem;color:var(--text-m);line-height:1.5;}
+.stair-tag{font-size:.62rem;padding:2px 8px;border-radius:8px;background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.2);color:#67e8f9;white-space:nowrap;flex-shrink:0;}
+.stair.s2 .stair-tag{background:rgba(129,140,248,.1);border-color:rgba(129,140,248,.2);color:#a5b4fc;}
+.stair.s3 .stair-tag{background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.2);color:#6ee7b7;}
+.stair.s4 .stair-tag{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.2);color:#fcd34d;}
+.stair.s5 .stair-tag{background:rgba(249,115,22,.1);border-color:rgba(249,115,22,.2);color:#fdba74;}
+
+.application{background:rgba(16,185,129,.05);border:1px solid rgba(16,185,129,.2);border-radius:12px;padding:18px 22px;margin:16px 0;}
+.app-title{font-family:'Orbitron',sans-serif;font-size:.6rem;letter-spacing:2px;color:#34d399;margin-bottom:10px;text-transform:uppercase;}
+.app-item{display:flex;gap:10px;margin-bottom:8px;font-size:.85rem;color:var(--text-m);line-height:1.6;}
+.app-item::before{content:'▸';color:#34d399;flex-shrink:0;}
+.app-item strong{color:var(--text);}
+
+.vigilance{background:rgba(249,115,22,.05);border:1px solid rgba(249,115,22,.2);border-radius:12px;padding:16px 20px;margin:16px 0;}
+.vig-title{font-family:'Orbitron',sans-serif;font-size:.6rem;letter-spacing:2px;color:var(--orange);margin-bottom:10px;text-transform:uppercase;}
+.vig-item{display:flex;gap:10px;margin-bottom:6px;font-size:.85rem;color:var(--text-m);line-height:1.5;}
+.vig-item::before{content:'⚠';color:var(--orange);flex-shrink:0;}
+
+.interaction{background:var(--panel);border:2px solid rgba(6,182,212,.25);border-radius:12px;padding:22px;margin:24px 0;}
+.int-question{font-size:.95rem;color:#a5f3fc;font-weight:600;margin-bottom:16px;line-height:1.5;}
+.int-options{display:flex;flex-direction:column;gap:8px;}
+.int-opt{padding:12px 16px;border-radius:8px;border:1px solid var(--border);background:var(--panel2);cursor:pointer;font-size:.85rem;color:var(--text-m);transition:.2s;text-align:left;}
+.int-opt:hover{border-color:var(--accent);color:var(--text);}
+.int-opt.correct{background:rgba(16,185,129,.1);border-color:rgba(16,185,129,.4);color:#6ee7b7;pointer-events:none;}
+.int-opt.wrong{background:rgba(239,68,68,.08);border-color:rgba(239,68,68,.3);color:#fca5a5;pointer-events:none;}
+.int-feedback{margin-top:14px;padding:12px 16px;border-radius:8px;font-size:.85rem;line-height:1.6;display:none;}
+.int-feedback.show{display:block;}
+.int-feedback.ok{background:rgba(16,185,129,.08);border:1px solid rgba(16,185,129,.2);color:#6ee7b7;}
+.int-feedback.ko{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#fca5a5;}
+
+.reveal-card{background:var(--panel2);border:1px solid var(--border);border-radius:10px;margin:10px 0;overflow:hidden;}
+.rc-trigger{padding:12px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;font-size:.85rem;color:var(--text-m);}
+.rc-trigger:hover{color:var(--text);}
+.rc-trigger span{margin-left:auto;font-size:.7rem;color:var(--text-d);transition:.2s;}
+.rc-body{padding:0 16px 14px;font-size:.85rem;color:var(--text-m);line-height:1.7;display:none;}
+.rc-body.open{display:block;}
+.rc-ico{font-size:1rem;flex-shrink:0;}
+
+.citation{border-left:3px solid var(--accent);padding:12px 18px;margin:16px 0;background:rgba(6,182,212,.05);border-radius:0 8px 8px 0;}
+.cit-text{font-size:.88rem;color:#a5f3fc;font-style:italic;line-height:1.7;}
+.cit-source{font-size:.7rem;color:var(--text-d);margin-top:8px;font-family:'Orbitron',sans-serif;letter-spacing:1px;}
+
+.scenario-box{background:linear-gradient(135deg,rgba(6,182,212,.08),rgba(6,182,212,.03));border:1px solid rgba(6,182,212,.25);border-radius:12px;padding:20px 24px;margin:16px 0;}
+.scen-label{font-family:'Orbitron',sans-serif;font-size:.58rem;letter-spacing:2px;color:var(--accent);margin-bottom:10px;text-transform:uppercase;}
+.scen-text{font-size:.88rem;color:var(--text-m);line-height:1.8;font-style:italic;}
+.scen-text strong{color:var(--text);font-style:normal;}
+
+.completion{background:linear-gradient(135deg,rgba(6,182,212,.12),rgba(245,158,11,.08));border:1px solid rgba(6,182,212,.3);border-radius:16px;padding:32px;text-align:center;margin-top:40px;}
+.comp-ico{font-size:3rem;margin-bottom:16px;filter:drop-shadow(0 0 20px var(--accent-glow));}
+.comp-title{font-family:'Orbitron',sans-serif;font-size:1rem;color:#67e8f9;margin-bottom:6px;letter-spacing:2px;}
+.comp-xp{font-family:'Orbitron',sans-serif;font-size:2rem;font-weight:900;color:var(--gold);margin-bottom:14px;}
+.comp-btn{background:var(--accent);color:#fff;border:none;padding:13px 32px;font-family:'Orbitron',sans-serif;font-size:.75rem;letter-spacing:2px;cursor:pointer;border-radius:8px;transition:.2s;text-transform:uppercase;}
+.comp-btn:hover{filter:brightness(1.15);}
+.comp-btn:disabled{opacity:.5;cursor:default;}
+.comp-done{font-size:.8rem;color:#10b981;margin-top:12px;display:none;}
+</style>
+</head>
+<body>
+
+<div class="topnav">
+  <a href="index_FONDEMENTS.html" class="tnav-back">← FONDEMENTS</a>
+  <div class="tnav-sep"></div>
+  <span class="tnav-pill">🗣️ COMMUNICATION · 01</span>
+  <div class="tnav-xp" id="topXp">0 XP</div>
+</div>
+
+<div class="mod-wrap">
+
+<div class="audio-banner" id="audioBanner">
+  <div class="ab-head">
+    <div class="ab-ico">🎧</div>
+    <div class="ab-info">
+      <div class="ab-tag">Narration audio · Immersif</div>
+      <div class="ab-title">Les cinq marches — Munich, 1972</div>
+      <div class="ab-sub">Récit documentaire · 10 min environ</div>
+    </div>
+  </div>
+  <p class="ab-invite">Avant de lire, laisse la narration te ramener au 5 septembre 1972. Ce soir-là, le monde a compris que des mots peuvent sauver des vies — et que mal utilisés, ils peuvent tout faire basculer.</p>
+  <audio id="modAudio" controls preload="none">
+    <source src="fond_comm_01.mp3" type="audio/mpeg">
+  </audio>
+</div>
+
+<div class="mod-header">
+  <div class="mod-eyebrow">Communication · Module 01</div>
+  <div class="mod-title">Les cinq marches</div>
+  <div class="mod-sub">Munich, 1972. Onze athlètes israéliens pris en otages par le groupe Septembre Noir. Les négociateurs échouent. Tous meurent. De cet échec naîtra l'une des méthodes de communication de crise les plus puissantes jamais développées : le Behavioral Change Stairway Model du FBI.</div>
+  <div class="mod-meta">
+    <span class="mod-tag">📍 Munich, JO 1972</span>
+    <span class="mod-tag">🔬 Négociation de crise</span>
+    <span class="mod-tag">👤 Gary Noesner · FBI</span>
+    <span class="mod-tag mod-xp-tag">⚡ 130 XP</span>
+  </div>
+</div>
+
+<!-- ══ SECTION 1 : LE RÉCIT ══ -->
+<div class="section">
+  <div class="section-label">Le Récit Fondateur</div>
+  <div class="recit">
+    <span class="date">MUNICH · 5 SEPTEMBRE 1972 · 4H10 DU MATIN</span>
+    <p>Huit hommes en survêtements d'entraînement escaladent la clôture du village olympique. Ils portent des sacs de sport. À l'intérieur : des armes. <strong>En moins de vingt minutes, ils s'emparent de onze athlètes israéliens.</strong> Deux sont tués dans la résistance initiale. Neuf sont retenus en otages.</p>
+    <br>
+    <p>La demande : la libération de deux cents prisonniers palestiniens dans les prisons israéliennes, et un avion pour quitter l'Allemagne. Les négociateurs allemands — policiers, officiels, un maire — n'ont aucune formation. <em>Ils improvisent.</em> Ils proposent de l'argent. Ils offrent de se substituer aux otages. Ils fixent des ultimatums, puis les repoussent.</p>
+    <br>
+    <p>Les preneurs d'otages ne croient pas un mot de ce qu'on leur dit. Le lien de confiance ne s'établit jamais. Quand l'assaut est finalement tenté à l'aéroport de Fürstenfeldbruck — par des tireurs d'élite mal positionnés, sans équipement de vision nocturne, sans plan coordonné — <strong>les neuf otages restants sont tués. Cinq des huit preneurs d'otages aussi. Et un policier allemand.</strong></p>
+    <br>
+    <p>Le monde entier regarde en direct. Et une question s'impose : <em>est-ce que ça aurait pu se passer autrement ?</em></p>
+    <br>
+    <p>La réponse de la communauté du renseignement et de la psychologie sera : oui. Mais il faut une méthode. Un langage. Une science de la parole sous pression. <strong>L'unité de négociation de crise du FBI est créée l'année suivante, en 1973.</strong> Et pendant les trente années suivantes, ses agents vont forger les outils que tu vas apprendre ici.</p>
+  </div>
+</div>
+
+<!-- Chercheur -->
+<div class="researcher">
+  <div class="researcher-ico">🎯</div>
+  <div class="researcher-info">
+    <div class="researcher-name">Gary Noesner</div>
+    <div class="researcher-dates">NÉ EN 1950 · FBI CRISIS NEGOTIATION UNIT · 30 ANS DE TERRAIN</div>
+    <div class="researcher-contrib">Chef négociateur du FBI pendant trois décennies. A géré plus de 120 situations de crise — prises d'otages, sièges, situations suicidaires. A théorisé la distinction entre crises instrumentales et expressives. Auteur de <em>Stalling for Time</em> (2010). Son approche a directement inspiré la formation des négociateurs de gendarmerie en France.</div>
+  </div>
+</div>
+
+<!-- Chiffres clés -->
+<div class="key-figures">
+  <div class="kf"><div class="kf-n">1973</div><div class="kf-l">Création de l'unité de négociation de crise du FBI</div></div>
+  <div class="kf"><div class="kf-n">5</div><div class="kf-l">Marches du modèle BISM, chacune conditionnant la suivante</div></div>
+  <div class="kf"><div class="kf-n">93%</div><div class="kf-l">Des crises négociées par le FBI se résolvent sans recours à la force</div></div>
+  <div class="kf"><div class="kf-n">2</div><div class="kf-l">Types de crise : instrumentale (calcul) vs expressive (émotion)</div></div>
+</div>
+
+<!-- ══ SECTION 2 : LE MODÈLE ══ -->
+<div class="section">
+  <div class="section-label">Le Modèle BISM</div>
+
+  <div class="science-block">
+    <div class="sb-title">Behavioral Change Stairway Model</div>
+    <div class="sb-body">
+      Le BISM part d'un constat neurologique fondamental : <strong>un cerveau en état de menace ne peut pas traiter la logique.</strong> L'amygdale suractive les circuits d'alerte et court-circuite le cortex préfrontal. Toute tentative d'argumentation, de rappel au règlement ou de menace de sanction est <em>inaudible</em> dans cet état.<br><br>
+      La seule façon d'accéder à la raison d'un individu en crise est de <strong>descendre d'abord son niveau d'activation physiologique</strong>. Le BISM formalise cette progression en cinq étapes séquentielles : on ne peut pas sauter une marche. Tenter d'influencer sans avoir créé l'empathie, c'est prendre l'escalier en commençant par le toit.
+    </div>
+    <div class="evidence">
+      <span class="ev-label">Niveau de preuve</span>
+      <span class="ev-stars">★★★★☆</span>
+      <span class="ev-note">Validé sur terrain FBI + études en psychologie du trauma</span>
+    </div>
+  </div>
+
+  <div class="stairway">
+    <div class="stair s1">
+      <div class="stair-num">1</div>
+      <div class="stair-info">
+        <div class="stair-name">Écoute active saturante</div>
+        <div class="stair-desc">Ne pas se taire — <em>saturer</em> l'espace de signaux de compréhension. Encouragements minimaux, silences stratégiques, paraphrases. L'objectif : que l'autre vide son sac émotionnel sans interruption.</div>
+      </div>
+      <div class="stair-tag">Écoute</div>
+    </div>
+    <div class="stair s2">
+      <div class="stair-num">2</div>
+      <div class="stair-info">
+        <div class="stair-name">Empathie tactique</div>
+        <div class="stair-desc">Comprendre les émotions de l'autre <em>sans nécessairement les partager</em>. Étiquetage émotionnel : "On dirait que tu te sens acculé." Si le label est juste — soulagement. S'il est faux — correction qui apporte de l'information.</div>
+      </div>
+      <div class="stair-tag">Empathie</div>
+    </div>
+    <div class="stair s3">
+      <div class="stair-num">3</div>
+      <div class="stair-info">
+        <div class="stair-name">Rapport</div>
+        <div class="stair-desc">L'interlocuteur commence à percevoir le professionnel non plus comme un ennemi ou un obstacle, mais comme <em>un tiers capable d'entendre</em>. La confiance minimale s'installe. Ce passage est souvent marqué par un changement de ton ou un premier propos personnel.</div>
+      </div>
+      <div class="stair-tag">Confiance</div>
+    </div>
+    <div class="stair s4">
+      <div class="stair-num">4</div>
+      <div class="stair-info">
+        <div class="stair-name">Influence</div>
+        <div class="stair-desc">Une fois le rapport établi, le professionnel acquiert le <em>"droit"</em> de suggérer des directions. Des propositions qui auraient été rejetées à froid deviennent audibles. Ce n'est pas de la manipulation — c'est la conséquence naturelle de la sécurité psychologique construite.</div>
+      </div>
+      <div class="stair-tag">Levier</div>
+    </div>
+    <div class="stair s5">
+      <div class="stair-num">5</div>
+      <div class="stair-info">
+        <div class="stair-name">Changement de comportement</div>
+        <div class="stair-desc">L'acte final — poser un objet, quitter une pièce, accepter de s'asseoir, baisser la voix — est la <em>conséquence naturelle</em> de la baisse de tension. Il n'est pas arraché. Il est consenti. Et cette différence change tout pour la suite de la relation.</div>
+      </div>
+      <div class="stair-tag">Résolution</div>
+    </div>
+  </div>
+
+  <div class="citation">
+    <div class="cit-text">« La stabilité du négociateur est son arme principale. Tu dois être l'ancre face à la tempête émotionnelle de l'autre. Si tu t'embales, c'est perdu. »</div>
+    <div class="cit-source">Gary Noesner · Stalling for Time, 2010</div>
+  </div>
+</div>
+
+<!-- ══ SECTION 3 : INSTRUMENTAL vs EXPRESSIF ══ -->
+<div class="section">
+  <div class="section-label">La distinction fondamentale</div>
+
+  <div class="science-block">
+    <div class="sb-title">Crise instrumentale vs crise expressive</div>
+    <div class="sb-body">
+      Noesner identifie deux grandes catégories de crise, qui nécessitent des approches radicalement différentes.<br><br>
+      <strong>La crise instrumentale</strong> est orientée vers un but calculé. L'individu veut quelque chose — fuir une sanction, obtenir une dérogation, faire pression. Sa cognition fonctionne. Il évalue les risques. Face à ce type de crise, <em>le cadre réglementaire reste un outil pertinent</em> — dès lors qu'on peut dialoguer.<br><br>
+      <strong>La crise expressive</strong> est une décharge émotionnelle. L'individu ne cherche pas un résultat précis — il souffre et il déborde. Rappeler le règlement à un élève qui pleure de désespoir ou à un parent qui hurle de rage, c'est inefficace et souvent aggravant. <em>Le cadre doit être momentanément mis en sourdine</em> au profit de la régulation émotionnelle.<br><br>
+      <strong>L'erreur la plus fréquente en milieu scolaire</strong> : traiter une crise expressive comme une crise instrumentale. Rappeler les règles, sanctionner à chaud, exiger une explication logique d'un cerveau qui n'est plus en état de la produire.
+    </div>
+    <div class="evidence">
+      <span class="ev-label">Niveau de preuve</span>
+      <span class="ev-stars">★★★★★</span>
+      <span class="ev-note">Consensus en neuropsychologie et psychotraumatologie</span>
+    </div>
+  </div>
+
+  <div class="reveal-card">
+    <div class="rc-trigger" onclick="toggleReveal(this)">
+      <span class="rc-ico">🔍</span> Comment identifier rapidement le type de crise ?
+      <span>▼</span>
+    </div>
+    <div class="rc-body">
+      <strong>Signes d'une crise instrumentale :</strong> l'individu formule des demandes précises, négocie, cite des précédents, évalue les conséquences. Sa colère est froide. Il regarde l'heure.<br><br>
+      <strong>Signes d'une crise expressive :</strong> discours incohérent, pleurs, tremblements, agitation motrice, répétitions, impossibilité à reformuler une question simple. L'émotion déborde le contenu.<br><br>
+      <strong>Cas mixtes :</strong> une crise peut commencer comme expressive et, une fois le premier pic passé, glisser vers l'instrumental. Le BISM fonctionne dans les deux cas — mais dans la crise mixte, il faut savoir reconnaître quand passer de l'empathie à la résolution.
+    </div>
+  </div>
+
+  <div class="reveal-card">
+    <div class="rc-trigger" onclick="toggleReveal(this)">
+      <span class="rc-ico">⏱️</span> La contrainte de temps en milieu scolaire
+      <span>▼</span>
+    </div>
+    <div class="rc-body">
+      Un négociateur du FBI peut disposer de plusieurs heures, voire de jours. Un CPE ou un AED doit souvent agir entre deux sonneries. Cette contrainte impose une <strong>densification des premières marches</strong> : l'écoute doit être plus intense sur un temps plus court, et la gestion de l'environnement physique (trouver un espace calme, éloigner les témoins) est cruciale pour compenser la pression temporelle.<br><br>
+      Si le temps manque absolument, la priorité est d'assurer la sécurité physique immédiate, puis de <em>programmer explicitement un moment de dialogue</em> : "Je dois aller maintenant, mais je reviens te voir à 14h et j'ai le temps. On reprend là où on en est."
+    </div>
+  </div>
+</div>
+
+<!-- ══ SECTION 4 : SCÉNARIO D'APPLICATION ══ -->
+<div class="section">
+  <div class="section-label">Mise en situation</div>
+
+  <div class="scenario-box">
+    <div class="scen-label">Scénario · Couloir du collège</div>
+    <div class="scen-text">
+      Il est 11h45. Un élève de 4e est dans le couloir, adossé au mur, refusant d'entrer en classe de mathématiques. Il répond par monosyllabes. Ses poings sont serrés. Sa professeure est dans l'embrasure de la porte, les bras croisés.<br><br>
+      <strong>Un AED s'approche.</strong> La sonnerie va retentir dans 8 minutes. Trente élèves observent.
+    </div>
+  </div>
+
+  <div class="application">
+    <div class="app-title">Appliquer le BISM — marche par marche</div>
+    <div class="app-item"><strong>Marche 1 — Écoute :</strong> L'AED s'approche, voix basse. "Je vois que c'est compliqué là." Silence. Attend. Ne comble pas le vide immédiatement. Laisse l'élève choisir de parler ou pas.</div>
+    <div class="app-item"><strong>Marche 2 — Empathie :</strong> Si l'élève lâche quelques mots, étiqueter sans juger. "On dirait que t'as l'impression que ça va mal finir si tu rentres." Ne pas corriger. Ne pas rassurer à la va-vite.</div>
+    <div class="app-item"><strong>Marche 3 — Rapport :</strong> Proposer de se décaler un peu du couloir — pas pour éloigner, mais pour offrir un espace moins exposé. "Viens deux secondes là, les autres nous regardent." Si l'élève suit — le rapport est en train de s'installer.</div>
+    <div class="app-item"><strong>Marche 4 — Influence :</strong> Une fois seul avec lui : "Comment on fait pour que tu puisses entrer sans que ça se termine mal ?" Le mettre en position de résoudre, pas de subir.</div>
+    <div class="app-item"><strong>Marche 5 — Changement :</strong> L'élève entre en classe — pas parce qu'on l'a forcé, mais parce qu'il a choisi. La sanction éventuelle se traite après, au calme, quand le cortex préfrontal est de retour.</div>
+  </div>
+
+  <div class="vigilance">
+    <div class="vig-title">À ne pas faire</div>
+    <div class="vig-item">Tenter de raisonner à chaud — la logique est inaudible quand l'amygdale est en surchauffe.</div>
+    <div class="vig-item">Rappeler le règlement ou la sanction dans les trois premières marches — c'est sauter à la marche 4 sans fondation.</div>
+    <div class="vig-item">Chercher à "gagner" la confrontation devant les pairs — l'humiliation ferme toutes les portes pour la suite.</div>
+    <div class="vig-item">Utiliser ces techniques pour obtenir des aveux ou des informations — c'est une dérive éthique grave dans le contexte scolaire.</div>
+  </div>
+</div>
+
+<!-- ══ INTERACTION 1 ══ -->
+<div class="interaction" id="q1">
+  <div class="int-question">Un élève hurle dans le bureau du CPE, en pleurs, incapable de terminer une phrase. Selon le BISM, quelle est la priorité absolue à ce stade ?</div>
+  <div class="int-options">
+    <button class="int-opt" onclick="answer(this,'q1',false)">Rappeler les règles de comportement dans le bureau pour cadrer la situation.</button>
+    <button class="int-opt" onclick="answer(this,'q1',false)">Demander une explication claire des faits pour comprendre ce qui s'est passé.</button>
+    <button class="int-opt" onclick="answer(this,'q1',true)">Écouter sans interrompre, signaler sa présence, laisser l'émotion se décharger.</button>
+    <button class="int-opt" onclick="answer(this,'q1',false)">Proposer immédiatement des solutions pour montrer que le problème est gérable.</button>
+  </div>
+  <div class="int-feedback" id="fb_q1"></div>
+</div>
+
+<!-- ══ INTERACTION 2 ══ -->
+<div class="interaction" id="q2">
+  <div class="int-question">Un parent arrive furieux dans le hall, exigeant de voir "le directeur tout de suite" et menaçant de "faire remonter ça au rectorat". Il cite des noms, liste des griefs. De quel type de crise s'agit-il ?</div>
+  <div class="int-options">
+    <button class="int-opt" onclick="answer(this,'q2',true)">Mixte — majoritairement instrumentale avec une composante expressive. Il veut quelque chose et sait le formuler.</button>
+    <button class="int-opt" onclick="answer(this,'q2',false)">Purement expressive — il ne peut pas raisonner, il déborde d'émotion.</button>
+    <button class="int-opt" onclick="answer(this,'q2',false)">Purement instrumentale — pas d'émotion visible, seulement une stratégie de pression.</button>
+    <button class="int-opt" onclick="answer(this,'q2',false)">Il ne s'agit pas d'une crise — juste d'un parent difficile à gérer normalement.</button>
+  </div>
+  <div class="int-feedback" id="fb_q2"></div>
+</div>
+
+<!-- ══ COMPLÉTION ══ -->
+<div class="completion" id="completion" style="display:none;">
+  <div class="comp-ico">🎯</div>
+  <div class="comp-title">Module complété</div>
+  <div class="comp-xp">+130 XP</div>
+  <button class="comp-btn" id="compBtn" onclick="completeModule()">Valider et continuer</button>
+  <div class="comp-done" id="compDone">✓ Progression enregistrée — retour à FONDEMENTS dans 2s</div>
+</div>
+
+</div><!-- end mod-wrap -->
+
+<script>
+// ── Audio auto-detection ──
+(async function detectAudio(){
+  try{
+    const r = await fetch('fond_comm_01.mp3',{method:'HEAD'});
+    if(r.status===200){
+      document.getElementById('audioBanner').classList.add('visible');
+      document.getElementById('modAudio').load();
+    }
+  }catch(e){}
+})();
+
+// ── XP from storage ──
+const KEY='fond_comm_01';
+const XP_VAL=130;
+let xp=parseInt(localStorage.getItem(KEY+'_xp')||'0');
+document.getElementById('topXp').textContent=xp+' XP';
+
+// ── Reveal cards ──
+function toggleReveal(el){
+  const body=el.nextElementSibling;
+  body.classList.toggle('open');
+  el.querySelector('span').textContent=body.classList.contains('open')?'▲':'▼';
+}
+
+// ── Interactions ──
+const fbTexts={
+  q1:{ok:"Exactement. La marche 1 du BISM est l'écoute saturante. Le cerveau en crise expressive ne peut pas traiter d'informations nouvelles — rappel des règles ou recherche de faits — tant que l'émotion n'a pas été reconnue. Toute autre action à ce stade aggrave l'état de sur-activation.",
+      ko:"Ce type de réponse correspond à une erreur fréquente : tenter de sauter les premières marches du BISM. Un cerveau en crise expressive (pleurs, agitation, incohérence verbale) ne peut pas traiter d'argumentations ou de questions logiques. La priorité est de reconnaître l'émotion, pas de la contourner."},
+  q2:{ok:"Bien vu. Ce profil — demandes précises, menaces articulées, références hiérarchiques — indique une cognition qui fonctionne (donc composante instrumentale). Mais l'intensité émotionnelle suggère aussi une activation amygdalienne non nulle. L'approche BISM reste valide : empathie d'abord pour désamorcer la composante expressive, puis dialogue sur le fond.",
+      ko:"La précision des demandes (voir le directeur, citer des noms, menacer d'une démarche hiérarchique) est la signature d'une cognition fonctionnelle — crise au moins partiellement instrumentale. Une crise purement expressive ne produit pas ce type d'argumentation structurée. Mais l'intensité émotionnelle appelle quand même à commencer par l'empathie."}
+};
+
+let q1done=false,q2done=false;
+function answer(btn,q,correct){
+  const opts=btn.closest('.interaction').querySelectorAll('.int-opt');
+  opts.forEach(o=>o.disabled=true);
+  btn.classList.add(correct?'correct':'wrong');
+  if(!correct) btn.closest('.interaction').querySelectorAll('.int-opt').forEach(o=>{
+    if(o.getAttribute('onclick').includes('true')) o.classList.add('correct');
+  });
+  const fb=document.getElementById('fb_'+q);
+  fb.textContent=fbTexts[q][correct?'ok':'ko'];
+  fb.className='int-feedback show '+(correct?'ok':'ko');
+  if(q==='q1') q1done=true;
+  if(q==='q2') q2done=true;
+  if(q1done&&q2done) document.getElementById('completion').style.display='block';
+}
+
+function completeModule(){
+  if(localStorage.getItem(KEY+'_done')==='1') return;
+  localStorage.setItem(KEY+'_done','1');
+  localStorage.setItem(KEY+'_xp',XP_VAL);
+  document.getElementById('compBtn').disabled=true;
+  document.getElementById('compDone').style.display='block';
+  document.getElementById('topXp').textContent=XP_VAL+' XP';
+  setTimeout(()=>{ window.location.href='index_FONDEMENTS.html'; },2000);
+}
+
+// Si déjà complété
+if(localStorage.getItem(KEY+'_done')==='1'){
+  document.getElementById('topXp').textContent=XP_VAL+' XP';
+}
+</script>
+</body>
+</html>
