@@ -240,12 +240,27 @@ body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--text);displ
 .welcome-btn:hover{filter:brightness(1.15);}
 .welcome-tagline{text-align:center;font-size:.78rem;color:var(--text-d);margin-top:16px;font-style:italic;}
 
+/* ===== MENU HAMBURGER ===== */
+.menu-toggle{display:none;align-items:center;justify-content:center;background:none;border:1px solid var(--border);color:var(--text-m);padding:6px 10px;border-radius:6px;cursor:pointer;font-size:1.1rem;line-height:1;transition:.2s;flex-shrink:0;}
+.menu-toggle:hover{background:var(--primary-dim);color:var(--text);}
+.sidebar-backdrop{display:none;position:fixed;inset:0;top:52px;background:rgba(0,0,0,.65);z-index:140;cursor:pointer;}
+.sidebar-backdrop.open{display:block;}
+
 /* ===== RESPONSIVE ===== */
 @media(max-width:700px){
-  .sidebar{display:none;}
+  .menu-toggle{display:flex;}
+  .sidebar{
+    position:fixed;top:52px;left:0;bottom:0;z-index:150;
+    transform:translateX(-100%);transition:transform .28s cubic-bezier(.4,0,.2,1);
+    width:min(280px,85vw);
+    box-shadow:4px 0 32px rgba(0,0,0,.6);
+  }
+  .sidebar.open{transform:translateX(0);}
   .mod-grid{grid-template-columns:1fr;}
   .pod-cards{grid-template-columns:1fr;}
   .modal-box{width:100vw;height:100vh;border-radius:0;}
+  .topbar-sub{display:none;}
+  .pillar-hdr-desc{display:none;}
 }
 </style>
 </head>
@@ -275,8 +290,12 @@ body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--text);displ
   </div>
 </div>
 
+<!-- SIDEBAR BACKDROP (mobile) -->
+<div class="sidebar-backdrop" id="sidebarBackdrop" onclick="closeSidebar()"></div>
+
 <!-- TOP BAR -->
 <div class="topbar">
+  <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()" title="Navigation">☰</button>
   <div>
     <div class="topbar-logo">K A I R O S</div>
     <div class="topbar-sub">Gestion de Crise · Éducation Nationale</div>
@@ -315,7 +334,7 @@ body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--text);displ
     <!-- URGENCE SECTION -->
     <div class="sidebar-divider" style="margin-top:8px;"></div>
     <div class="sidebar-head" style="color:rgba(239,68,68,.5);">Protocoles</div>
-    <button class="urgence-nav-btn" id="urgenceNavBtn" onclick="showURGENCE()">
+    <button class="urgence-nav-btn" id="urgenceNavBtn" onclick="showURGENCE();closeSidebar()">
       <div class="urgence-nav-ico">🚨</div>
       <div class="urgence-nav-info">
         <div class="urgence-nav-name">Protocoles d'Urgence</div>
@@ -326,7 +345,7 @@ body{font-family:'Exo 2',sans-serif;background:var(--bg);color:var(--text);displ
     <!-- ONDES SECTION -->
     <div class="sidebar-divider" style="margin-top:8px;"></div>
     <div class="ondes-sidebar-head">Podcast</div>
-    <button class="ondes-nav-btn" id="ondesNavBtn" onclick="showONDES()">
+    <button class="ondes-nav-btn" id="ondesNavBtn" onclick="showONDES();closeSidebar()">
       <div class="ondes-nav-ico">🎙️</div>
       <div class="ondes-nav-info">
         <div class="ondes-nav-name">KAIROS ONDES</div>
@@ -632,7 +651,7 @@ function buildSidebar(){
         <div class="pillar-prog">${done}/${total} modules · ${pct}%</div>
         <div class="pillar-bar"><div class="pillar-bar-fill" style="width:${pct}%;background:${p.color}"></div></div>
       </div>`;
-    btn.onclick=()=>{ currentPillarIdx=i; viewMode='modules'; buildSidebar(); buildMain(); showModules(); };
+    btn.onclick=()=>{ currentPillarIdx=i; viewMode='modules'; buildSidebar(); buildMain(); showModules(); closeSidebar(); };
     nav.appendChild(btn);
   });
   // ONDES button state
@@ -1184,6 +1203,26 @@ function loadProgress(event){
     event.target.value = '';
   };
   reader.readAsText(file);
+}
+
+/* ============================================================
+   SIDEBAR MOBILE TOGGLE
+   ============================================================ */
+function toggleSidebar(){
+  const sb=document.querySelector('.sidebar');
+  const bd=document.getElementById('sidebarBackdrop');
+  const btn=document.getElementById('menuToggle');
+  const open=sb.classList.toggle('open');
+  bd.classList.toggle('open',open);
+  btn.textContent=open?'✕':'☰';
+}
+function closeSidebar(){
+  const sb=document.querySelector('.sidebar');
+  const bd=document.getElementById('sidebarBackdrop');
+  const btn=document.getElementById('menuToggle');
+  sb.classList.remove('open');
+  bd.classList.remove('open');
+  btn.textContent='☰';
 }
 
 /* ============================================================
